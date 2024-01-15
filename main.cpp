@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <cmath>
 
 int screenWidth = 1280;
 int screenHeight = 720;
@@ -41,7 +42,7 @@ public:
     // Set texture, position and size of sprite
     sprite.setTexture(texture);
     sprite.setPosition(sf::Vector2f(100,400));
-    sprite.scale(sf::Vector2f(2,2));
+    sprite.scale(sf::Vector2f(0.2,0.2));
     // Set origin point to centre of sprite
     sf::FloatRect bounds = sprite.getLocalBounds();
     sprite.setOrigin(bounds.width / 2.0f, bounds.height / 2.0f);
@@ -86,17 +87,16 @@ private:
         }
         sprite.move(velocity*deltaTime);
         // Rotation
-        sprite.setRotation(((maxRotation * velocity.y)/terminalVel)+3.0f);
+        sprite.setRotation((maxRotation * velocity.y)/terminalVel);
     }
 };
 
-class Plane { //Plane sprite
+class Plane { // Plane sprite
 public:
     Plane(){
     if(!texture.loadFromFile("sprites/Plane.png")){
         std::cout << "Could not load Plane texture";
     }
-
     sprite.setTexture(texture);
     }
 
@@ -115,8 +115,8 @@ private:
     sf::Vector2f velocity{-1400.0f,0.0f}; // Initial velocity
 
     // Movement speed will slowly increase, so spawn interval is based on speed, i.e how long it takes to cross the screen
-    float spawnTimer = 0.0f; // Spawn  timer values
-    float spawnInterval = -(1600.0f/(velocity.x)); // Time between building reset
+    float spawnTimer = 1.8f; // Spawn  timer values
+    float spawnInterval = -(1700.0f/(velocity.x)); // Time between building reset
 
     void movement(float deltaTime){ // Movement across screen
 
@@ -126,11 +126,12 @@ private:
     void randomProp(){ // Random properties between different buildings
         sprite.setScale(sf::Vector2f(1,1));
         // First number is the random range 0 to x. The + shifts that range.
-        float yPos = static_cast<float>(std::rand() % 200); // In SFML, 0,0 is the top left, screenWidth x screenHeight is the bottom right.
-        float scale = static_cast<float>((std::rand() % 4) +4);
+        float yPos = static_cast<float>(std::rand() % 400); // In SFML, 0,0 is the top left, screenWidth x screenHeight is the bottom right.
+        float scale = static_cast<float>((std::rand() % 2)*0.3w);
         sprite.scale(sf::Vector2f(scale,scale));
-        sprite.setOrigin(0.0f, 0.0f);
-        sprite.setPosition(sf::Vector2f(1280,yPos));
+        sf::Vector2u textureSize = texture.getSize(); // Make origin centre of texture
+        sprite.setOrigin(textureSize.x/2,textureSize.y/2);
+        sprite.setPosition(sf::Vector2f(1280 + textureSize.x/2,yPos));
 
     }
 
@@ -147,12 +148,12 @@ public:
     }
 
     void update(sf::RenderWindow& window, float deltaTime){
-        movement(deltaTime);
-        spawnTimer += deltaTime;
         if(spawnTimer >= spawnInterval){
             randomProp();
             spawnTimer = 0.0f + (static_cast<float>(std::rand() % -(800))/velocity.x); // Resets spawn timer, with some randomness deducted
         }
+        movement(deltaTime);
+        spawnTimer += deltaTime;
         window.draw(sprite);
     }
 private:
@@ -162,21 +163,28 @@ private:
 
     float spawnTimer = 0.0f;
     float spawnInterval = -(1500.0f/velocity.x);
+    float heliTimer = 0;
+    float initialyPos;
 
     void movement(float deltaTime){ // Movement across screen
+        heliTimer += deltaTime;
         sprite.move(velocity*deltaTime);
+        sf::Vector2f position = sprite.getPosition();
+        sprite.setPosition(position.x,200*sin(heliTimer) + initialyPos); // y-position = (movement range) * sin(time) + initial y-pos
     }
 
 
-    void randomProp(){ // Random properties between different buildings
+    void randomProp(){ // Random properties between different helicopters
         sprite.setScale(sf::Vector2f(1,1));
         // First number is the random range 0 to x. The + shifts that range.
-        float yPos = static_cast<float>((std::rand() % 240) + 200); // In SFML, 0,0 is the top left, screenWidthxscreenHeight is the bottom right.
-        float scale = static_cast<float>((std::rand() % 2) +2);
+        float yPos = static_cast<float>((std::rand() % 720)); // In SFML, 0,0 is the top left, screenWidthxscreenHeight is the bottom right.
+        float scale = static_cast<float>((std::rand() % 2) +3);
         sprite.scale(sf::Vector2f(scale,scale));
-        sprite.setOrigin(0.0f, 0.0f);
-        sprite.setPosition(sf::Vector2f(1280,yPos));
+        sf::Vector2u textureSize = texture.getSize();
+        sprite.setOrigin(textureSize.x/2,textureSize.y/2);
+        sprite.setPosition(sf::Vector2f(1280 + textureSize.x*2,yPos));
         sprite.setRotation(20.0f);
+        initialyPos = yPos;
 
     }
 
@@ -224,8 +232,8 @@ private:
     void randomProp(){ // Random properties between different buildings
         sprite.setScale(sf::Vector2f(1,1));
         // First number is the random range 0 to x. The + shifts that range.
-        float yPos = static_cast<float>((std::rand() % 140) + 440); // In SFML, 0,0 is the top left, screenWidthxscreenHeight is the bottom right.
-        float scale = static_cast<float>((std::rand() % 4) +4);
+        float yPos = static_cast<float>((std::rand() % 180) + 400); // In SFML, 0,0 is the top left, screenWidthxscreenHeight is the bottom right.
+        float scale = static_cast<float>((std::rand() % 3) +7);
         sprite.scale(sf::Vector2f(scale,scale));
         sprite.setOrigin(0.0f, 0.0f);
         sprite.setPosition(sf::Vector2f(1280,yPos));
@@ -259,7 +267,7 @@ int main()
 
         float deltaTime = clock.restart().asSeconds(); // Change in time since last frame
 
-        window.clear(sf::Color{229,255,255,255});
+        window.clear(sf::Color{229,255,255,255}); // Background colour
         // Update all mechanics here
         score.update(window);
         player.update(window, deltaTime); // Continuously update player sprite in game loop
