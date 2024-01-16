@@ -1,9 +1,29 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <cmath>
 
 int screenWidth = 1280;
 int screenHeight = 720;
+
+class Sounds { // Sound effects
+public:
+    Sounds(){
+    if(!point.loadFromFile("sounds/point.ogg")){
+        std::cout << "Could not load point sound file" << std::endl;
+        }
+    }
+
+    void pointSound(){
+        sound.setBuffer(point);
+        sound.play();
+        sound.setVolume(5);
+        sound.setPitch(0.9f);
+        }
+private:
+    sf::Sound sound;
+    sf::SoundBuffer point; // Define point as sound
+};
 
 class Score { // Score
 public:
@@ -22,9 +42,10 @@ public:
         text.setPosition((screenWidth - textBounds.width) / 2, 100); // Centres text based on text and screen width
         window.draw(text);
         }
-    void addScore(){
+    void addScore(Sounds& sound){
         current_score += 1;
         text.setString(std::to_string(current_score));
+    //    sound.pointSound(); // Play score point sound
     }
 private:
     sf::Font font;
@@ -101,12 +122,12 @@ public:
     }
 
     void update(sf::RenderWindow& window, float deltaTime){
-        movement(deltaTime);
-        spawnTimer += deltaTime;
         if(spawnTimer >= spawnInterval){
             randomProp();
             spawnTimer = 0.0f + (static_cast<float>(std::rand() % -(800))/velocity.x); // Incorporate randomness into spawn interval
         }
+        movement(deltaTime);
+        spawnTimer += deltaTime;
         window.draw(sprite);
     }
 private:
@@ -115,7 +136,7 @@ private:
     sf::Vector2f velocity{-1400.0f,0.0f}; // Initial velocity
 
     // Movement speed will slowly increase, so spawn interval is based on speed, i.e how long it takes to cross the screen
-    float spawnTimer = 1.8f; // Spawn  timer values
+    float spawnTimer = 3.0f; // Spawn  timer values
     float spawnInterval = -(1700.0f/(velocity.x)); // Time between building reset
 
     void movement(float deltaTime){ // Movement across screen
@@ -127,7 +148,7 @@ private:
         sprite.setScale(sf::Vector2f(1,1));
         // First number is the random range 0 to x. The + shifts that range.
         float yPos = static_cast<float>(std::rand() % 400); // In SFML, 0,0 is the top left, screenWidth x screenHeight is the bottom right.
-        float scale = static_cast<float>((std::rand() % 2)*0.3w);
+        float scale = static_cast<float>((std::rand() % 1) + 0.5f);
         sprite.scale(sf::Vector2f(scale,scale));
         sf::Vector2u textureSize = texture.getSize(); // Make origin centre of texture
         sprite.setOrigin(textureSize.x/2,textureSize.y/2);
@@ -145,6 +166,7 @@ public:
         }
 
     sprite.setTexture(texture);
+    sprite.setPosition(4000.0f,4000.0f);
     }
 
     void update(sf::RenderWindow& window, float deltaTime){
@@ -162,7 +184,7 @@ private:
     sf::Vector2f velocity{-200.0f,0.0f};
 
     float spawnTimer = 0.0f;
-    float spawnInterval = -(1500.0f/velocity.x);
+    float spawnInterval = -(2000.0f/velocity.x);
     float heliTimer = 0;
     float initialyPos;
 
@@ -178,11 +200,11 @@ private:
         sprite.setScale(sf::Vector2f(1,1));
         // First number is the random range 0 to x. The + shifts that range.
         float yPos = static_cast<float>((std::rand() % 720)); // In SFML, 0,0 is the top left, screenWidthxscreenHeight is the bottom right.
-        float scale = static_cast<float>((std::rand() % 2) +3);
+        float scale = static_cast<float>((std::rand() % 1)*1.5 +0.5);
         sprite.scale(sf::Vector2f(scale,scale));
         sf::Vector2u textureSize = texture.getSize();
         sprite.setOrigin(textureSize.x/2,textureSize.y/2);
-        sprite.setPosition(sf::Vector2f(1280 + textureSize.x*2,yPos));
+        sprite.setPosition(sf::Vector2f(1280 + textureSize.x,yPos));
         sprite.setRotation(20.0f);
         initialyPos = yPos;
 
@@ -203,13 +225,13 @@ public:
 
     // These are the functions which can be applied to our instance. They must be public to be directly called, or called by a public function,
     // as seen below
-    void update(sf::RenderWindow& window, float deltaTime, Score& score){
+    void update(sf::RenderWindow& window, float deltaTime, Score& score, Sounds& sound){
         movement(deltaTime);
         spawnTimer += deltaTime; // Decide if a building spawns based on time passed from last one
         if(spawnTimer >= spawnInterval){
             randomProp();
             spawnTimer = 0.0f + (static_cast<float>(std::rand() % -(800))/velocity.x); // Resets spawn timer, with some randomness deducted
-            score.addScore(); // Add score for every building (technically) passed
+            score.addScore(sound); // Add score for every building (technically) passed
         }
         window.draw(sprite);
     }
@@ -245,16 +267,17 @@ private:
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(screenWidth, screenHeight), "Paper Glide");
-
     sf::Clock clock;
 
     std::srand(static_cast<unsigned>(std::time(nullptr))); // Random gen seed
 
+    Sounds sounds;
     Player player;
     Building building;
     Plane plane;
     Helicopter helicopter;
     Score score;
+
 
     while (window.isOpen()) // Game loop
     {
@@ -271,7 +294,7 @@ int main()
         // Update all mechanics here
         score.update(window);
         player.update(window, deltaTime); // Continuously update player sprite in game loop
-        building.update(window, deltaTime, score);
+        building.update(window, deltaTime, score, sounds);
         helicopter.update(window, deltaTime);
         plane.update(window,deltaTime); // Layers of graphics depends on order of update
         window.display();
