@@ -6,7 +6,7 @@ if(!font.loadFromFile("sprites/Font.ttf")){
     }
 text.setFont(font);
 text.setCharacterSize(300);
-text.setColor(sf::Color{255,255,255,200}); // r g b occupancy/255
+text.setColor(sf::Color{200,223,255,200}); // r g b occupancy/255
 text.setOrigin(sf::Vector2f(0.0f,0.0f));
 text.setString(std::to_string(current_score));
     }

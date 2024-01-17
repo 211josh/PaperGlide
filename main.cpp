@@ -9,6 +9,7 @@
 #include "score.h"
 #include "plane.h"
 #include "helicopter.h"
+#include "background.h"
 
 int screenWidth = 1280;
 int screenHeight = 720;
@@ -26,6 +27,7 @@ int main()
     Plane plane;
     Helicopter helicopter;
     Score score;
+    Background background;
 
 
     while (window.isOpen()) // Game loop
@@ -41,11 +43,12 @@ int main()
 
         window.clear(sf::Color{229,255,255,255}); // Background colour
         // Update all mechanics here
+        background.update(window, deltaTime);
         score.update(window,screenWidth,screenHeight);
         player.update(window, deltaTime); // Continuously update player sprite in game loop
         building.update(window, deltaTime, score, sounds);
         helicopter.update(window, deltaTime);
-        plane.update(window,deltaTime); // Layers of graphics depends on order of update
+        plane.update(window, deltaTime); // Layers of graphics depends on order of update
         window.display();
     }
 

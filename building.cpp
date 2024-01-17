@@ -10,8 +10,7 @@ if(!texture.loadFromFile("sprites/Building.png")){
 sprite.setTexture(texture);
 }
 
-// These are the functions which can be applied to our instance. They must be public to be directly called, or called by a public function,
-// as seen below
+// These are the functions which can be applied to our instance.
 void Building::update(sf::RenderWindow& window, float deltaTime, Score& score, Sounds& sound){
     movement(deltaTime);
     spawnTimer += deltaTime; // Decide if a building spawns based on time passed from last one
@@ -33,7 +32,7 @@ float Building::spawnInterval = -(1600.0f/(velocity.x)); // Time between buildin
 
 void Building::movement(float deltaTime){ // Movement across screen
 
-    sprite.move(velocity*deltaTime);
+    sprite.move(velocity*deltaTime); // velocity * time. Sprite is continuously updated in window through game loop.
     }
 
 void Building::randomProp(){ // Random properties between different buildings
