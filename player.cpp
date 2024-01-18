@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "player.h"
 
 // Player sprite
@@ -17,6 +19,14 @@ if(!texture.loadFromFile("sprites/Player.png")){
 void Player::update(sf::RenderWindow& window, float deltaTime) { // Continuously update the sprite inside the window
     handleInput(deltaTime);
     applyGravity(deltaTime);
+    window.draw(sprite);
+    }
+
+float Player::playerTimer = 0;
+
+void Player::menuUpdate(sf::RenderWindow& window, float deltaTime){
+    playerTimer += deltaTime;
+    menuFloating(deltaTime);
     window.draw(sprite);
     }
 
@@ -49,5 +59,10 @@ void Player::applyGravity(float deltaTime) { // Gravity on player
     sprite.move(velocity*deltaTime);
     // Rotation
     sprite.setRotation((maxRotation * velocity.y)/terminalVel);
+    }
+
+void Player::menuFloating(float deltaTime){
+    sprite.setPosition(100,150*sin(playerTimer) + 400);
+    sprite.setRotation((maxRotation/4 * cos(playerTimer)));
     }
 

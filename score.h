@@ -13,6 +13,7 @@ public:
 private:
     sf::Font font;
     sf::Text text;
+
     static int current_score;
 };
 
