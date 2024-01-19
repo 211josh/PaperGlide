@@ -33,7 +33,6 @@ int main()
     Score score;
     Menu menu;
 
-
     while (window.isOpen()) // Game loop
     {
         sf::Event event;
@@ -45,11 +44,8 @@ int main()
 
         float deltaTime = clock.restart().asSeconds(); // Change in time since last frame
 
-        window.clear(sf::Color{229,255,255,255}); // Background colour
-        // Update all mechanics here
-
         // Menu state
-        if(gameState == 0){
+        if(gameState == 0){ // Order of update dictates layer
             background.update(window,deltaTime);
             player.menuUpdate(window,deltaTime);
             menu.menuUpdate(window, screenWidth, deltaTime, gameState, sounds);
@@ -60,21 +56,20 @@ int main()
         if(gameState == 1){
             background.update(window, deltaTime);
             score.update(window,screenWidth,screenHeight);
-            player.update(window, deltaTime); // Continuously update player sprite in game loop
+            player.update(window, deltaTime);
             building.update(window, deltaTime);
             helicopter.update(window, deltaTime);
             plane.update(window, deltaTime); // Layers of graphics depends on order of update
 
+            // Temp method of adding score
             timePassed += deltaTime;
-       //     std::cout << timePassed << std::endl;  // TEMPORARY METHOD OF ADDING SCORE
             if(timePassed > 1.0f){
-                score.addScore(sounds, background, helicopter, plane, building); // TEMPORARY METHOD OF ADDING SCORE
+                score.addScore(sounds, background, helicopter, plane, building);
                 timePassed = 0.0f;
             }
 
             window.display();
         }
     }
-
     return 0;
 }

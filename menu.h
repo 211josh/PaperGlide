@@ -3,8 +3,6 @@
 
 #include "sounds.h"
 
-// Need several update functions. e.g. if in other state than main menu state, move all text off screen.
-
 class Menu{
 public:
     Menu();

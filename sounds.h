@@ -8,7 +8,7 @@
 class Sounds{
 public:
     Sounds();
-    void pointSound();
+    void pointSound(); // Functions to play each sound
     void menuSound();
     void startSound();
 

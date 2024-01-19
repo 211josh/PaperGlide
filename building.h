@@ -4,16 +4,16 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-#include "background.h" // Needed for add score function
+#include "background.h"
 
 
 class Building { // Building sprite
-public:
+public: // Can be accessed outside the class
     Building();
     void update(sf::RenderWindow& window, float deltaTime);
     void increaseVel(float velRange);
 
-private:
+private: // Can only be accessed by code inside the class
     sf::Texture texture;
     sf::Sprite sprite;
 

@@ -12,21 +12,21 @@ if(!start.loadFromFile("sounds/start.ogg")){
     }
 }
 
-void Sounds::pointSound(){
+void Sounds::pointSound(){ // Sound when score point is given
     sound.setBuffer(point);
     sound.setVolume(5);
     sound.setPitch(0.9f);
     sound.play();
     }
 
-void Sounds::menuSound(){
+void Sounds::menuSound(){ // Sound for swapping options on menu
     sound.setBuffer(menu);
     sound.setVolume(20);
     sound.setPitch(1.0f);
     sound.play();
     }
 
-void Sounds::startSound(){
+void Sounds::startSound(){ // Sound for starting game
     sound.setBuffer(start);
     sound.setVolume(20);
     sound.setPitch(1.0f);

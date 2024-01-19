@@ -7,8 +7,8 @@
 class Player {
 public:
     Player();
-    void update(sf::RenderWindow& window, float deltaTime);
-    void menuUpdate(sf::RenderWindow& window, float deltaTime); // Update for when in menu mode, i.e floating about
+    void update(sf::RenderWindow& window, float deltaTime); // Update for game state
+    void menuUpdate(sf::RenderWindow& window, float deltaTime); // Update for menu state
 
 private:
     sf::Texture texture;

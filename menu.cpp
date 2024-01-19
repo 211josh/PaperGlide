@@ -69,7 +69,7 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
         sound.menuSound();
         }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && selectTimer > 0.2f){
-        menuSelect = ((menuSelect - 1)%3 +3 ) % 3; // C++ modulo doesn't work w negative numbers, so make our own
+        menuSelect = ((menuSelect - 1)%3 +3 ) % 3; // C++ modulo doesn't work w/ negative numbers, so made our own
         selectTimer = 0.0f;
         sound.menuSound();
         }

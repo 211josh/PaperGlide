@@ -14,7 +14,7 @@ public:
 private:
     sf::Texture texture;
     sf::Sprite sprite;
-    static sf::Vector2f velocity;
+    static sf::Vector2f velocity; // Initial velocity
     static sf::Vector2f maxVel;
     static float velDif;
 
