@@ -3,6 +3,10 @@
 
 #include "background.h"
 
+sf::Vector2f Background::velocity{-187.0f,0.0f}; // Initial velocity
+sf::Vector2f Background::maxVel{-800.0,0.0f};
+float Background::velDif = (velocity.x - maxVel.x);
+
 Background::Background(){
     if(!texture.loadFromFile("sprites/Background.png")){
     std::cout << "Could not load Background texture";
@@ -11,15 +15,11 @@ Background::Background(){
     sprite.setPosition(sf::Vector2f(0,0));
 }
 
-
-
 void Background::update(sf::RenderWindow& window, float deltaTime){
     movement(deltaTime);
     resetPos();
     window.draw(sprite);
 }
-
-sf::Vector2f Background::velocity{-200.0f,0.0f}; // Initial velocity
 
 void Background::movement(float deltaTime){
     sprite.move(velocity*deltaTime);
@@ -31,4 +31,9 @@ void Background::resetPos(){ // First screen size of background texture is ident
     if(position.x <= -5120){ // Beginning of last frame x value is 2560
         sprite.setPosition(sf::Vector2f{0.0f,0.0f});
     }
+}
+
+void Background::increaseVel(float velRange){ // Increase velocity
+    velocity.x -= velDif/velRange;
+//    std::cout << velocity.x << std::endl;
 }

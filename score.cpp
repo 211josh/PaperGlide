@@ -1,5 +1,8 @@
 #include "score.h"
 
+int Score::current_score = 0;
+float Score::velRange = 180;
+
 Score::Score(){
 if(!font.loadFromFile("sprites/Font.ttf")){
     std::cout << "Could not load Score font";
@@ -15,10 +18,15 @@ void Score::update(sf::RenderWindow& window, int screenWidth, int screenHeight){
     text.setPosition((screenWidth - textBounds.width) / 2, 100); // Centres text based on text and screen width
     window.draw(text);
     }
-void Score::addScore(Sounds& sound){
+void Score::addScore(Sounds& sound, Background& background, Helicopter& helicopter, Plane& plane, Building& building){
     current_score += 1;
     text.setString(std::to_string(current_score));
         sound.pointSound(); // Play score point sound
-    }
 
-int Score::current_score = 0;
+    if(current_score < velRange){
+        background.increaseVel(velRange);
+        helicopter.increaseVel(velRange);
+        plane.increaseVel(velRange);
+        building.increaseVel(velRange);
+        }
+    }

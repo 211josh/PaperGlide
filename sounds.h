@@ -9,10 +9,14 @@ class Sounds{
 public:
     Sounds();
     void pointSound();
+    void menuSound();
+    void startSound();
 
 private:
     sf::Sound sound;
     sf::SoundBuffer point;
+    sf::SoundBuffer menu;
+    sf::SoundBuffer start;
 };
 
 #endif // SOUNDS_H_INCLUDED
