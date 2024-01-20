@@ -2,8 +2,8 @@
 #include <iostream>
 
 #include "background.h"
-
-sf::Vector2f Background::velocity{-187.0f,0.0f}; // Initial velocity
+sf::Vector2f Background::initialVel{-187.0f,0.0f};
+sf::Vector2f Background::velocity = Background::initialVel;
 sf::Vector2f Background::maxVel{-800.0,0.0f};
 float Background::velDif = (velocity.x - maxVel.x);
 
@@ -34,4 +34,9 @@ void Background::resetPos(){ // First screen size of background texture is ident
 
 void Background::increaseVel(float velRange){ // Increase velocity
     velocity.x -= velDif/velRange;
-}
+    }
+
+void Background::resetGame(){ // Function if die and retry
+    velocity = initialVel;
+    resetPos();
+    }

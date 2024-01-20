@@ -12,11 +12,13 @@ public: // Can be accessed outside the class
     Building();
     void update(sf::RenderWindow& window, float deltaTime);
     void increaseVel(float velRange);
+    void resetGame();
 
 private: // Can only be accessed by code inside the class
     sf::Texture texture;
     sf::Sprite sprite;
 
+    static sf::Vector2f initialVel;
     static sf::Vector2f velocity;
     static sf::Vector2f maxVel;
     static float velDif;

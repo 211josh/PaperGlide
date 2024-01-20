@@ -15,28 +15,32 @@ Menu::Menu(){
     playText.setFont(font); // Setting menu fonts to font
     settingsText.setFont(font);
     quitText.setFont(font);
+    versionText.setFont(font);
+    }
+
+
+void Menu::menuUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane){
 
     Menu::playText.setString("Play"); // Words on menu screen
     settingsText.setString("Settings");
     quitText.setString("Quit");
+    versionText.setString("v1.0");
 
-    playText.setCharacterSize(170); // Word sizes
-    settingsText.setCharacterSize(170);
-    quitText.setCharacterSize(170);
-    }
-
-
-void Menu::menuUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound){
+    playText.setCharacterSize(120); // Word sizes
+    settingsText.setCharacterSize(120);
+    quitText.setCharacterSize(120);
+    versionText.setCharacterSize(30);
 
     sf::FloatRect playTextBounds = playText.getLocalBounds(); // Retrieve menu option bounds
     sf::FloatRect settingsTextBounds = settingsText.getLocalBounds();
     sf::FloatRect quitTextBounds = quitText.getLocalBounds();
 
-    playText.setPosition((screenWidth - playTextBounds.width) / 2, 50); // Centres text based on text and screen width
-    settingsText.setPosition((screenWidth - settingsTextBounds.width) / 2, 250);
-    quitText.setPosition((screenWidth - quitTextBounds.width) / 2, 450);
+    playText.setPosition((screenWidth - playTextBounds.width) / 2, 160); // Centres text based on text and screen width
+    settingsText.setPosition((screenWidth - settingsTextBounds.width) / 2, 270);
+    quitText.setPosition((screenWidth - quitTextBounds.width) / 2, 380);
+    versionText.setPosition(1200,675);
 
-    handleInput(window, deltaTime, gameState, sound);
+    handleInput(window, deltaTime, gameState, sound, background, player, building, helicopter, plane);
     selectTimer += deltaTime;
 
     if(menuSelect == 0){
@@ -57,12 +61,62 @@ void Menu::menuUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime
         quitText.setColor(sf::Color{255,255,0,200});
         }
 
+    versionText.setColor(sf::Color{255,255,255,70});
+
+    window.draw(playText);
+    window.draw(settingsText);
+    window.draw(quitText);
+    window.draw(versionText);
+    }
+
+void Menu::tryUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane){
+
+    Menu::playText.setString("Retry"); // Words on menu screen
+    settingsText.setString("Menu");
+    quitText.setString("Quit");
+
+    playText.setCharacterSize(90); // Word sizes
+    settingsText.setCharacterSize(90);
+    quitText.setCharacterSize(90);
+
+    sf::FloatRect playTextBounds = playText.getLocalBounds(); // Retrieve menu option bounds
+    sf::FloatRect settingsTextBounds = settingsText.getLocalBounds();
+    sf::FloatRect quitTextBounds = quitText.getLocalBounds();
+
+    playText.setPosition((screenWidth - playTextBounds.width) / 2, 250); // Centres text based on text and screen width
+    settingsText.setPosition((screenWidth - settingsTextBounds.width) / 2, 350);
+    quitText.setPosition((screenWidth - quitTextBounds.width) / 2, 450);
+    versionText.setPosition(1200,675);
+
+    handleInput(window, deltaTime, gameState, sound, background, player, building, helicopter, plane);
+    selectTimer += deltaTime;
+
+    if(menuSelect == 0){
+        playText.setColor(sf::Color{255,255,0,200});
+        settingsText.setColor(sf::Color{255,255,255,200});
+        quitText.setColor(sf::Color{255,255,255,200});
+        }
+
+    if(menuSelect == 1){
+        playText.setColor(sf::Color{255,255,255,200});
+        settingsText.setColor(sf::Color{255,255,0,200});
+        quitText.setColor(sf::Color{255,255,255,200});
+        }
+
+    if(menuSelect == 2){
+        playText.setColor(sf::Color{255,255,255,200});
+        settingsText.setColor(sf::Color{255,255,255,200});
+        quitText.setColor(sf::Color{255,255,0,200});
+        }
+
+    versionText.setColor(sf::Color{255,255,255,70});
+
     window.draw(playText);
     window.draw(settingsText);
     window.draw(quitText);
     }
 
-void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState, Sounds& sound){
+void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane){
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && selectTimer > 0.2f){
         menuSelect = ((menuSelect + 1)%3 + 3) % 3;
         selectTimer = 0.0f;
@@ -73,9 +127,22 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
         selectTimer = 0.0f;
         sound.menuSound();
         }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && menuSelect == 0){
-        gameState = 1;
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && menuSelect == 0){ // i.e game starts / retries
+        background.resetGame();
+        player.resetGame(gameState);
+        building.resetGame();
+        helicopter.resetGame();
+        plane.resetGame();
+
         sound.startSound();
+        gameState = 1;
+        }
+
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && menuSelect == 1){ // Option 2
+        if(gameState==3){ // If on try again menu, i.e menu option
+            gameState = 0;
+            }
         }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && menuSelect == 2){
         window.close();

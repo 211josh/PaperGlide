@@ -1,6 +1,6 @@
 #include "helicopter.h"
-
-sf::Vector2f Helicopter::velocity{-150.0f,0.0f};
+sf::Vector2f Helicopter::initialVel{-150.0f,0.0f};
+sf::Vector2f Helicopter::velocity = Helicopter::initialVel;
 sf::Vector2f Helicopter:: maxVel{-600.0f,0.0f};
 float Helicopter::velDif = (velocity.x - maxVel.x);
 
@@ -21,8 +21,6 @@ if(!texture.loadFromFile("sprites/Helicopter.png")){
 void Helicopter::update(sf::RenderWindow& window, float deltaTime){
     if(spawnTimer >= spawnInterval){
         randomProp();
-        spawnTimer = 0.0f + (static_cast<float>(std::rand() % (800))/-velocity.x); // Resets spawn timer, with some randomness deducted
-        spawnInterval = -(2200.0f/velocity.x); // Spawn interval updated dependent on velocity
         }
     movement(deltaTime);
     spawnTimer += deltaTime;
@@ -38,6 +36,9 @@ void Helicopter::movement(float deltaTime){ // Movement across screen
 
 
 void Helicopter::randomProp(){ // Random properties between different helicopters
+    spawnTimer = 0.0f + (static_cast<float>(std::rand() % (800))/-velocity.x); // Resets spawn timer, with some randomness deducted
+    spawnInterval = -(2200.0f/velocity.x); // Spawn interval updated dependent on velocity
+
     sprite.setScale(sf::Vector2f(1,1));
     // First number is the random range 0 to x. The + shifts that range.
     float yPos = static_cast<float>((std::rand() % 620)+50);
@@ -54,4 +55,9 @@ void Helicopter::randomProp(){ // Random properties between different helicopter
 
 void Helicopter::increaseVel(float velRange){
     velocity.x -= velDif/velRange;
+    }
+
+void Helicopter::resetGame(){
+    velocity = initialVel;
+    sprite.setPosition(20000,2000);
     }

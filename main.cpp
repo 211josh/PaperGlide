@@ -48,7 +48,7 @@ int main()
         if(gameState == 0){ // Order of update dictates layer
             background.update(window,deltaTime);
             player.menuUpdate(window,deltaTime);
-            menu.menuUpdate(window, screenWidth, deltaTime, gameState, sounds);
+            menu.menuUpdate(window, screenWidth, deltaTime, gameState, sounds, background, player, building, helicopter, plane);
             window.display();
         }
 
@@ -56,7 +56,7 @@ int main()
         if(gameState == 1){
             background.update(window, deltaTime);
             score.update(window,screenWidth,screenHeight);
-            player.update(window, deltaTime);
+            player.update(window, deltaTime, gameState, screenHeight);
             building.update(window, deltaTime);
             helicopter.update(window, deltaTime);
             plane.update(window, deltaTime); // Layers of graphics depends on order of update
@@ -68,6 +68,13 @@ int main()
                 timePassed = 0.0f;
             }
 
+            window.display();
+        }
+
+        // Try again state
+        if(gameState == 3){
+            menu.tryUpdate(window, screenWidth, deltaTime, gameState, sounds, background, player, building, helicopter, plane);
+            score.tryUpdate(window,screenWidth,screenHeight);
             window.display();
         }
     }

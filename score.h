@@ -15,6 +15,8 @@ class Score{
 public:
     Score();
     void update(sf::RenderWindow& window, int screenWidth, int screenHeight);
+    void tryUpdate(sf::RenderWindow& window, int screenWidth, int screenHeight);
+
     void addScore(Sounds& sound, Background& background, Helicopter& helicopter, Plane& plane, Building& building);
 
     static int current_score;
@@ -23,6 +25,7 @@ public:
 private:
     sf::Font font;
     sf::Text text;
+    sf::Text showScore;
 };
 
 #endif // SCORE_H_INCLUDED

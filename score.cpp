@@ -8,10 +8,18 @@ if(!font.loadFromFile("sprites/Font.ttf")){
     std::cout << "Could not load Score font";
     }
     // Score display properties
-    text.setFont(font);
+    text.setFont(font); // Score behind screen
+    showScore.setFont(font); // Score on try again screen
+
     text.setCharacterSize(300);
+    showScore.setCharacterSize(150);
+
     text.setColor(sf::Color{200,223,255,200}); // r g b occupancy/255
+    showScore.setColor(sf::Color{200,223,255,200});
+
     text.setOrigin(sf::Vector2f(0.0f,0.0f));
+    showScore.setOrigin(sf::Vector2f(0.0f,0.0f));
+
     text.setString(std::to_string(current_score));
     }
 
@@ -34,4 +42,15 @@ void Score::addScore(Sounds& sound, Background& background, Helicopter& helicopt
         plane.increaseVel(velRange);
         building.increaseVel(velRange);
         }
+    }
+
+void Score::tryUpdate(sf::RenderWindow& window, int screenWidth, int screenHeight){
+    text.setPosition(sf::Vector2f(2000.0f,2000.0f)); // Move play score off screen
+
+    showScore.setString("Score: " + current_score);
+    sf::FloatRect showScoreBounds = showScore.getLocalBounds();
+    showScore.setPosition((screenWidth - showScoreBounds.width) / 2, 100); // Centres text based on text and screen width
+
+    window.draw(text);
+    window.draw(showScore);
     }

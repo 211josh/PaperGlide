@@ -1,6 +1,7 @@
 #include "building.h"
 
-sf::Vector2f Building::velocity{-750.0f,0.0f}; // Initial velocity of building
+sf::Vector2f Building::initialVel{-750.0f,0.0f}; // Initial velocity of building
+sf::Vector2f Building::velocity = Building::initialVel;
 sf::Vector2f Building::maxVel{-1500.0,0.0f}; // Max velocity it can reach
 float Building::velDif = (velocity.x - maxVel.x); // Calculated for incremental increase of velocity based on score
 
@@ -24,7 +25,6 @@ void Building::update(sf::RenderWindow& window, float deltaTime){
     spawnTimer += deltaTime; // Decide if a building spawns based on time passed from last one
     if(spawnTimer >= spawnInterval){
         randomProp(); // Function below which spawns new building with different, randomly selected properties
-        spawnTimer = 0.0f + (static_cast<float>(std::rand() % -(800))/velocity.x); // Resets spawn timer, with some randomness deducted
     }
     window.draw(sprite);
 }
@@ -34,6 +34,7 @@ void Building::movement(float deltaTime){
     } // deltaTime is the difference in time between each run of our game loop. distance travelled = velocity * time
 
 void Building::randomProp(){ // Random properties between different buildings
+    spawnTimer = 0.0f + (static_cast<float>(std::rand() % -(800))/velocity.x); // Resets spawn timer, with some randomness deducted
     sprite.setScale(sf::Vector2f(1,1));
     // First number is the random range 0 to x. The + shifts that range.
     float yPos = static_cast<float>((std::rand() % 180) + 400);
@@ -48,5 +49,9 @@ void Building::randomProp(){ // Random properties between different buildings
 
 void Building::increaseVel(float velRange){
     velocity.x -= velDif/velRange;
- //   std::cout << velocity.x << std::endl;
+    }
+
+void Building::resetGame(){
+    velocity = initialVel;
+    randomProp();
     }

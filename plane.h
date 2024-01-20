@@ -8,11 +8,13 @@ public:
     Plane();
     void update(sf::RenderWindow& window, float deltaTime);
     void increaseVel(float velRange);
+    void resetGame();
 
 private:
     sf::Texture texture;
     sf::Sprite sprite;
 
+    static sf::Vector2f initialVel; // Initial velocity
     static sf::Vector2f velocity; // Initial velocity
     static sf::Vector2f maxVel;
     static float velDif;

@@ -16,10 +16,11 @@ if(!texture.loadFromFile("sprites/Player.png")){
     sprite.setOrigin(bounds.width / 2.0f, bounds.height / 2.0f);
     }
 
-void Player::update(sf::RenderWindow& window, float deltaTime) { // Continuously update the sprite inside the window
+void Player::update(sf::RenderWindow& window, float deltaTime, int& gameState, int screenHeight) { // Continuously update the sprite inside the window
     handleInput(deltaTime);
     applyGravity(deltaTime);
     window.draw(sprite);
+    deathCheck(gameState, screenHeight);
     }
 
 float Player::playerTimer = 0;
@@ -58,5 +59,19 @@ void Player::applyGravity(float deltaTime) { // Gravity on player
 void Player::menuFloating(float deltaTime){
     sprite.setPosition(100,150*sin(playerTimer) + 400);
     sprite.setRotation((maxRotation/4 * cos(playerTimer)));
+    }
+
+void Player::deathCheck(int& gameState, int screenHeight){
+    sf::Vector2f currentPos = sprite.getPosition();
+    if(currentPos.y < 0 || currentPos.y > screenHeight){
+        gameState = 3; // Try again screen
+        }
+    }
+
+void Player::resetGame(int gameState){
+    if(gameState == 3){
+        sprite.setPosition(100,400);
+        }
+    velocity.y = 0;
     }
 
