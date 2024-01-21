@@ -25,6 +25,7 @@ private:
     void movement(float deltaTime);
 
     void randomProp();
+
 };
 
 #endif // PLANE_H_INCLUDED

@@ -40,7 +40,7 @@ void Menu::menuUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime
     quitText.setPosition((screenWidth - quitTextBounds.width) / 2, 380);
     versionText.setPosition(1200,675);
 
-    handleInput(window, deltaTime, gameState, sound, background, player, building, helicopter, plane);
+    handleInput(window, deltaTime, gameState, sound, background, player, building, helicopter, plane, Score::current_score);
     selectTimer += deltaTime;
 
     if(menuSelect == 0){
@@ -69,7 +69,7 @@ void Menu::menuUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime
     window.draw(versionText);
     }
 
-void Menu::tryUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane){
+void Menu::tryUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, int& current_score){
 
     Menu::playText.setString("Retry"); // Words on menu screen
     settingsText.setString("Menu");
@@ -88,7 +88,7 @@ void Menu::tryUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime,
     quitText.setPosition((screenWidth - quitTextBounds.width) / 2, 450);
     versionText.setPosition(1200,675);
 
-    handleInput(window, deltaTime, gameState, sound, background, player, building, helicopter, plane);
+    handleInput(window, deltaTime, gameState, sound, background, player, building, helicopter, plane, current_score);
     selectTimer += deltaTime;
 
     if(menuSelect == 0){
@@ -116,7 +116,7 @@ void Menu::tryUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime,
     window.draw(quitText);
     }
 
-void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane){
+void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, int& current_score){
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && selectTimer > 0.2f){
         menuSelect = ((menuSelect + 1)%3 + 3) % 3;
         selectTimer = 0.0f;
@@ -137,6 +137,8 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
 
         sound.startSound();
         gameState = 1;
+
+        Score::current_score = 0;
         }
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && menuSelect == 1){ // Option 2

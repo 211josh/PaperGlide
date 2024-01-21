@@ -22,6 +22,7 @@ int main()
     std::srand(static_cast<unsigned>(std::time(nullptr))); // Random gen seed
 
     sf::RenderWindow window(sf::VideoMode(screenWidth, screenHeight), "Paper Glide");
+
     sf::Clock clock;
 
     Sounds sounds;
@@ -73,8 +74,14 @@ int main()
 
         // Try again state
         if(gameState == 3){
-            menu.tryUpdate(window, screenWidth, deltaTime, gameState, sounds, background, player, building, helicopter, plane);
+            window.clear();
+            background.update(window, deltaTime);
+            building.update(window, deltaTime);
+            plane.update(window,deltaTime);
+            helicopter.update(window,deltaTime);
+            player.update(window, deltaTime, gameState, screenHeight);
             score.tryUpdate(window,screenWidth,screenHeight);
+            menu.tryUpdate(window, screenWidth, deltaTime, gameState, sounds, background, player, building, helicopter, plane, Score::current_score);
             window.display();
         }
     }

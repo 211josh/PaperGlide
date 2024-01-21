@@ -24,6 +24,7 @@ if(!font.loadFromFile("sprites/Font.ttf")){
     }
 
 void Score::update(sf::RenderWindow& window, int screenWidth, int screenHeight){
+    text.setString(std::to_string(current_score));
     sf::FloatRect textBounds = text.getLocalBounds();
     text.setPosition((screenWidth - textBounds.width) / 2, 100); // Centres text based on text and screen width
     window.draw(text);
@@ -32,8 +33,7 @@ void Score::update(sf::RenderWindow& window, int screenWidth, int screenHeight){
 
 void Score::addScore(Sounds& sound, Background& background, Helicopter& helicopter, Plane& plane, Building& building){
     current_score += 1;
-    text.setString(std::to_string(current_score));
-        sound.pointSound(); // Play score point sound
+    sound.pointSound(); // Play score point sound
 
     // Increase in score increases velocities of sprites
     if(current_score < velRange){
@@ -45,12 +45,11 @@ void Score::addScore(Sounds& sound, Background& background, Helicopter& helicopt
     }
 
 void Score::tryUpdate(sf::RenderWindow& window, int screenWidth, int screenHeight){
-    text.setPosition(sf::Vector2f(2000.0f,2000.0f)); // Move play score off screen
 
-    showScore.setString("Score: " + current_score);
+    showScore.setString("Score: " + std::to_string(current_score));
     sf::FloatRect showScoreBounds = showScore.getLocalBounds();
     showScore.setPosition((screenWidth - showScoreBounds.width) / 2, 100); // Centres text based on text and screen width
 
-    window.draw(text);
+
     window.draw(showScore);
     }
