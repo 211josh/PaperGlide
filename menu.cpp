@@ -117,18 +117,18 @@ void Menu::tryUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime,
     }
 
 void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, int& current_score){
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && selectTimer > 0.2f){
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && selectTimer > 0.2f){
         menuSelect = ((menuSelect + 1)%3 + 3) % 3;
         selectTimer = 0.0f;
         sound.menuSound();
         }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && selectTimer > 0.2f){
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && selectTimer > 0.2f){
         menuSelect = ((menuSelect - 1)%3 +3 ) % 3; // C++ modulo doesn't work w/ negative numbers, so made our own
         selectTimer = 0.0f;
         sound.menuSound();
         }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && menuSelect == 0){ // i.e game starts / retries
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && menuSelect == 0){ // i.e game starts / retries
         background.resetGame();
         player.resetGame(gameState);
         building.resetGame();
@@ -141,12 +141,12 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
         Score::current_score = 0;
         }
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && menuSelect == 1){ // Option 2
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && menuSelect == 1){ // Option 2
         if(gameState==3){ // If on try again menu, i.e menu option
             gameState = 0;
             }
         }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && menuSelect == 2){
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && menuSelect == 2){
         window.close();
         }
     }

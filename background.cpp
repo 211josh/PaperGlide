@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "background.h"
+
 sf::Vector2f Background::initialVel{-187.0f,0.0f};
 sf::Vector2f Background::velocity = Background::initialVel;
 sf::Vector2f Background::maxVel{-800.0,0.0f};

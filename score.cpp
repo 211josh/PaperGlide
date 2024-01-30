@@ -1,6 +1,7 @@
 #include "score.h"
 
 int Score::current_score = 0;
+float Score::score_timer = 0; // Makes sure only 1 score is added per building passed
 float Score::velRange = 180; // velRange = score for sprites to hit max velocities
 
 Score::Score(){
@@ -23,10 +24,11 @@ if(!font.loadFromFile("sprites/Font.ttf")){
     text.setString(std::to_string(current_score));
     }
 
-void Score::update(sf::RenderWindow& window, int screenWidth, int screenHeight){
+void Score::update(sf::RenderWindow& window, int screenWidth, int screenHeight, Sounds& sound, Background& background, Helicopter& helicopter, Plane& plane, Building& building, float deltaTime){
     text.setString(std::to_string(current_score));
     sf::FloatRect textBounds = text.getLocalBounds();
     text.setPosition((screenWidth - textBounds.width) / 2, 100); // Centres text based on text and screen width
+    checkScore(sound, background, helicopter, plane, building, deltaTime);
     window.draw(text);
     }
 
@@ -49,7 +51,14 @@ void Score::tryUpdate(sf::RenderWindow& window, int screenWidth, int screenHeigh
     showScore.setString("Score: " + std::to_string(current_score));
     sf::FloatRect showScoreBounds = showScore.getLocalBounds();
     showScore.setPosition((screenWidth - showScoreBounds.width) / 2, 100); // Centres text based on text and screen width
-
-
     window.draw(showScore);
+    }
+
+void Score::checkScore(Sounds& sound, Background& background, Helicopter& helicopter, Plane& plane, Building& building, float deltaTime){ // Check position of building to see if point can be added
+    sf::Vector2f position = Building::sprite.getPosition();
+    score_timer += deltaTime;
+    if(position.x < 100 && score_timer > 2.0){
+        addScore(sound,background,helicopter,plane,building);
+        score_timer = 0;
+        }
     }

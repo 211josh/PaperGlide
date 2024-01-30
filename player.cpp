@@ -37,8 +37,8 @@ float Player::terminalVel = 1000.0f; // Terminal vertical velocity
 float Player::maxRotation = 70.0f; // Max rotation of sprite [-max,max]
 sf::Vector2f Player::velocity{0.0f,0.0f}; // Initial velocity
 
-void Player::handleInput(float deltaTime) { // Control player with W
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
+void Player::handleInput(float deltaTime) { // Control player with Space
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
         velocity.y += speed * deltaTime;
         }
     }
