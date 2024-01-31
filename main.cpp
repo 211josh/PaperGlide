@@ -15,7 +15,6 @@
 int screenWidth = 1280;
 int screenHeight = 720;
 int gameState = 0; // 0 = main menu, 1 = gameplay, 2 = settings and 3 = try again screen
-// float timePassed = 0; // TEMPORARY METHOD OF ADDING SCORE
 
 int main()
 {
@@ -56,18 +55,11 @@ int main()
         // Play state
         if(gameState == 1){
             background.update(window, deltaTime);
-            score.update(window,screenWidth,screenHeight, sounds, background, helicopter, plane, building, deltaTime);
-            player.update(window, deltaTime, gameState, screenHeight);
+            score.update(window,screenWidth, screenHeight, sounds, background, helicopter, plane, building, deltaTime);
+            player.update(window, deltaTime, screenHeight, gameState, building, plane, helicopter);
             building.update(window, deltaTime);
             helicopter.update(window, deltaTime);
             plane.update(window, deltaTime); // Layers of graphics depends on order of update
-
-            // Temp method of adding score
-            //timePassed += deltaTime;
-            //if(timePassed > 1.0f){
-            //    score.addScore(sounds, background, helicopter, plane, building);
-            //    timePassed = 0.0f;
-            //}
 
             window.display();
         }
@@ -79,7 +71,7 @@ int main()
             building.update(window, deltaTime);
             plane.update(window,deltaTime);
             helicopter.update(window,deltaTime);
-            player.update(window, deltaTime, gameState, screenHeight);
+            player.update(window, deltaTime, screenHeight, gameState, building, plane, helicopter);
             score.tryUpdate(window,screenWidth,screenHeight);
             menu.tryUpdate(window, screenWidth, deltaTime, gameState, sounds, background, player, building, helicopter, plane, Score::current_score);
             window.display();

@@ -10,14 +10,15 @@
 class Building { // Building sprite
 public: // Can be accessed outside the class
     Building();
-    void update(sf::RenderWindow& window, float deltaTime);
+    void update(sf::RenderWindow& window, float deltaTime); // void = no return value
     void increaseVel(float velRange);
     void resetGame();
-    static sf::Sprite sprite;
+    sf::Vector2f getPos(); // function returns a sf::Vector2f (2 float vector)
+    sf::FloatRect getHitbox();
 
 private: // Can only be accessed by code inside the class
     sf::Texture texture;
-
+    sf::Sprite sprite;
 
     static sf::Vector2f initialVel;
     static sf::Vector2f velocity;

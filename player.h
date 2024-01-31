@@ -4,10 +4,14 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
+#include "building.h"
+#include "plane.h"
+#include "helicopter.h"
+
 class Player {
 public:
     Player();
-    void update(sf::RenderWindow& window, float deltaTime, int& gameState, int screenHeight); // Update for game state
+    void update(sf::RenderWindow& window, float deltaTime, int screenHeight, int& gameState, Building& building, Plane& plane, Helicopter& helicopter); // Update for game state
     void menuUpdate(sf::RenderWindow& window, float deltaTime); // Update for menu state
     void resetGame(int gameState);
 
@@ -27,6 +31,7 @@ private:
     void applyGravity(float deltaTime);
     void menuFloating(float deltaTime);
     void deathCheck(int& gameState, int screenHeight);
+    void collision(int& gameState, Building& building, Plane& plane, Helicopter& helicopter);
 };
 
 #endif // PLAYER_H

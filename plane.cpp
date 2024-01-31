@@ -54,3 +54,4 @@ void Plane::resetGame(){
     velocity = initialVel;
     sprite.setPosition(2000,2000);
     }
+

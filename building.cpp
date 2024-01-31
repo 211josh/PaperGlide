@@ -1,6 +1,5 @@
 #include "building.h"
 
-sf::Sprite Building::sprite;
 sf::Vector2f Building::initialVel{-750.0f,0.0f}; // Initial velocity of building
 sf::Vector2f Building::velocity = Building::initialVel;
 sf::Vector2f Building::maxVel{-1500.0,0.0f}; // Max velocity it can reach
@@ -56,5 +55,14 @@ void Building::resetGame(){
     velocity = initialVel;
     randomProp();
     }
+
+sf::Vector2f Building::getPos(){
+    return sprite.getPosition();
+    }
+
+sf::FloatRect Building::getHitbox(){
+    return sprite.getGlobalBounds();
+    }
+
 
 

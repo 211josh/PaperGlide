@@ -55,7 +55,7 @@ void Score::tryUpdate(sf::RenderWindow& window, int screenWidth, int screenHeigh
     }
 
 void Score::checkScore(Sounds& sound, Background& background, Helicopter& helicopter, Plane& plane, Building& building, float deltaTime){ // Check position of building to see if point can be added
-    sf::Vector2f position = Building::sprite.getPosition();
+    sf::Vector2f position = building.getPos();
     score_timer += deltaTime;
     if(position.x < 100 && score_timer > 2.0){
         addScore(sound,background,helicopter,plane,building);

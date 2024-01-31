@@ -1,11 +1,12 @@
 #include <cmath>
+#include <iostream>
 
 #include "player.h"
 
 Player::Player(){
-if(!texture.loadFromFile("sprites/Player.png")){
-    std::cout << "Could not load Player texture";
-    }
+    if(!texture.loadFromFile("sprites/Player.png")){
+        std::cout << "Could not load Player texture";
+        }
     // Set texture, position and size of sprite
     sprite.setTexture(texture);
     sprite.setPosition(sf::Vector2f(100,400));
@@ -16,11 +17,12 @@ if(!texture.loadFromFile("sprites/Player.png")){
     sprite.setOrigin(bounds.width / 2.0f, bounds.height / 2.0f);
     }
 
-void Player::update(sf::RenderWindow& window, float deltaTime, int& gameState, int screenHeight) { // Continuously update the sprite inside the window
+void Player::update(sf::RenderWindow& window, float deltaTime, int screenHeight, int& gameState, Building& building, Plane& plane, Helicopter& helicopter) { // Continuously update the sprite inside the window
     handleInput(deltaTime);
     applyGravity(deltaTime);
     window.draw(sprite);
     deathCheck(gameState, screenHeight);
+    collision(gameState, building, plane, helicopter);
     }
 
 float Player::playerTimer = 0;
@@ -73,5 +75,14 @@ void Player::resetGame(int gameState){
         sprite.setPosition(100,400);
         }
     velocity.y = 0;
+    }
+
+void Player::collision(int& gameState, Building& building, Plane& plane, Helicopter& helicopter){
+    sf::FloatRect playerHitbox = sprite.getGlobalBounds();
+    sf::FloatRect buildHitbox = building.getHitbox();
+
+    if(playerHitbox.intersects(buildHitbox)){
+        gameState = 3;
+        }
     }
 
