@@ -143,6 +143,7 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && menuSelect == 1){ // Option 2
         if(gameState==3){ // If on try again menu, i.e menu option
+            player.resetGame(gameState);
             gameState = 0;
             }
         }
