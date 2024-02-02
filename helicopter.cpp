@@ -1,4 +1,7 @@
 #include "helicopter.h"
+
+sf::Sprite Helicopter::sprite;
+
 sf::Vector2f Helicopter::initialVel{-150.0f,0.0f};
 sf::Vector2f Helicopter::velocity = Helicopter::initialVel;
 sf::Vector2f Helicopter:: maxVel{-600.0f,0.0f};

@@ -5,20 +5,22 @@
 #include <iostream>
 
 #include "background.h"
+#include "score.h"
 
+class Score;
 
 class Building { // Building sprite
 public: // Can be accessed outside the class
     Building();
-    void update(sf::RenderWindow& window, float deltaTime); // void = no return value
+    void update(sf::RenderWindow& window, float deltaTime, Score& score); // void = no return value
     void increaseVel(float velRange);
-    void resetGame();
+    void resetGame(Score& score);
     sf::Vector2f getPos(); // function returns a sf::Vector2f (2 float vector)
-    sf::FloatRect getHitbox();
+
+    static sf::Sprite sprite;
 
 private: // Can only be accessed by code inside the class
     sf::Texture texture;
-    sf::Sprite sprite;
 
     static sf::Vector2f initialVel;
     static sf::Vector2f velocity;
@@ -29,7 +31,7 @@ private: // Can only be accessed by code inside the class
     static float spawnInterval;
 
     void movement(float deltaTime);
-    void randomProp();
+    void randomProp(Score& score);
 };
 
 #endif // BUILDING_H_INCLUDED

@@ -2,6 +2,8 @@
 #define PLAYER_H
 
 #include <SFML/Graphics.hpp>
+#include "Collision.hpp"
+
 #include <iostream>
 
 #include "building.h"

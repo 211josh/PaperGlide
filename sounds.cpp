@@ -18,7 +18,7 @@ if(!gameOverSoundFile.loadFromFile("sounds/gameOver.ogg")){
     }
 
     gameOver.setBuffer(gameOverSoundFile);
-    gameOver.setVolume(80);
+    gameOver.setVolume(100);
     gameOver.setPitch(1.0f);
 
     hit.setBuffer(hitSoundFile);
@@ -42,7 +42,7 @@ void Sounds::menuSound(){ // Sound for swapping options on menu
 
 void Sounds::startSound(){ // Sound for starting game
     sound.setBuffer(start);
-    sound.setVolume(20);
+    sound.setVolume(40);
     sound.setPitch(1.0f);
     sound.play();
     }

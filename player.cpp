@@ -109,12 +109,19 @@ void Player::resetGame(int gameState){
     }
 
 void Player::collision(int& gameState, Building& building, Plane& plane, Helicopter& helicopter, sf::RenderWindow& window){
-    sf::FloatRect playerHitbox = sprite.getGlobalBounds();
-    sf::FloatRect buildHitbox = building.getHitbox();
 
-    if(playerHitbox.intersects(buildHitbox)){
+    if(Collision::PixelPerfectTest(sprite, Building::sprite)){ // BUILDING COLLISION
         collided = 1;
         }
+
+    if(Collision::PixelPerfectTest(sprite, Plane::sprite)){ // PLANE COLLISION
+        collided = 1;
+        }
+
+    if(Collision::PixelPerfectTest(sprite, Helicopter::sprite)){ // HELICOPTER COLLISION
+        collided = 1;
+        }
+
     }
 
 void Player::hitSequence(float deltaTime, sf::RenderWindow& window, Sounds& sound){ // Visualisation and audio of what happens when player collides w/ sprite

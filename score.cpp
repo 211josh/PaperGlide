@@ -1,8 +1,8 @@
 #include "score.h"
 
 int Score::current_score = 0;
-float Score::score_timer = 0; // Makes sure only 1 score is added per building passed
-float Score::velRange = 180; // velRange = score for sprites to hit max velocities
+bool Score::pointAdded = 0;
+float Score::velRange = 100; // velRange = score for sprites to hit max velocities
 
 Score::Score(){
 if(!font.loadFromFile("sprites/Font.ttf")){
@@ -56,9 +56,8 @@ void Score::tryUpdate(sf::RenderWindow& window, int screenWidth, int screenHeigh
 
 void Score::checkScore(Sounds& sound, Background& background, Helicopter& helicopter, Plane& plane, Building& building, float deltaTime){ // Check position of building to see if point can be added
     sf::Vector2f position = building.getPos();
-    score_timer += deltaTime;
-    if(position.x < 100 && score_timer > 2.0){
+    if(position.x < 100 && pointAdded == 0){
         addScore(sound,background,helicopter,plane,building);
-        score_timer = 0;
+        pointAdded = 1;
         }
     }

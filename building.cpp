@@ -1,5 +1,7 @@
 #include "building.h"
 
+sf::Sprite Building::sprite;
+
 sf::Vector2f Building::initialVel{-750.0f,0.0f}; // Initial velocity of building
 sf::Vector2f Building::velocity = Building::initialVel;
 sf::Vector2f Building::maxVel{-1500.0,0.0f}; // Max velocity it can reach
@@ -20,11 +22,11 @@ sprite.setTexture(texture);
 }
 
 // The update function runs once every game loop
-void Building::update(sf::RenderWindow& window, float deltaTime){
+void Building::update(sf::RenderWindow& window, float deltaTime, Score& score){
     movement(deltaTime); // Function below which handles the movement of building across screen
     spawnTimer += deltaTime; // Decide if a building spawns based on time passed from last one
     if(spawnTimer >= spawnInterval){
-        randomProp(); // Function below which spawns new building with different, randomly selected properties
+        randomProp(score); // Function below which spawns new building with different, randomly selected properties
     }
     window.draw(sprite);
 }
@@ -33,7 +35,7 @@ void Building::movement(float deltaTime){
     sprite.move(velocity*deltaTime);
     } // deltaTime is the difference in time between each run of our game loop. distance travelled = velocity * time
 
-void Building::randomProp(){ // Random properties between different buildings
+void Building::randomProp(Score& score){ // Random properties between different buildings
     spawnTimer = 0.0f + (static_cast<float>(std::rand() % -(800))/velocity.x); // Resets spawn timer, with some randomness deducted
     sprite.setScale(sf::Vector2f(1,1));
     // First number is the random range 0 to x. The + shifts that range.
@@ -45,24 +47,23 @@ void Building::randomProp(){ // Random properties between different buildings
     sprite.setPosition(sf::Vector2f(1280,yPos));
 
     spawnInterval = -(1600.0f/(velocity.x));
+
+    score.pointAdded = 0; // Allows points to be given again
     }
 
 void Building::increaseVel(float velRange){
     velocity.x -= velDif/velRange;
     }
 
-void Building::resetGame(){
+void Building::resetGame(Score& score){
     velocity = initialVel;
-    randomProp();
+    randomProp(score);
     }
 
 sf::Vector2f Building::getPos(){
     return sprite.getPosition();
     }
 
-sf::FloatRect Building::getHitbox(){
-    return sprite.getGlobalBounds();
-    }
 
 
 

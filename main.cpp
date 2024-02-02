@@ -47,7 +47,7 @@ int main()
         // Menu state
         if(gameState == 0){ // Order of update dictates layer
             background.update(window,deltaTime);
-            menu.menuUpdate(window, screenWidth, deltaTime, gameState, sounds, background, player, building, helicopter, plane);
+            menu.menuUpdate(window, screenWidth, deltaTime, gameState, sounds, background, player, building, helicopter, plane, score);
             player.menuUpdate(window,deltaTime);
             window.display();
         }
@@ -56,7 +56,7 @@ int main()
         if(gameState == 1){
             background.update(window, deltaTime);
             score.update(window,screenWidth, screenHeight, sounds, background, helicopter, plane, building, deltaTime);
-            building.update(window, deltaTime);
+            building.update(window, deltaTime, score);
             helicopter.update(window, deltaTime);
             plane.update(window, deltaTime); // Layers of graphics depends on order of update
             player.update(window, deltaTime, screenHeight, gameState, building, plane, helicopter, sounds);
@@ -67,11 +67,11 @@ int main()
         if(gameState == 3){
             window.clear();
             background.update(window, deltaTime);
-            building.update(window, deltaTime);
+            building.update(window, deltaTime, score);
             plane.update(window,deltaTime);
             helicopter.update(window,deltaTime);
             score.tryUpdate(window,screenWidth,screenHeight);
-            menu.tryUpdate(window, screenWidth, deltaTime, gameState, sounds, background, player, building, helicopter, plane, Score::current_score);
+            menu.tryUpdate(window, screenWidth, deltaTime, gameState, sounds, background, player, building, helicopter, plane, Score::current_score, score);
             player.update(window, deltaTime, screenHeight, gameState, building, plane, helicopter, sounds);
             window.display();
         }

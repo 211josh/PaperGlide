@@ -9,6 +9,8 @@
 #include "plane.h"
 #include "building.h"
 
+class Building; // Forward declaration of Building class to prevent circular dependency
+
 class Score{
 public:
     Score();
@@ -19,7 +21,7 @@ public:
     void checkScore(Sounds& sound, Background& background, Helicopter& helicopter, Plane& plane, Building& building, float deltaTime);
 
     static int current_score;
-    static float score_timer;
+    static bool pointAdded;
     static float velRange; // The current score determines the velocity of sprites. The range depicts what score you must reach for their max vels
 
 

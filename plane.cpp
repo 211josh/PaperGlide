@@ -1,6 +1,8 @@
 #include "plane.h"
 #include <iostream>
 
+sf::Sprite Plane::sprite;
+
 sf::Vector2f Plane::initialVel{-1050.0f,0.0f}; // Initial velocity
 sf::Vector2f Plane::velocity = Plane::initialVel; // Initial velocity
 sf::Vector2f Plane::maxVel{-2000.0f,0.0f};
