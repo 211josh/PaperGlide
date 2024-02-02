@@ -18,6 +18,8 @@ public:
     void menuUpdate(sf::RenderWindow& window, float deltaTime); // Update for menu state
     void resetGame(int gameState);
 
+    static float playerTimer;
+
 private:
     sf::Texture texture;
     sf::Texture deathTexture;
@@ -30,7 +32,6 @@ private:
     static float gravity;
     static float terminalVel;
     static float maxRotation;
-    static float playerTimer;
     static bool collided;
     static bool hitSoundPlayed;
     static bool gameOverPlayed;

@@ -20,12 +20,18 @@ public:
 
 private:
     sf::Font font;
+
     sf::Text playText;
     sf::Text settingsText;
     sf::Text quitText;
     sf::Text versionText;
+    sf::Text holdSpaceText;
+
+    static sf::Sprite upArrow;
+    sf::Texture arrowTexture;
 
     void handleInput(sf::RenderWindow& window, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, int& current_score, Score& score);
+    void holdSpaceDisplay(sf::RenderWindow& window, Player& player);
 };
 
 #endif // MENU_H_INCLUDED

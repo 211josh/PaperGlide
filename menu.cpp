@@ -4,9 +4,14 @@
 
 #include "menu.h"
 
+sf::Sprite Menu::upArrow;
+
 Menu::Menu(){
     if(!font.loadFromFile("sprites/Font.ttf")){
-    std::cout << "Could not load Menu font";
+        std::cout << "Could not load Menu font";
+    }
+    if(!arrowTexture.loadFromFile("sprites/upArrow.png")){
+        std::cout << "Could not load upArrow font";
     }
 
     menuSelect = 0; // Menu opens on play option
@@ -16,10 +21,21 @@ Menu::Menu(){
     settingsText.setFont(font);
     quitText.setFont(font);
     versionText.setFont(font);
+
+    holdSpaceText.setFont(font);
+    holdSpaceText.setString("Hold Space");
+    holdSpaceText.setCharacterSize(25);
+    holdSpaceText.setColor(sf::Color{255,255,255,200});
+    holdSpaceText.setOrigin(sf::Vector2f(0.0f,0.0f));
+
+    upArrow.setTexture(arrowTexture);
+    upArrow.setColor(sf::Color{255,255,255,200});
     }
 
 
 void Menu::menuUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, Score& score){
+
+    holdSpaceDisplay(window, player);
 
     Menu::playText.setString("Play"); // Words on menu screen
     settingsText.setString("Settings");
@@ -149,5 +165,18 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
         }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && menuSelect == 2){
         window.close();
+        }
+    }
+
+void Menu::holdSpaceDisplay(sf::RenderWindow& window, Player& player){
+
+    holdSpaceText.setPosition(30,150*sin(Player::playerTimer) + 440);
+    upArrow.setPosition(180,150*sin(Player::playerTimer) + 440);
+
+    window.draw(holdSpaceText);
+
+    int spaceTimer = Player::playerTimer*1.2;
+    if(spaceTimer % 2 == 0){
+        window.draw(upArrow);
         }
     }

@@ -55,6 +55,7 @@ int main()
             background.update(window,deltaTime);
             menu.menuUpdate(window, screenWidth, deltaTime, gameState, sounds, background, player, building, helicopter, plane, score);
             player.menuUpdate(window,deltaTime);
+            score.displayHighScore(window, screenWidth);
             window.display();
         }
 
@@ -79,6 +80,7 @@ int main()
             score.tryUpdate(window,screenWidth,screenHeight);
             menu.tryUpdate(window, screenWidth, deltaTime, gameState, sounds, background, player, building, helicopter, plane, Score::current_score, score);
             player.update(window, deltaTime, screenHeight, gameState, building, plane, helicopter, sounds);
+            score.displayHighScore(window, screenWidth);
             window.display();
         }
     }
