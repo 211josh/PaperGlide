@@ -22,6 +22,12 @@ int main()
 
     sf::RenderWindow window(sf::VideoMode(screenWidth, screenHeight), "Paper Glide");
 
+    sf::Image icon;
+    if(!icon.loadFromFile("sprites/icon.png")){
+        std::cout << "Could not load icon texture" << std::endl;
+        }
+    window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+
     sf::Clock clock;
 
     Sounds sounds;
