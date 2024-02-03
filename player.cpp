@@ -34,7 +34,7 @@ void Player::update(sf::RenderWindow& window, float deltaTime, int screenHeight,
     window.draw(sprite);
     deathCheck(gameState, screenHeight, sound);
     collision(gameState, building, plane, helicopter, window);
-    hitSequence(deltaTime, window, sound);
+    hitSequence(deltaTime, window, sound, gameState);
     }
 
 float Player::playerTimer = 0;
@@ -83,10 +83,10 @@ void Player::menuFloating(float deltaTime){
 void Player::deathCheck(int& gameState, int screenHeight, Sounds& sound){
     sf::Vector2f currentPos = sprite.getPosition();
     if(currentPos.y > screenHeight){
-        gameState = 3; // Try again screen
         collided = 1;
         if(gameOverPlayed == 0){
             sound.gameOverSound();
+            gameState = 3; // Try again screen
             gameOverPlayed = 1;
             }
         }
@@ -124,7 +124,7 @@ void Player::collision(int& gameState, Building& building, Plane& plane, Helicop
 
     }
 
-void Player::hitSequence(float deltaTime, sf::RenderWindow& window, Sounds& sound){ // Visualisation and audio of what happens when player collides w/ sprite
+void Player::hitSequence(float deltaTime, sf::RenderWindow& window, Sounds& sound, int& gameState){ // Visualisation and audio of what happens when player collides w/ sprite
     if(collided == 1 && hitSoundPlayed == 0){
         sound.hitSound();
         hitSoundPlayed = 1;

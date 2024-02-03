@@ -14,6 +14,7 @@
 
 int screenWidth = 1280;
 int screenHeight = 720;
+
 int gameState = 0; // 0 = main menu, 1 = gameplay, 2 = settings and 3 = try again screen
 
 int main()
@@ -37,7 +38,7 @@ int main()
     Plane plane;
     Helicopter helicopter;
     Score score;
-    Menu menu;
+    Menu menu(screenWidth);
 
     while (window.isOpen()) // Game loop
     {
@@ -61,7 +62,7 @@ int main()
 
         // Play state
         if(gameState == 1){
-            background.update(window, deltaTime);
+            background.update(window,deltaTime);
             score.update(window,screenWidth, screenHeight, sounds, background, helicopter, plane, building, deltaTime);
             building.update(window, deltaTime, score);
             helicopter.update(window, deltaTime);
@@ -70,10 +71,19 @@ int main()
             window.display();
         }
 
+        // Settings state
+        if(gameState == 2){
+            background.update(window,deltaTime);
+            player.menuUpdate(window,deltaTime);
+            score.displayHighScore(window, screenWidth);
+            menu.settingsUpdate(window, deltaTime, gameState, sounds, background, player, building, helicopter, plane, Score::current_score, score);
+            window.display();
+        }
+
         // Try again state
         if(gameState == 3){
             window.clear();
-            background.update(window, deltaTime);
+            background.update(window,deltaTime);
             building.update(window, deltaTime, score);
             plane.update(window,deltaTime);
             helicopter.update(window,deltaTime);
@@ -83,6 +93,10 @@ int main()
             score.displayHighScore(window, screenWidth);
             window.display();
         }
+
+
+
+
     }
     return 0;
 }

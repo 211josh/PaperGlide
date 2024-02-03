@@ -44,7 +44,7 @@ private:
     void menuFloating(float deltaTime);
     void deathCheck(int& gameState, int screenHeight, Sounds& sound);
     void collision(int& gameState, Building& building, Plane& plane, Helicopter& helicopter, sf::RenderWindow& window);
-    void hitSequence(float deltaTime, sf::RenderWindow& window, Sounds& sound);
+    void hitSequence(float deltaTime, sf::RenderWindow& window, Sounds& sound, int& gameState);
 };
 
 #endif // PLAYER_H
