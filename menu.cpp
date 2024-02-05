@@ -69,7 +69,6 @@ Menu::Menu(int screenWidth){
     backText.setFont(font);
 
     fullscreenText.setString("Fullscreen");
-    volumeText.setString("Volume:");
     backText.setString("Back");
 
     fullscreenText.setCharacterSize(90);
@@ -78,11 +77,9 @@ Menu::Menu(int screenWidth){
 
 
     sf::FloatRect fullscreenBounds = fullscreenText.getLocalBounds(); // Retrieve menu option bounds
-    sf::FloatRect volumeTextBounds = volumeText.getLocalBounds();
     sf::FloatRect backTextBounds = backText.getLocalBounds();
 
     fullscreenText.setPosition((screenWidth - fullscreenBounds.width) / 2, 200); // Centres text based on text and screen width
-    volumeText.setPosition((screenWidth - volumeTextBounds.width) / 2, 300);
     backText.setPosition((screenWidth - backTextBounds.width) / 2, 400);
 
     // Hold space
@@ -130,7 +127,11 @@ void Menu::menuUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime
     window.draw(versionText);
     }
 
-void Menu::settingsUpdate(sf::RenderWindow& window, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, int& current_score, Score& score){
+void Menu::settingsUpdate(sf::RenderWindow& window, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, int& current_score, Score& score, int screenWidth){
+
+    volumeText.setString("Volume:" + std::to_string(Sounds::volume));
+    sf::FloatRect volumeTextBounds = volumeText.getLocalBounds();
+    volumeText.setPosition((screenWidth - volumeTextBounds.width) / 2, 300);
 
     holdSpaceDisplay(window, player);
 
@@ -222,6 +223,7 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
                 Score::current_score = 0;
             }
             if(menuSelect == 1){ // if we press settings
+                sound.menuSound();
                 gameState = 2;
                 menuSelect = 0;
             }
@@ -236,9 +238,10 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
 
                 }
             if(menuSelect == 1){ // if we press Volume
-
+                // Volume uses arrows, seen below
                 }
             if(menuSelect == 2){ // if we press Back
+                sound.menuSound();
                 menuSelect = 0;
                 gameState = 0;
                 }
@@ -258,7 +261,9 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
                 Score::current_score = 0;
             }
             if(menuSelect == 1){ // if we press Menu
+                sound.menuSound();
                 gameState = 0;
+                menuSelect = 0;
 
             }
             if(menuSelect == 2){ // if we press Quit
@@ -266,6 +271,19 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
             }
         }
     }
+    if(gameState == 2 && menuSelect == 1){
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && selectTimer > 0.2f ){
+            Sounds::volume = ((Sounds::volume - 1)%11 +11 ) % 11;
+            sound.menuSound();
+            selectTimer = 0;
+            }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && selectTimer > 0.2f ){
+            Sounds::volume = ((Sounds::volume + 1)%11 +11 ) % 11;
+            sound.menuSound();
+            selectTimer = 0;
+            }
+        }
+
 }
 
 void Menu::holdSpaceDisplay(sf::RenderWindow& window, Player& player){

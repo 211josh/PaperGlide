@@ -17,18 +17,22 @@ public:
 private:
     sf::Texture texture;
 
+    static float spawnTimer;
+    static float spawnTimerMax;
+
     static sf::Vector2f initialVel;
     static sf::Vector2f velocity; // Initial velocity
     static sf::Vector2f maxVel;
     static float velDif;
-
-    static float spawnTimer;
-    static float spawnInterval;
     static float heliTimer;
+    static float animationTimer;
     static float initialyPos;
 
     void movement(float deltaTime);
     void randomProp();
+    void animation(float deltaTime);
+
+    static sf::IntRect rectFirstSprite;
 
 };
 

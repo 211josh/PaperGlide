@@ -76,7 +76,7 @@ int main()
             background.update(window,deltaTime);
             player.menuUpdate(window,deltaTime);
             score.displayHighScore(window, screenWidth);
-            menu.settingsUpdate(window, deltaTime, gameState, sounds, background, player, building, helicopter, plane, Score::current_score, score);
+            menu.settingsUpdate(window, deltaTime, gameState, sounds, background, player, building, helicopter, plane, Score::current_score, score, screenWidth);
             window.display();
         }
 
@@ -88,14 +88,11 @@ int main()
             plane.update(window,deltaTime);
             helicopter.update(window,deltaTime);
             score.tryUpdate(window,screenWidth,screenHeight);
+            score.displayHighScore(window, screenWidth);
             menu.tryUpdate(window, screenWidth, deltaTime, gameState, sounds, background, player, building, helicopter, plane, Score::current_score, score);
             player.update(window, deltaTime, screenHeight, gameState, building, plane, helicopter, sounds);
-            score.displayHighScore(window, screenWidth);
             window.display();
         }
-
-
-
 
     }
     return 0;
