@@ -36,7 +36,6 @@ if(!font.loadFromFile("sprites/Font.ttf")){
             }
         }
     readFile.close();
-
     }
 
 void Score::update(sf::RenderWindow& window, int screenWidth, int screenHeight, Sounds& sound, Background& background, Helicopter& helicopter, Plane& plane, Building& building, float deltaTime){

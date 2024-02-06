@@ -12,22 +12,51 @@
 #include "background.h"
 #include "menu.h"
 
+#include <fstream>
+
 int screenWidth = 1280;
 int screenHeight = 720;
+int isFullscreen; // 0 for windowed, 1 for fullscreen
 
 int gameState = 0; // 0 = main menu, 1 = gameplay, 2 = settings and 3 = try again screen
+
+void loadWindow(int screenWidth, int screenHeight, int& isFullscreen, sf::RenderWindow& window){
+
+    std::ifstream readFile;
+    readFile.open( "isFullscreen.txt" );
+    if(readFile.is_open()){
+        while(!readFile.eof()){ // while not at end of file
+                readFile >> isFullscreen; // high score is equal to the contents of the file
+            }
+        }
+    readFile.close();
+
+    if (isFullscreen == 1) {
+        window.create(sf::VideoMode(screenWidth, screenHeight), "Paper Glide", sf::Style::Fullscreen);
+    } else {
+        window.create(sf::VideoMode(screenWidth, screenHeight), "Paper Glide");
+        if(isFullscreen != 0){
+            std::cout << "Could not retrieve fullscreen setting. Setting to windowed." << std::endl;
+            }
+        }
+    }
+
+void setIcon(sf::RenderWindow& window, sf::Image icon){
+    if(!icon.loadFromFile("sprites/icon.png")){
+        std::cout << "Could not load icon texture" << std::endl;
+        }
+    window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+    }
 
 int main()
 {
     std::srand(static_cast<unsigned>(std::time(nullptr))); // Random gen seed
 
-    sf::RenderWindow window(sf::VideoMode(screenWidth, screenHeight), "Paper Glide");
+    sf::RenderWindow window;
+    loadWindow(screenWidth, screenHeight, isFullscreen, window);
 
     sf::Image icon;
-    if(!icon.loadFromFile("sprites/icon.png")){
-        std::cout << "Could not load icon texture" << std::endl;
-        }
-    window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+    setIcon(window, icon);
 
     sf::Clock clock;
 
@@ -40,21 +69,20 @@ int main()
     Score score;
     Menu menu(screenWidth);
 
-    while (window.isOpen()) // Game loop
-    {
+    while (window.isOpen()){ // Game loop
         sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
+        while (window.pollEvent(event)){
+            if (event.type == sf::Event::Closed){
                 window.close();
-        }
+                }
+            }
 
         float deltaTime = clock.restart().asSeconds(); // Change in time since last frame
 
         // Menu state
         if(gameState == 0){ // Order of update dictates layer
             background.update(window,deltaTime);
-            menu.menuUpdate(window, screenWidth, deltaTime, gameState, sounds, background, player, building, helicopter, plane, score);
+            menu.menuUpdate(window, screenWidth, deltaTime, gameState, sounds, background, player, building, helicopter, plane, score, isFullscreen, screenHeight);
             player.menuUpdate(window,deltaTime);
             score.displayHighScore(window, screenWidth);
             window.display();
@@ -76,7 +104,7 @@ int main()
             background.update(window,deltaTime);
             player.menuUpdate(window,deltaTime);
             score.displayHighScore(window, screenWidth);
-            menu.settingsUpdate(window, deltaTime, gameState, sounds, background, player, building, helicopter, plane, Score::current_score, score, screenWidth);
+            menu.settingsUpdate(window, deltaTime, gameState, sounds, background, player, building, helicopter, plane, Score::current_score, score, screenWidth, isFullscreen, screenHeight);
             window.display();
         }
 
@@ -89,7 +117,7 @@ int main()
             helicopter.update(window,deltaTime);
             score.tryUpdate(window,screenWidth,screenHeight);
             score.displayHighScore(window, screenWidth);
-            menu.tryUpdate(window, screenWidth, deltaTime, gameState, sounds, background, player, building, helicopter, plane, Score::current_score, score);
+            menu.tryUpdate(window, screenWidth, deltaTime, gameState, sounds, background, player, building, helicopter, plane, Score::current_score, score, isFullscreen, screenHeight);
             player.update(window, deltaTime, screenHeight, gameState, building, plane, helicopter, sounds);
             window.display();
         }
@@ -97,3 +125,4 @@ int main()
     }
     return 0;
 }
+

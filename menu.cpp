@@ -14,6 +14,15 @@ Menu::Menu(int screenWidth){
         std::cout << "Could not load upArrow font";
     }
 
+    std::ifstream readVolumeFile;
+    readVolumeFile.open( "Volume.txt" );
+    if(readVolumeFile.is_open()){
+        while(!readVolumeFile.eof()){ // while not at end of file
+                readVolumeFile >> Sounds::volume; // high score is equal to the contents of the file
+            }
+        }
+    readVolumeFile.close();
+
     menuSelect = 0; // Menu opens on play option
     selectTimer = 0; // Min time wait between changing menu option. Prevents endless fast scrolling.
 
@@ -68,18 +77,13 @@ Menu::Menu(int screenWidth){
     volumeText.setFont(font);
     backText.setFont(font);
 
-    fullscreenText.setString("Fullscreen");
     backText.setString("Back");
 
-    fullscreenText.setCharacterSize(90);
     volumeText.setCharacterSize(90);
     backText.setCharacterSize(90);
 
-
-    sf::FloatRect fullscreenBounds = fullscreenText.getLocalBounds(); // Retrieve menu option bounds
     sf::FloatRect backTextBounds = backText.getLocalBounds();
 
-    fullscreenText.setPosition((screenWidth - fullscreenBounds.width) / 2, 200); // Centres text based on text and screen width
     backText.setPosition((screenWidth - backTextBounds.width) / 2, 400);
 
     // Hold space
@@ -95,10 +99,10 @@ Menu::Menu(int screenWidth){
     }
 
 
-void Menu::menuUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, Score& score){
+void Menu::menuUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, Score& score, int& isFullscreen, int screenHeight){
 
     holdSpaceDisplay(window, player);
-    handleInput(window, deltaTime, gameState, sound, background, player, building, helicopter, plane, Score::current_score, score);
+    handleInput(window, deltaTime, gameState, sound, background, player, building, helicopter, plane, Score::current_score, score, isFullscreen, screenWidth, screenHeight);
     selectTimer += deltaTime;
 
     if(menuSelect == 0){
@@ -127,7 +131,16 @@ void Menu::menuUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime
     window.draw(versionText);
     }
 
-void Menu::settingsUpdate(sf::RenderWindow& window, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, int& current_score, Score& score, int screenWidth){
+void Menu::settingsUpdate(sf::RenderWindow& window, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, int& current_score, Score& score, int screenWidth, int& isFullscreen, int screenHeight){
+
+    if(isFullscreen == 1){
+        fullscreenText.setString("Windowed");
+        } else{
+        fullscreenText.setString("Fullscreen");
+        }
+    fullscreenText.setCharacterSize(90);
+    sf::FloatRect fullscreenBounds = fullscreenText.getLocalBounds(); // Retrieve menu option bounds
+    fullscreenText.setPosition((screenWidth - fullscreenBounds.width) / 2, 200); // Centres text based on text and screen width
 
     volumeText.setString("Volume:" + std::to_string(Sounds::volume));
     sf::FloatRect volumeTextBounds = volumeText.getLocalBounds();
@@ -135,7 +148,7 @@ void Menu::settingsUpdate(sf::RenderWindow& window, float deltaTime, int& gameSt
 
     holdSpaceDisplay(window, player);
 
-    handleInput(window, deltaTime, gameState, sound, background, player, building, helicopter, plane, current_score, score);
+    handleInput(window, deltaTime, gameState, sound, background, player, building, helicopter, plane, current_score, score, isFullscreen, screenWidth, screenHeight);
     selectTimer += deltaTime;
 
     if(menuSelect == 0){
@@ -161,9 +174,9 @@ void Menu::settingsUpdate(sf::RenderWindow& window, float deltaTime, int& gameSt
     window.draw(backText);
 }
 
-void Menu::tryUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, int& current_score, Score& score){
+void Menu::tryUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, int& current_score, Score& score, int& isFullscreen, int screenHeight){
 
-    handleInput(window, deltaTime, gameState, sound, background, player, building, helicopter, plane, current_score, score);
+    handleInput(window, deltaTime, gameState, sound, background, player, building, helicopter, plane, current_score, score, isFullscreen, screenWidth, screenHeight);
     selectTimer += deltaTime;
 
     if(menuSelect == 0){
@@ -191,7 +204,7 @@ void Menu::tryUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime,
     window.draw(quit2Text);
     }
 
-void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, int& current_score, Score& score){
+void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, int& current_score, Score& score, int& isFullscreen, int screenWidth, int screenHeight){
     // CONTROLS
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && selectTimer > 0.2f){
         menuSelect = ((menuSelect + 1)%3 + 3) % 3;
@@ -207,7 +220,6 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
     // MENU SELECTION
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && selectTimer > 0.2f){ // If Enter is pressed
-        selectTimer = 0.0f;
 
         if(gameState == 0){ // IF ON THE MENU. OUR CHOICES ARE: PLAY, SETTINGS, QUIT
             if(menuSelect == 0){ // if we press play
@@ -226,15 +238,42 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
                 sound.menuSound();
                 gameState = 2;
                 menuSelect = 0;
+                selectTimer = 0;
             }
 
             if(menuSelect == 2){ // if we press quit
                 window.close();
             }
         }
+    }
+
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && selectTimer > 0.2f){ // have to be separate because of selectTimer > 0.2
 
         if(gameState == 2){ // IF ON SETTINGS. OUR CHOICES ARE FULLSCREEN, VOLUME, BACK
+
+
             if(menuSelect == 0){ // if we press Fullscreen
+
+                if(isFullscreen == 0){
+                isFullscreen = 1;
+                selectTimer = 0;
+                std::cout << isFullscreen << std::endl;
+                } else{
+                if(isFullscreen == 1){
+                    isFullscreen = 0;
+                    selectTimer = 0;
+                    std::cout << isFullscreen << std::endl;
+                    }
+                }
+
+                std::ofstream writeFullscreenFile("isFullscreen.txt"); // Update high score text file
+                if(writeFullscreenFile.is_open()){
+                    writeFullscreenFile << isFullscreen;
+                    }
+                writeFullscreenFile.close();
+
+                window.close();
+                loadWindow(screenWidth, screenHeight, isFullscreen, window);
 
                 }
             if(menuSelect == 1){ // if we press Volume
@@ -244,9 +283,16 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
                 sound.menuSound();
                 menuSelect = 0;
                 gameState = 0;
+                std::ofstream writeVolumeFile("Volume.txt"); // Update high score text file
+                if(writeVolumeFile.is_open()){
+                    writeVolumeFile << Sounds::volume;
+                    }
+                writeVolumeFile.close();
                 }
         }
+    }
 
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && selectTimer > 0.2f){
         if(gameState == 3){ // IF ON TRY AGAIN MENU. OUR CHOICES ARE RETRY, MENU, QUIT
             if(menuSelect == 0){ // if we press Play
                 background.resetGame();
@@ -270,6 +316,7 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
                 window.close();
             }
         }
+        selectTimer = 0.0f;
     }
     if(gameState == 2 && menuSelect == 1){
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && selectTimer > 0.2f ){
