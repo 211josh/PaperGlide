@@ -139,4 +139,36 @@ void Player::hitSequence(float deltaTime, sf::RenderWindow& window, Sounds& soun
         }
     }
 
+void Player::testMode(sf::RenderWindow& window, float deltaTime){
+    sf::Vector2f velocityX = {200,0};
+    sf::Vector2f velocityY = {0,200};
+
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
+        sprite.move(velocityX*deltaTime);
+    }
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
+        sprite.move(-velocityX*deltaTime);
+    }
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
+        sprite.move(-velocityY*deltaTime);
+    }
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
+        sprite.move(velocityY*deltaTime);
+    }
+
+    if(Collision::PixelPerfectTest(sprite, Helicopter::sprite)){ // BUILDING COLLISION
+        std::cout << "COLLISION" << std::endl;
+        } else{
+        std::cout << "NO COLLISION" << std::endl;
+        }
+
+//    if(Collision::PixelPerfectTest(sprite, Plane::sprite)){ // BUILDING COLLISION
+//        std::cout << "COLLISION" << std::endl;
+//        } else{
+//        std::cout << "NO COLLISION" << std::endl;
+//        }
+
+    window.draw(sprite);
+    }
+
 

@@ -18,6 +18,8 @@ public:
     void menuUpdate(sf::RenderWindow& window, float deltaTime); // Update for menu state
     void resetGame(int gameState);
 
+    void testMode(sf::RenderWindow& window, float deltaTime);
+
     static float playerTimer;
 
 private:

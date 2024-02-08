@@ -2,6 +2,7 @@
 #define HELICOPTER_H_INCLUDED
 
 #include <SFML/Graphics.hpp>
+
 #include <iostream>
 #include <cmath>
 
@@ -11,6 +12,8 @@ public:
     void update(sf::RenderWindow& window, float deltaTime);
     void increaseVel(float velRange);
     void resetGame();
+
+    void testMode(sf::RenderWindow& window, float deltaTime);
 
     static sf::Sprite sprite;
 

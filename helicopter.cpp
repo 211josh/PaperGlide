@@ -6,7 +6,7 @@ sf::Vector2f Helicopter::initialVel{-150.0f,0.0f};
 sf::Vector2f Helicopter::velocity = Helicopter::initialVel;
 sf::Vector2f Helicopter:: maxVel{-400.0f,0.0f};
 
-sf::IntRect Helicopter::rectFirstSprite(0,0,550,400); // For animation. First texture is (0,0) to (550,400)
+sf::IntRect Helicopter::rectFirstSprite(0,0,550,300); // For animation. First texture is (0,0) to (550,400)
 
 float Helicopter::velDif = (velocity.x - maxVel.x);
 
@@ -21,6 +21,7 @@ Helicopter::Helicopter() {
 if(!texture.loadFromFile("sprites/Helicopter.png")){
     std::cout <<"Could not load Helicopter texture";
     }
+
     sprite.setTexture(texture);
     sprite.setTextureRect(rectFirstSprite);
     resetGame();
@@ -93,3 +94,9 @@ void Helicopter::animation(float deltaTime){
     animationTimer = 0;
     }
 }
+
+void Helicopter::testMode(sf::RenderWindow& window, float deltaTime){
+    sprite.setPosition({300,300});
+    animation(deltaTime);
+    window.draw(sprite);
+    }

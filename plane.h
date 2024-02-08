@@ -10,6 +10,8 @@ public:
     void increaseVel(float velRange);
     void resetGame();
 
+    void testMode(sf::RenderWindow& window, float deltaTime);
+
     static sf::Sprite sprite;
 
 private:

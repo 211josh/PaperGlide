@@ -122,6 +122,14 @@ int main()
             window.display();
         }
 
+        if(gameState == 4){ // Developer mode for testing. Only entered manually
+            background.update(window,deltaTime);
+            player.testMode(window,deltaTime);
+            helicopter.testMode(window, deltaTime);
+            plane.testMode(window, deltaTime);
+            window.display();
+        }
+
     }
     return 0;
 }
