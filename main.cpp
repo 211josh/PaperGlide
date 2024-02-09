@@ -18,7 +18,7 @@ int screenWidth = 1280;
 int screenHeight = 720;
 int isFullscreen; // 0 for windowed, 1 for fullscreen
 
-int gameState = 0; // 0 = main menu, 1 = gameplay, 2 = settings and 3 = try again screen
+int gameState = 0; // 0 = main menu, 1 = gameplay, 2 = customisation, 3 = settings, 4 = try again, 5 = dev mode
 
 void loadWindow(int screenWidth, int screenHeight, int& isFullscreen, sf::RenderWindow& window){
 
@@ -99,8 +99,16 @@ int main()
             window.display();
         }
 
-        // Settings state
         if(gameState == 2){
+            background.update(window,deltaTime);
+            player.menuUpdate(window,deltaTime);
+            score.displayHighScore(window, screenWidth);
+            menu.customiseUpdate(window, screenWidth, deltaTime, gameState, sounds, background, player, building, helicopter, plane, score, isFullscreen, screenHeight);
+            window.display();
+        }
+
+        // Settings state
+        if(gameState == 3){
             background.update(window,deltaTime);
             player.menuUpdate(window,deltaTime);
             score.displayHighScore(window, screenWidth);
@@ -109,7 +117,7 @@ int main()
         }
 
         // Try again state
-        if(gameState == 3){
+        if(gameState == 4){
             window.clear();
             background.update(window,deltaTime);
             building.update(window, deltaTime, score);
@@ -122,7 +130,7 @@ int main()
             window.display();
         }
 
-        if(gameState == 4){ // Developer mode for testing. Only entered manually
+        if(gameState == 5){ // Developer mode for testing. Only entered manually
             background.update(window,deltaTime);
             player.testMode(window,deltaTime);
             helicopter.testMode(window, deltaTime);

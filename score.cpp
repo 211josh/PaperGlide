@@ -12,20 +12,20 @@ if(!font.loadFromFile("sprites/Font.ttf")){
     // Play state Score display properties
     playScore.setFont(font); // Score behind screen
     playScore.setCharacterSize(300);
-    playScore.setColor(sf::Color{200,223,255,200}); // r g b occupancy/255
+    playScore.setColor(sf::Color{255,255,255,100}); // r g b occupancy/255
     playScore.setOrigin(sf::Vector2f(0.0f,0.0f));
     playScore.setString(std::to_string(current_score));
 
     // Try again state Score display properties
     tryScore.setFont(font); // Score on try again screen
     tryScore.setCharacterSize(150);
-    tryScore.setColor(sf::Color{200,223,255,200});
+    tryScore.setColor(sf::Color{255,255,255,230});
     tryScore.setOrigin(sf::Vector2f(0.0f,0.0f));
 
     // High Score display
     highScore.setFont(font);
     highScore.setCharacterSize(100);
-    highScore.setColor(sf::Color{200,223,255,200});
+    highScore.setColor(sf::Color{255,255,255,255});
     highScore.setOrigin(sf::Vector2f(0.0f,0.0f));
 
     std::ifstream readFile;
@@ -96,6 +96,6 @@ void Score::displayHighScore(sf::RenderWindow& window, int screenWidth){
 
     highScore.setString("High Score: " + std::to_string(high_score));
     sf::FloatRect highScoreBounds = highScore.getLocalBounds();
-    highScore.setPosition((screenWidth - highScoreBounds.width) / 2, 25); // Centres text based on text and screen width
+    highScore.setPosition((screenWidth - highScoreBounds.width) / 2, 600); // Centres text based on text and screen width
     window.draw(highScore);
     }

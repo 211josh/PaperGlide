@@ -19,19 +19,29 @@ public:
     void menuUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, Score& score, int& isFullscreen, int screenHeight);
     void tryUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, int& current_score, Score& score, int& isFullscreen, int screenHeight);
     void settingsUpdate(sf::RenderWindow& window, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, int& current_score, Score& score, int screenWidth, int& isFullscreen, int screenHeight);
+    void customiseUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, Score& score, int& isFullscreen, int screenHeight);
 
     int menuSelect; // determines which option to select. 0 for play, 1 for settings, 2 for quit.
+    int playerSelect;
+    int themeSelect;
     float selectTimer; // Prevents fast menu scrolling
 
 private:
     sf::Font font;
 
     // Menu text
+    sf::Text titleText;
     sf::Text playText;
+    sf::Text customiseText;
     sf::Text settingsText;
     sf::Text quitText;
     sf::Text versionText;
     sf::Text holdSpaceText;
+
+    // Customisation text
+    sf::Text playerText;
+    sf::Text themeText;
+    sf::Text unlockText;
 
     // Settings text
     sf::Text fullscreenText;

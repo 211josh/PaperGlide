@@ -86,7 +86,7 @@ void Player::deathCheck(int& gameState, int screenHeight, Sounds& sound){
         collided = 1;
         if(gameOverPlayed == 0){
             sound.gameOverSound();
-            gameState = 3; // Try again screen
+            gameState = 4; // Try again screen
             gameOverPlayed = 1;
             }
         }
@@ -97,7 +97,7 @@ void Player::deathCheck(int& gameState, int screenHeight, Sounds& sound){
 
 
 void Player::resetGame(int gameState){
-    if(gameState == 3){
+    if(gameState == 4){
         sprite.setPosition(100,400);
         }
     velocity.y = 0;
