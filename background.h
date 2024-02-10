@@ -8,6 +8,9 @@ public:
     void increaseVel(float velRange);
     void resetGame();
 
+    void themeNormal();
+    void themeSunset();
+
     static int Style;
 
     static bool isDay;
@@ -26,8 +29,8 @@ private:
     sf::Sprite Sun;
     sf::Sprite backgroundBuildings;
 
-    static sf::Vector2f sunInitialPos;
-    static sf::Vector2f sunSunsetInitialPos;
+//    static sf::Vector2f sunInitialPos;
+//    static sf::Vector2f sunSunsetInitialPos;
 
     static sf::Vector2f initialVel;
     static sf::Vector2f velocity;

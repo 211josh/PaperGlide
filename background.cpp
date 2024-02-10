@@ -1,15 +1,16 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <fstream>
 
 #include "background.h"
 
-sf::Vector2f Background::sunInitialPos{1300,50};
-sf::Vector2f Background::sunSunsetInitialPos{1600,400};
+sf::Vector2f sunInitialPos{1500,50};
+sf::Vector2f sunSunsetInitialPos{1800,450};
 
 sf::Vector2f Background::initialVel{-187.0f,0.0f};
 
 sf::Vector2f Background::velocity = Background::initialVel;
-sf::Vector2f Background::sunVelocity{-250.0f,0.0f}; // 20 is good
+sf::Vector2f Background::sunVelocity{-50.0f,0.0f}; // 20 is good
 // sun velocity doesn't change
 
 sf::Vector2f Background::maxVel{-800.0,0.0f};
@@ -21,6 +22,8 @@ int Background::Style;
 float Background::velDif = (velocity.x - maxVel.x);
 
 Background::Background(){
+
+    Background::Style = 0; // Which background is being used. Will be stored in a file
 
     // Normal theme
     if(!bgSkyTexture.loadFromFile("sprites/backgroundSky.png")){
@@ -44,40 +47,24 @@ Background::Background(){
         std::cout << "Could not load Background Buildings Sunset texture";
         }
 
-    Background::Style = 0; // Which background is being used. Will be stored in a file
-
     backgroundSky.setPosition(sf::Vector2f(0,0));
     backgroundBuildings.setPosition(sf::Vector2f(0,0));
-    Sun.setPosition(sunInitialPos);
-    Sun.setScale({2.5,2.5});
 
+    if(Style == 0){
+        themeNormal();
+        }
+    if(Style == 1){
+        themeSunset();
+        }
     dayCycle();
 }
 
 void Background::update(sf::RenderWindow& window, float deltaTime){
-    if(Style == 0){
-        backgroundSky.setTexture(bgSkyTexture);
-        backgroundBuildings.setTexture(bgBuildingsTexture);
-        backgroundBuildings.setColor(sf::Color({255,255,255,100}));
-        Sun.setScale({2.5,2.5});
-        }
-    if(Style == 1){
-        backgroundSky.setTexture(bgSkySunsetTexture);
-        backgroundBuildings.setTexture(bgBuildingsSunsetTexture);
-        backgroundBuildings.setColor(sf::Color({255,255,255,255}));
-        backgroundSky.setColor(sf::Color({255,255,255,255}));
-        Sun.setTexture(sunTexture);
-        Sun.setColor(sf::Color({255,0,255,255}));
-        Sun.setScale({7,7});
-        }
-
     movement(deltaTime);
     resetPos();
     window.draw(backgroundSky);
     window.draw(Sun);
     window.draw(backgroundBuildings);
-
-    std::cout << Style << std::endl;
 }
 
 void Background::movement(float deltaTime){
@@ -94,9 +81,9 @@ void Background::resetPos(){ // First screen size of background texture is ident
     }
 
     sf::Vector2f sunPos = Sun.getPosition();
-    if(sunPos.x <= -300){
-        isDay = !isDay;
-        dayCycle();
+        if(sunPos.x <= -80){
+            isDay = !isDay;
+            dayCycle();
     }
 }
 
@@ -112,7 +99,7 @@ void Background::resetGame(){ // Function if die and retry
     }
 
 void Background::dayCycle(){
-    if(Style == 0){
+    if(Style == 0){ // Normal theme
         Sun.setPosition(sunInitialPos);
         if(isDay == 1){
             Sun.setTexture(sunTexture);
@@ -127,4 +114,39 @@ void Background::dayCycle(){
     if(Style == 1){
         Sun.setPosition(sunSunsetInitialPos);
         }
+    }
+
+void Background::themeNormal(){
+    std::cout << "NORMAL" << std::endl;
+    Style = 0;
+    isDay = 1;
+    backgroundSky.setTexture(bgSkyTexture);
+    backgroundBuildings.setTexture(bgBuildingsTexture);
+    backgroundBuildings.setColor(sf::Color({255,255,255,100}));
+
+    Sun.setTexture(sunTexture);
+    Sun.setPosition(sunInitialPos);
+    Sun.setColor(sf::Color({255,255,160,255}));
+    Sun.setScale({6,6});
+
+    sf::Vector2f origin = Sun.getOrigin(); // sets origin of sun to right side to ensure sun is off screen
+    Sun.setOrigin({sunTexture.getSize().x,origin.y});
+    }
+
+
+void Background::themeSunset(){
+    std::cout << "SUNSET" << std::endl;
+    Style = 1;
+    backgroundSky.setTexture(bgSkySunsetTexture);
+    backgroundBuildings.setTexture(bgBuildingsSunsetTexture);
+    backgroundBuildings.setColor(sf::Color({255,255,255,255}));
+    backgroundSky.setColor(sf::Color({255,255,255,255}));
+
+    Sun.setTexture(sunTexture);
+    Sun.setPosition(sunSunsetInitialPos);
+    Sun.setColor(sf::Color({255,0,255,255}));
+    Sun.setScale({12,12});
+
+    sf::Vector2f origin = Sun.getOrigin();
+    Sun.setOrigin({sunTexture.getSize().x,origin.y});
     }

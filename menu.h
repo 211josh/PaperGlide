@@ -59,6 +59,9 @@ private:
     void handleInput(sf::RenderWindow& window, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, int& current_score, Score& score, int& isFullscreen, int screenWidth, int screenHeight);
     void holdSpaceDisplay(sf::RenderWindow& window, Player& player);
 
+    void playerChange(Player& player, Background& background, Score& score);
+    void themeChange(Player& player, Background& background, Score& score);
+
 };
 
 #endif // MENU_H_INCLUDED

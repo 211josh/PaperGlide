@@ -3,9 +3,17 @@
 
 #include "player.h"
 
+int Player::Style;
+
 Player::Player(){
-    if(!texture.loadFromFile("sprites/Player.png")){
-        std::cout << "Could not load Player texture" << std::endl;
+
+    Style = 0; // CHANGE SO IT DEPENDS ON THE TXT FILE
+
+    if(!playerNormal.loadFromFile("sprites/Player.png")){
+        std::cout << "Could not load Player (Normal) texture" << std::endl;
+        }
+    if(!playerGold.loadFromFile("sprites/PlayerGold.png")){
+        std::cout << "Could not load Player (Gold) texture" << std::endl;
         }
     if(!deathTexture.loadFromFile("sprites/Death.png")){
         std::cout << "Could not load Death screen texture" << std::endl;
@@ -15,7 +23,13 @@ Player::Player(){
         }
 
     // Set texture, position and size of sprite
-    sprite.setTexture(texture);
+    std::cout << Style << std::endl;
+    if(Style == 0){
+        sprite.setTexture(playerNormal);
+        }
+    if(Style == 1){
+        sprite.setTexture(playerGold);
+        }
     sprite.setPosition(sf::Vector2f(100,400));
     sprite.scale(sf::Vector2f(0.2,0.2));
 
@@ -75,7 +89,12 @@ void Player::applyGravity(float deltaTime) { // Gravity on player
     }
 
 void Player::menuFloating(float deltaTime){
-    sprite.setTexture(texture);
+    if(Style == 0){
+        sprite.setTexture(playerNormal);
+        }
+    if(Style == 1){
+        sprite.setTexture(playerGold);
+        }
     sprite.setPosition(100,150*sin(playerTimer) + 400);
     sprite.setRotation((maxRotation/4 * cos(playerTimer)));
     }
@@ -105,7 +124,12 @@ void Player::resetGame(int gameState){
     hitSoundPlayed = 0;
     deathScreenTime = 0;
     gameOverPlayed = 0;
-    sprite.setTexture(texture);
+    if(Style == 0){
+        sprite.setTexture(playerNormal);
+        }
+    if(Style == 1){
+        sprite.setTexture(playerGold);
+        }
     }
 
 void Player::collision(int& gameState, Building& building, Plane& plane, Helicopter& helicopter, sf::RenderWindow& window){
@@ -135,7 +159,13 @@ void Player::hitSequence(float deltaTime, sf::RenderWindow& window, Sounds& soun
         sprite.setTexture(hitPlayer);
         }
     if(deathScreenTime >= 0.3){
-        sprite.setTexture(texture); // Reset texture to normal player
+        // Reset texture to normal player
+        if(Style == 0){
+            sprite.setTexture(playerNormal);
+            }
+        if(Style == 1){
+        sprite.setTexture(playerGold);
+            }
         }
     }
 
@@ -171,4 +201,13 @@ void Player::testMode(sf::RenderWindow& window, float deltaTime){
     window.draw(sprite);
     }
 
+void Player::themeNormal(){
+    Style = 0;
+    sprite.setTexture(playerNormal);
+    }
+
+void Player::themeGold(){
+    Style = 1;
+    sprite.setTexture(playerGold);
+    }
 

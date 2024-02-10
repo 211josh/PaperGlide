@@ -20,10 +20,17 @@ public:
 
     void testMode(sf::RenderWindow& window, float deltaTime);
 
+    void themeNormal();
+    void themeGold();
+
+    static int Style;
+
     static float playerTimer;
 
 private:
-    sf::Texture texture;
+    sf::Texture playerNormal;
+    sf::Texture playerGold;
+
     sf::Texture deathTexture;
     sf::Texture hitPlayer;
 

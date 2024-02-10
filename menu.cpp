@@ -6,6 +6,11 @@
 
 sf::Sprite Menu::upArrow;
 
+// Scores required for unlocks
+int goldScore = 100;
+
+int sunsetScore = 50;
+
 Menu::Menu(int screenWidth){
     if(!font.loadFromFile("sprites/Font.ttf")){
         std::cout << "Could not load Menu font";
@@ -182,6 +187,7 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
     themeText.setPosition((screenWidth - themeBounds.width)/2, 320);
     unlockText.setPosition((screenWidth - unlockBounds.width)/2, 500);
 
+    // General customisation menu navigation
     if(menuSelect == 0){ // if on player theme
         playerText.setColor(sf::Color{255,255,0,230});
         themeText.setColor(sf::Color{255,255,255,230});
@@ -206,23 +212,23 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
         }
     if(playerSelect == 1){
         playerText.setString("< Player: Gold >");
+        if(Score::high_score < goldScore){ // i.e it's not unlocked
+            unlockText.setString("Score " + std::to_string(goldScore) + " points to unlock!");
+            playerText.setColor({255,0,0,230});
+            window.draw(unlockText);
+        }
         }
 
     if(themeSelect == 0){
         themeText.setString(" < Theme: Normal > ");
-        Background::Style = themeSelect;
     }
     if(themeSelect == 1){
-        themeText.setString(" < Theme: Sunset >");
-        Background::Style = themeSelect;
-        std::cout << Score::high_score << std::endl;
-        if(Score::high_score < 50){ // i.e it's not unlocked
-            unlockText.setString("Score 50 points to unlock!");
+        themeText.setString(" < Theme: Pink Sunset >");
+        if(Score::high_score < sunsetScore){ // i.e it's not unlocked
+            unlockText.setString("Score " + std::to_string(sunsetScore) + " points to unlock!");
             themeText.setColor({255,0,0,230});
             window.draw(unlockText);
-        } else{
-            themeText.setColor({255,255,255,230});
-            }
+        }
     }
 
     window.draw(playerText);
@@ -377,22 +383,29 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
             if(menuSelect == 0){ // IF ON PLAYER
                 playerSelect = ((playerSelect + 1)%2 + 2) % 2;
                 selectTimer = 0;
+                playerChange(player, background, score);
                 }
             if(menuSelect == 1){
                 themeSelect = ((themeSelect + 1)%2 + 2) % 2;
                 selectTimer = 0;
+                themeChange(player, background, score);
                 }
+            sound.menuSound();
             }
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && selectTimer > 0.2f){ // IF PRESS RIGHT
             if(menuSelect == 0){ // IF ON PLAYER
                 playerSelect = ((playerSelect - 1)%2 + 2) % 2;
                 selectTimer = 0;
+                playerChange(player, background, score);
                 }
             if(menuSelect == 1){
                 themeSelect = ((themeSelect - 1)%2 + 2) % 2;
                 selectTimer = 0;
+                themeChange(player, background, score);
                 }
+            sound.menuSound();
             }
+
         }
 
     //IF ON SETTINGS. OUR CHOICES ARE FULLSCREEN, VOLUME, BACK
@@ -482,5 +495,23 @@ void Menu::holdSpaceDisplay(sf::RenderWindow& window, Player& player){
     int spaceTimer = Player::playerTimer*1.2;
     if(spaceTimer % 2 == 0){
         window.draw(upArrow);
+        }
+    }
+
+void Menu::playerChange(Player& player, Background& background, Score& score){ // event-based theme changer in settings
+    if(playerSelect == 0 && Score::high_score >= goldScore){
+        player.themeNormal();
+        }
+    if(playerSelect == 1 && Score::high_score >= goldScore){
+        player.themeGold();
+        }
+    }
+
+void Menu::themeChange(Player& player, Background& background, Score& score){
+    if(themeSelect == 0 && Background::Style != 0){ // the double condition prevents the sun resetting when themes aren't unlocked
+        background.themeNormal();
+        }
+    if(themeSelect == 1 && Score::high_score >= sunsetScore && Background::Style != 1){
+        background.themeSunset();
         }
     }
