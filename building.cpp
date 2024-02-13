@@ -11,14 +11,27 @@ float Building::velDif = (velocity.x - maxVel.x); // Calculated for incremental 
 float Building::spawnTimer = 0.0f; // Resets at spawnInterval, moving the building back to the right side of the screen
 float Building::spawnInterval = -(1600.0f/(velocity.x)); // Time between building position reset. -1600 was found through trial and error
 
+int Building::Style;
+
 Building::Building(){ // This section of the class runs once - when a new instance of Building is created. In our case, it's Building building; in main.
     // Our game only has one building loaded at a time, i.e Building building;
     // If we wanted 2 instances of buildings, we could create a Building building2;
-if(!texture.loadFromFile("sprites/Building.png")){
-    std::cout << "Could not load Building texture";
-    }
 
-sprite.setTexture(texture);
+    Building::Style =  0; // CHANGE SO ACCESSES TXT
+
+    if(!textureNormal.loadFromFile("sprites/Building.png")){
+        std::cout << "Could not load Building (Normal) texture";
+        }
+    if(!textureSunset.loadFromFile("sprites/buildingSunset.png")){
+        std::cout << "Could not load Building (Sunset) texture";
+        }
+
+    if(Style == 0){
+        themeNormal();
+        }
+    if(Style == 1){
+        themeSunset();
+    }
 }
 
 // The update function runs once every game loop
@@ -62,6 +75,14 @@ void Building::resetGame(Score& score){
 
 sf::Vector2f Building::getPos(){
     return sprite.getPosition();
+    }
+
+void Building::themeNormal(){
+    sprite.setTexture(textureNormal);
+    }
+
+void Building::themeSunset(){
+    sprite.setTexture(textureSunset);
     }
 
 

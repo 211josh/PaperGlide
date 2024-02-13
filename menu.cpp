@@ -318,6 +318,14 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
         } else{
             menuSelect = ((menuSelect + 1)%3 + 3) % 3;
             }
+
+        if(playerSelect == 1 && Score::high_score < goldScore){ // prevents double stacking "score to unlock" text
+            playerSelect = 0;
+            }
+        if(themeSelect == 1 && Score::high_score < sunsetScore){
+            themeSelect = 0;
+            }
+
         selectTimer = 0.0f;
         sound.menuSound();
         }
@@ -329,6 +337,13 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
             }
         selectTimer = 0.0f;
         sound.menuSound();
+
+        if(playerSelect == 1 && Score::high_score < goldScore){ // prevents double stacking "score to unlock" text
+            playerSelect = 0;
+            }
+        if(themeSelect == 1 && Score::high_score < sunsetScore){
+            themeSelect = 0;
+            }
         }
 
     // MENU SELECTION

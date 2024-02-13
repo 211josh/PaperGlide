@@ -17,10 +17,16 @@ public: // Can be accessed outside the class
     void resetGame(Score& score);
     sf::Vector2f getPos(); // function returns a sf::Vector2f (2 float vector)
 
+    void themeNormal();
+    void themeSunset();
+
+    static int Style;
+
     static sf::Sprite sprite;
 
 private: // Can only be accessed by code inside the class
-    sf::Texture texture;
+    sf::Texture textureNormal;
+    sf::Texture textureSunset;
 
     static sf::Vector2f initialVel;
     static sf::Vector2f velocity;
