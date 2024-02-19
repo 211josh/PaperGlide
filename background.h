@@ -9,6 +9,7 @@ public:
     void resetGame();
 
     void themeNormal();
+    void themeMedival();
     void themeSunset();
 
     static int Style;

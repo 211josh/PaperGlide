@@ -19,6 +19,7 @@ public: // Can be accessed outside the class
 
     void themeNormal();
     void themeSunset();
+    void themeMedival();
 
     static int Style;
 
@@ -27,6 +28,7 @@ public: // Can be accessed outside the class
 private: // Can only be accessed by code inside the class
     sf::Texture textureNormal;
     sf::Texture textureSunset;
+    sf::Texture textureMedival;
 
     static sf::Vector2f initialVel;
     static sf::Vector2f velocity;

@@ -62,6 +62,8 @@ private:
     void playerChange(Player& player, Background& background, Score& score);
     void themeChange(Player& player, Background& background, Score& score);
 
+    void resetSelection(Score& score);
+
 };
 
 #endif // MENU_H_INCLUDED

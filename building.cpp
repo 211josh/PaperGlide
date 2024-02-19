@@ -17,7 +17,7 @@ Building::Building(){ // This section of the class runs once - when a new instan
     // Our game only has one building loaded at a time, i.e Building building;
     // If we wanted 2 instances of buildings, we could create a Building building2;
 
-    Building::Style =  0; // CHANGE SO ACCESSES TXT
+    Building::Style = 1; // CHANGE SO ACCESSES TXT
 
     if(!textureNormal.loadFromFile("sprites/Building.png")){
         std::cout << "Could not load Building (Normal) texture";
@@ -25,13 +25,21 @@ Building::Building(){ // This section of the class runs once - when a new instan
     if(!textureSunset.loadFromFile("sprites/buildingSunset.png")){
         std::cout << "Could not load Building (Sunset) texture";
         }
+    if(!textureMedival.loadFromFile("sprites/buildingMedival.png")){
+        std::cout << "Could not load Building (Medival) texture";
+        }
 
     if(Style == 0){
         themeNormal();
         }
     if(Style == 1){
+        themeMedival();
+        }
+    if(Style == 2){
         themeSunset();
-    }
+        }
+
+
 }
 
 // The update function runs once every game loop
@@ -83,6 +91,10 @@ void Building::themeNormal(){
 
 void Building::themeSunset(){
     sprite.setTexture(textureSunset);
+    }
+
+void Building::themeMedival(){
+    sprite.setTexture(textureMedival);
     }
 
 

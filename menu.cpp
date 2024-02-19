@@ -7,9 +7,15 @@
 sf::Sprite Menu::upArrow;
 
 // Scores required for unlocks
+int player2Score = 1;
 int goldScore = 100;
+int player4Score = 1;
+int player5Score = 1;
 
+int medivalScore = 25;
 int sunsetScore = 50;
+int theme4Score = 1;
+int theme5Score = 1;
 
 Menu::Menu(int screenWidth){
     if(!font.loadFromFile("sprites/Font.ttf")){
@@ -211,21 +217,69 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
         playerText.setString("< Player: Normal >");
         }
     if(playerSelect == 1){
+        playerText.setString("< Player: 2 >");
+        if(Score::high_score < player2Score){ // i.e it's not unlocked
+            unlockText.setString("Score " + std::to_string(player2Score) + " points to unlock!");
+            playerText.setColor({255,0,0,230});
+            window.draw(unlockText);
+            }
+        }
+    if(playerSelect == 2){
         playerText.setString("< Player: Gold >");
         if(Score::high_score < goldScore){ // i.e it's not unlocked
             unlockText.setString("Score " + std::to_string(goldScore) + " points to unlock!");
             playerText.setColor({255,0,0,230});
             window.draw(unlockText);
+            }
         }
+    if(playerSelect == 3){
+        playerText.setString("< Player: 4 >");
+        if(Score::high_score < player4Score){ // i.e it's not unlocked
+            unlockText.setString("Score " + std::to_string(player4Score) + " points to unlock!");
+            playerText.setColor({255,0,0,230});
+            window.draw(unlockText);
+            }
+        }
+    if(playerSelect == 4){
+        playerText.setString("< Player: 5 >");
+        if(Score::high_score < player5Score){ // i.e it's not unlocked
+            unlockText.setString("Score " + std::to_string(player5Score) + " points to unlock!");
+            playerText.setColor({255,0,0,230});
+            window.draw(unlockText);
+            }
         }
 
     if(themeSelect == 0){
         themeText.setString(" < Theme: Normal > ");
     }
     if(themeSelect == 1){
+        themeText.setString(" < Theme: Medival >");
+        if(Score::high_score < medivalScore){ // i.e it's not unlocked
+            unlockText.setString("Score " + std::to_string(medivalScore) + " points to unlock!");
+            themeText.setColor({255,0,0,230});
+            window.draw(unlockText);
+        }
+    }
+    if(themeSelect == 2){
         themeText.setString(" < Theme: Pink Sunset >");
         if(Score::high_score < sunsetScore){ // i.e it's not unlocked
             unlockText.setString("Score " + std::to_string(sunsetScore) + " points to unlock!");
+            themeText.setColor({255,0,0,230});
+            window.draw(unlockText);
+        }
+    }
+    if(themeSelect == 3){
+        themeText.setString(" < Theme: 4 >");
+        if(Score::high_score < theme4Score){ // i.e it's not unlocked
+            unlockText.setString("Score " + std::to_string(theme4Score) + " points to unlock!");
+            themeText.setColor({255,0,0,230});
+            window.draw(unlockText);
+        }
+    }
+    if(themeSelect == 4){
+        themeText.setString(" < Theme: 5 >");
+        if(Score::high_score < theme5Score){ // i.e it's not unlocked
+            unlockText.setString("Score " + std::to_string(theme5Score) + " points to unlock!");
             themeText.setColor({255,0,0,230});
             window.draw(unlockText);
         }
@@ -319,13 +373,7 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
             menuSelect = ((menuSelect + 1)%3 + 3) % 3;
             }
 
-        if(playerSelect == 1 && Score::high_score < goldScore){ // prevents double stacking "score to unlock" text
-            playerSelect = 0;
-            }
-        if(themeSelect == 1 && Score::high_score < sunsetScore){
-            themeSelect = 0;
-            }
-
+        resetSelection(score);
         selectTimer = 0.0f;
         sound.menuSound();
         }
@@ -335,15 +383,10 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
         } else{
             menuSelect = ((menuSelect - 1)%3 + 3 ) % 3; // C++ modulo doesn't work w/ negative numbers, so made our own
             }
+
         selectTimer = 0.0f;
         sound.menuSound();
-
-        if(playerSelect == 1 && Score::high_score < goldScore){ // prevents double stacking "score to unlock" text
-            playerSelect = 0;
-            }
-        if(themeSelect == 1 && Score::high_score < sunsetScore){
-            themeSelect = 0;
-            }
+        resetSelection(score);
         }
 
     // MENU SELECTION
@@ -396,12 +439,12 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
         // CHANGING PLAYER AND THEME
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && selectTimer > 0.2f){ // IF PRESS RIGHT
             if(menuSelect == 0){ // IF ON PLAYER
-                playerSelect = ((playerSelect + 1)%2 + 2) % 2;
+                playerSelect = ((playerSelect + 1)%5 + 5) % 5;
                 selectTimer = 0;
                 playerChange(player, background, score);
                 }
             if(menuSelect == 1){
-                themeSelect = ((themeSelect + 1)%2 + 2) % 2;
+                themeSelect = ((themeSelect + 1)%5 + 5) % 5;
                 selectTimer = 0;
                 themeChange(player, background, score);
                 }
@@ -409,12 +452,12 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
             }
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && selectTimer > 0.2f){ // IF PRESS RIGHT
             if(menuSelect == 0){ // IF ON PLAYER
-                playerSelect = ((playerSelect - 1)%2 + 2) % 2;
+                playerSelect = ((playerSelect - 1)%5 + 5) % 5;
                 selectTimer = 0;
                 playerChange(player, background, score);
                 }
             if(menuSelect == 1){
-                themeSelect = ((themeSelect - 1)%2 + 2) % 2;
+                themeSelect = ((themeSelect - 1)%5 + 5) % 5;
                 selectTimer = 0;
                 themeChange(player, background, score);
                 }
@@ -517,6 +560,7 @@ void Menu::playerChange(Player& player, Background& background, Score& score){ /
     if(playerSelect == 0 && Score::high_score >= goldScore){
         player.themeNormal();
         }
+
     if(playerSelect == 1 && Score::high_score >= goldScore){
         player.themeGold();
         }
@@ -526,7 +570,38 @@ void Menu::themeChange(Player& player, Background& background, Score& score){
     if(themeSelect == 0 && Background::Style != 0){ // the double condition prevents the sun resetting when themes aren't unlocked
         background.themeNormal();
         }
-    if(themeSelect == 1 && Score::high_score >= sunsetScore && Background::Style != 1){
+    if(themeSelect == 1 && Score::high_score >= medivalScore && Background::Style != 1){
+        background.themeMedival();
+        }
+    if(themeSelect == 2 && Score::high_score >= sunsetScore && Background::Style != 2){
         background.themeSunset();
         }
     }
+
+void Menu::resetSelection(Score& score){ // Resets player and theme selection if they are not unlocked
+    if(playerSelect == 1 && Score::high_score < player2Score){ // prevents double stacking "score to unlock" text
+        playerSelect = 0;
+        }
+    if(playerSelect == 2 && Score::high_score < goldScore){ // prevents double stacking "score to unlock" text
+        playerSelect = 0;
+        }
+    if(playerSelect == 3 && Score::high_score < player4Score){ // prevents double stacking "score to unlock" text
+        playerSelect = 0;
+        }
+    if(playerSelect == 4 && Score::high_score < player5Score){ // prevents double stacking "score to unlock" text
+        playerSelect = 0;
+        }
+
+    if(themeSelect == 1 && Score::high_score < medivalScore){
+        themeSelect = 0;
+        }
+    if(themeSelect == 2 && Score::high_score < sunsetScore){
+        themeSelect = 0;
+        }
+    if(themeSelect == 3 && Score::high_score < theme4Score){
+        themeSelect = 0;
+        }
+    if(themeSelect == 4 && Score::high_score < theme5Score){
+        themeSelect = 0;
+        }
+}

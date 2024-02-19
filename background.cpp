@@ -53,7 +53,7 @@ Background::Background(){
     if(Style == 0){
         themeNormal();
         }
-    if(Style == 1){
+    if(Style == 2){
         themeSunset();
         }
     dayCycle();
@@ -111,7 +111,7 @@ void Background::dayCycle(){
             backgroundSky.setColor(sf::Color({40,40,40,255}));
             }
         }
-    if(Style == 1){
+    if(Style == 2){
         Sun.setPosition(sunSunsetInitialPos);
         }
     }
@@ -136,7 +136,7 @@ void Background::themeNormal(){
 
 void Background::themeSunset(){
     std::cout << "SUNSET" << std::endl;
-    Style = 1;
+    Style = 2;
     backgroundSky.setTexture(bgSkySunsetTexture);
     backgroundBuildings.setTexture(bgBuildingsSunsetTexture);
     backgroundBuildings.setColor(sf::Color({255,255,255,255}));
@@ -149,4 +149,8 @@ void Background::themeSunset(){
 
     sf::Vector2f origin = Sun.getOrigin();
     Sun.setOrigin({sunTexture.getSize().x,origin.y});
+    }
+
+void Background::themeMedival(){
+
     }
