@@ -60,7 +60,7 @@ private:
     void holdSpaceDisplay(sf::RenderWindow& window, Player& player);
 
     void playerChange(Player& player, Background& background, Score& score);
-    void themeChange(Player& player, Background& background, Score& score);
+    void themeChange(Player& player, Background& background, Score& score, Building& building);
 
     void resetSelection(Score& score);
 

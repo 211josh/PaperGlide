@@ -11,16 +11,25 @@ public:
     void themeNormal();
     void themeMedival();
     void themeSunset();
+    void themeSpace();
+    void themeApoc();
 
     static int Style;
 
     static bool isDay;
     void dayCycle(); // public as retrying resets to day
 private:
+
+    void shineFollow();
+
     sf::Texture bgSkyTexture;
     sf::Texture bgSkySunsetTexture;
+    sf::Texture bgSkyApocTexture;
+
+    sf::Texture sunShineTexture;
 
     sf::Texture sunTexture;
+    sf::Texture sunApocTexture;
     sf::Texture moonTexture;
 
     sf::Texture bgBuildingsTexture;
@@ -28,6 +37,7 @@ private:
 
     sf::Sprite backgroundSky;
     sf::Sprite Sun;
+    sf::Sprite sunShine;
     sf::Sprite backgroundBuildings;
 
 //    static sf::Vector2f sunInitialPos;

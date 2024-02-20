@@ -15,7 +15,7 @@ int player5Score = 1;
 int medivalScore = 25;
 int sunsetScore = 50;
 int theme4Score = 1;
-int theme5Score = 1;
+int apocScore = 200;
 
 Menu::Menu(int screenWidth){
     if(!font.loadFromFile("sprites/Font.ttf")){
@@ -269,7 +269,7 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
         }
     }
     if(themeSelect == 3){
-        themeText.setString(" < Theme: 4 >");
+        themeText.setString(" < Theme: Space >");
         if(Score::high_score < theme4Score){ // i.e it's not unlocked
             unlockText.setString("Score " + std::to_string(theme4Score) + " points to unlock!");
             themeText.setColor({255,0,0,230});
@@ -277,9 +277,9 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
         }
     }
     if(themeSelect == 4){
-        themeText.setString(" < Theme: 5 >");
-        if(Score::high_score < theme5Score){ // i.e it's not unlocked
-            unlockText.setString("Score " + std::to_string(theme5Score) + " points to unlock!");
+        themeText.setString(" < Theme: Apocalypse >");
+        if(Score::high_score < apocScore){ // i.e it's not unlocked
+            unlockText.setString("Score " + std::to_string(apocScore) + " points to unlock!");
             themeText.setColor({255,0,0,230});
             window.draw(unlockText);
         }
@@ -301,7 +301,7 @@ void Menu::settingsUpdate(sf::RenderWindow& window, float deltaTime, int& gameSt
     sf::FloatRect fullscreenBounds = fullscreenText.getLocalBounds(); // Retrieve menu option bounds
     fullscreenText.setPosition((screenWidth - fullscreenBounds.width) / 2, 240); // Centres text based on text and screen width
 
-    volumeText.setString("< Volume:" + std::to_string(Sounds::volume) + " >");
+    volumeText.setString("< Volume: " + std::to_string(Sounds::volume) + " >");
     sf::FloatRect volumeTextBounds = volumeText.getLocalBounds();
     volumeText.setPosition((screenWidth - volumeTextBounds.width) / 2, 320);
 
@@ -446,7 +446,7 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
             if(menuSelect == 1){
                 themeSelect = ((themeSelect + 1)%5 + 5) % 5;
                 selectTimer = 0;
-                themeChange(player, background, score);
+                themeChange(player, background, score, building);
                 }
             sound.menuSound();
             }
@@ -459,7 +459,7 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
             if(menuSelect == 1){
                 themeSelect = ((themeSelect - 1)%5 + 5) % 5;
                 selectTimer = 0;
-                themeChange(player, background, score);
+                themeChange(player, background, score, building);
                 }
             sound.menuSound();
             }
@@ -566,7 +566,7 @@ void Menu::playerChange(Player& player, Background& background, Score& score){ /
         }
     }
 
-void Menu::themeChange(Player& player, Background& background, Score& score){
+void Menu::themeChange(Player& player, Background& background, Score& score, Building& building){
     if(themeSelect == 0 && Background::Style != 0){ // the double condition prevents the sun resetting when themes aren't unlocked
         background.themeNormal();
         }
@@ -575,6 +575,9 @@ void Menu::themeChange(Player& player, Background& background, Score& score){
         }
     if(themeSelect == 2 && Score::high_score >= sunsetScore && Background::Style != 2){
         background.themeSunset();
+        }
+    if(themeSelect == 4 && Score::high_score >= apocScore && Background::Style != 4){
+        background.themeApoc();
         }
     }
 
@@ -601,7 +604,7 @@ void Menu::resetSelection(Score& score){ // Resets player and theme selection if
     if(themeSelect == 3 && Score::high_score < theme4Score){
         themeSelect = 0;
         }
-    if(themeSelect == 4 && Score::high_score < theme5Score){
+    if(themeSelect == 4 && Score::high_score < apocScore){
         themeSelect = 0;
         }
 }

@@ -18,8 +18,9 @@ public: // Can be accessed outside the class
     sf::Vector2f getPos(); // function returns a sf::Vector2f (2 float vector)
 
     void themeNormal();
-    void themeSunset();
     void themeMedival();
+    void themeSunset();
+    void themeApoc();
 
     static int Style;
 
@@ -29,6 +30,7 @@ private: // Can only be accessed by code inside the class
     sf::Texture textureNormal;
     sf::Texture textureSunset;
     sf::Texture textureMedival;
+    sf::Texture textureApoc;
 
     static sf::Vector2f initialVel;
     static sf::Vector2f velocity;
