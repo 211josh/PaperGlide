@@ -9,6 +9,7 @@ Score::Score(){
 if(!font.loadFromFile("sprites/Font.ttf")){
     std::cout << "Could not load Score font";
     }
+
     // Play state Score display properties
     playScore.setFont(font); // Score behind screen
     playScore.setCharacterSize(300);
@@ -36,6 +37,8 @@ if(!font.loadFromFile("sprites/Font.ttf")){
             }
         }
     readFile.close();
+
+    themeUpdate();
     }
 
 void Score::update(sf::RenderWindow& window, int screenWidth, int screenHeight, Sounds& sound, Background& background, Helicopter& helicopter, Plane& plane, Building& building, float deltaTime){
@@ -99,3 +102,21 @@ void Score::displayHighScore(sf::RenderWindow& window, int screenWidth){
     highScore.setPosition((screenWidth - highScoreBounds.width) / 2, 600); // Centres text based on text and screen width
     window.draw(highScore);
     }
+
+void Score::themeUpdate(){ // Updates text colours based on theme
+    if(Background::Style == 0){ // normal theme
+        playScore.setColor(sf::Color{255,255,255,100});
+    }
+    if(Background::Style == 1){ // medival theme
+        playScore.setColor(sf::Color{255,255,255,100});
+    }
+    if(Background::Style == 2){ // sunset theme
+        playScore.setColor(sf::Color{255,100,200,100});
+    }
+    if(Background::Style == 3){ // space theme
+        playScore.setColor(sf::Color{255,255,255,100});
+    }
+    if(Background::Style == 4){ // apocalypse theme
+        playScore.setColor(sf::Color{130,0,0,100});
+    }
+}

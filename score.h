@@ -22,11 +22,12 @@ public:
     void addScore(Sounds& sound, Background& background, Helicopter& helicopter, Plane& plane, Building& building);
     void checkScore(Sounds& sound, Background& background, Helicopter& helicopter, Plane& plane, Building& building, float deltaTime);
 
+    void themeUpdate();
+
     static int current_score;
     static int high_score;
     static bool pointAdded;
     static float velRange; // The current score determines the velocity of sprites. The range depicts what score you must reach for their max vels
-
 
 private:
     sf::Font font;

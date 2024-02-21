@@ -14,7 +14,7 @@ int player5Score = 1;
 
 int medivalScore = 25;
 int sunsetScore = 50;
-int theme4Score = 1;
+int spaceScore = 1;
 int apocScore = 200;
 
 Menu::Menu(int screenWidth){
@@ -270,8 +270,8 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
     }
     if(themeSelect == 3){
         themeText.setString(" < Theme: Space >");
-        if(Score::high_score < theme4Score){ // i.e it's not unlocked
-            unlockText.setString("Score " + std::to_string(theme4Score) + " points to unlock!");
+        if(Score::high_score < spaceScore){ // i.e it's not unlocked
+            unlockText.setString("Score " + std::to_string(spaceScore) + " points to unlock!");
             themeText.setColor({255,0,0,230});
             window.draw(unlockText);
         }
@@ -569,15 +569,27 @@ void Menu::playerChange(Player& player, Background& background, Score& score){ /
 void Menu::themeChange(Player& player, Background& background, Score& score, Building& building){
     if(themeSelect == 0 && Background::Style != 0){ // the double condition prevents the sun resetting when themes aren't unlocked
         background.themeNormal();
+        score.themeUpdate();
+        building.themeNormal();
         }
     if(themeSelect == 1 && Score::high_score >= medivalScore && Background::Style != 1){
         background.themeMedival();
+        score.themeUpdate();
+        building.themeMedival();
         }
     if(themeSelect == 2 && Score::high_score >= sunsetScore && Background::Style != 2){
         background.themeSunset();
+        score.themeUpdate();
+        building.themeSunset();
+        }
+    if(themeSelect == 3 && Score::high_score >= spaceScore && Background::Style != 3){
+        background.themeSpace();
+        score.themeUpdate();
         }
     if(themeSelect == 4 && Score::high_score >= apocScore && Background::Style != 4){
         background.themeApoc();
+        score.themeUpdate();
+        building.themeApoc();
         }
     }
 
@@ -601,7 +613,7 @@ void Menu::resetSelection(Score& score){ // Resets player and theme selection if
     if(themeSelect == 2 && Score::high_score < sunsetScore){
         themeSelect = 0;
         }
-    if(themeSelect == 3 && Score::high_score < theme4Score){
+    if(themeSelect == 3 && Score::high_score < spaceScore){
         themeSelect = 0;
         }
     if(themeSelect == 4 && Score::high_score < apocScore){

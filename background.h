@@ -24,15 +24,18 @@ private:
 
     sf::Texture bgSkyTexture;
     sf::Texture bgSkySunsetTexture;
+    sf::Texture bgSkySpaceTexture;
     sf::Texture bgSkyApocTexture;
 
     sf::Texture sunShineTexture;
 
     sf::Texture sunTexture;
-    sf::Texture sunApocTexture;
     sf::Texture moonTexture;
+    sf::Texture sunSpaceTexture;
+    sf::Texture sunApocTexture;
 
     sf::Texture bgBuildingsTexture;
+    sf::Texture bgBuildingsSpaceTexture;
     sf::Texture bgBuildingsSunsetTexture;
 
     sf::Sprite backgroundSky;
