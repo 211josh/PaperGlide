@@ -444,26 +444,28 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
                 playerSelect = ((playerSelect + 1)%5 + 5) % 5;
                 selectTimer = 0;
                 playerChange(player, background, score);
+                sound.menuSound();
                 }
             if(menuSelect == 1){
                 themeSelect = ((themeSelect + 1)%5 + 5) % 5;
                 selectTimer = 0;
                 themeChange(player, background, score, building);
+                sound.menuSound();
                 }
-            sound.menuSound();
             }
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && selectTimer > 0.2f){ // If press right
             if(menuSelect == 0){ // On theme
                 playerSelect = ((playerSelect - 1)%5 + 5) % 5;
                 selectTimer = 0;
                 playerChange(player, background, score);
+                sound.menuSound();
                 }
             if(menuSelect == 1){
                 themeSelect = ((themeSelect - 1)%5 + 5) % 5;
                 selectTimer = 0;
                 themeChange(player, background, score, building);
+                sound.menuSound();
                 }
-            sound.menuSound();
             }
 
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && selectTimer > 0.2f){ // Press Enter

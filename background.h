@@ -51,9 +51,14 @@ private:
     static sf::Vector2f sunVelocity;
     static sf::Vector2f maxVel;
 
+    static float transitionTime;
+    static int transition;
+    static float transitionInterval;
+
     static float velDif;
 
     void movement(float deltaTime);
+    void dayNight(float deltaTime);
     void resetPos();
 };
 

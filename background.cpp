@@ -4,9 +4,15 @@
 
 #include "background.h"
 
-float velCof; // velocity coefficient
+// Day night transitions
+float Background::transitionTime = 0;
+int Background::transition = 0;
+float Background::transitionInterval = 4; // Time it takes for transition from night to day vice versa
 
-sf::Vector2f sunInitialPos{1500,150};
+float velCof; // Velocity coefficient
+
+// Sun across screen
+sf::Vector2f sunInitialPos{1650,150}; // 1500,150
 sf::Vector2f sunSunsetInitialPos{1800,650};
 sf::Vector2f sunApocInitialPos{1600,150};
 sf::Vector2f sunSpaceInitialPos{1600,360};
@@ -27,7 +33,7 @@ float Background::velDif = (velocity.x - maxVel.x);
 
 Background::Background(){
 
-    Background::Style = 3; // Which background is being used. Will be stored in a file
+    Background::Style = 0; // Which background is being used. Will be stored in a file
 
     // Normal theme
     //Sun & Moon
@@ -101,6 +107,9 @@ void Background::update(sf::RenderWindow& window, float deltaTime){
     shineFollow();
     movement(deltaTime);
     resetPos();
+    if(transition == 1){
+        dayNight(deltaTime);
+    }
     window.draw(backgroundSky);
     window.draw(sunShine);
     window.draw(Sun);
@@ -128,6 +137,7 @@ void Background::resetPos(){ // First screen size of background texture is ident
     if(sunPos.x <= -150 && Style == 0){ // Normal reset position
         isDay = !isDay;
         dayCycle();
+        transition = 1; // begin transition to day/night
         }
     if(sunPos.x <= -400 && Style == 2){ // Sunset reset position
         dayCycle();
@@ -157,11 +167,9 @@ void Background::dayCycle(){
         if(isDay == 1){
             Sun.setTexture(sunTexture);
             Sun.setColor(sf::Color({255,255,160,255}));
-            backgroundSky.setColor(sf::Color({255,255,255,255}));
         } else{
             Sun.setTexture(moonTexture);
             Sun.setColor(sf::Color({255,255,255,255}));
-            backgroundSky.setColor(sf::Color({40,40,40,255}));
             }
         }
     if(Style == 2){
@@ -280,5 +288,23 @@ void Background::themeSpace(){
     Sun.setOrigin({sunSpaceTexture.getSize().x/2,sunSpaceTexture.getSize().y/2});
     }
 
+void Background::dayNight(float deltaTime){
+    transitionTime += deltaTime;
+    if(transitionTime < transitionInterval){
+        if(isDay){ // if it's becoming day time
+            backgroundSky.setColor(sf::Color{ 40 + (255-40)*transitionTime/transitionInterval, 40 + (255-40)*transitionTime/transitionInterval, 40 + (255-40)*transitionTime/transitionInterval, 255});
+        } else{ // if it's becoming night time
+            backgroundSky.setColor(sf::Color{ 255 - (255-40)*transitionTime/transitionInterval, 255 - (255-40)*transitionTime/transitionInterval, 255 - (255-40)*transitionTime/transitionInterval, 255});
+        }
+    } else{
+        transition = 0;
+        transitionTime = 0;
+        if(isDay){
+            backgroundSky.setColor(sf::Color({255,255,255,255}));
+        } else{
+            backgroundSky.setColor(sf::Color({40,40,40,255}));
+        }
+    }
+}
 
 
