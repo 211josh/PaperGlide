@@ -8,8 +8,8 @@ float velCof; // velocity coefficient
 
 sf::Vector2f sunInitialPos{1500,150};
 sf::Vector2f sunSunsetInitialPos{1800,650};
-sf::Vector2f sunSpaceInitialPos{1600,360};
 sf::Vector2f sunApocInitialPos{1600,150};
+sf::Vector2f sunSpaceInitialPos{1600,360};
 
 sf::Vector2f Background::initialVel{-187.0f,0.0f};
 
@@ -57,6 +57,13 @@ Background::Background(){
     if(!bgBuildingsSunsetTexture.loadFromFile("sprites/bgBuildingsSunset.png")){
         std::cout << "Could not load Background Buildings Sunset texture";
         }
+    // Apocalypse theme
+    if(!sunApocTexture.loadFromFile("sprites/sunApoc.png")){
+        std::cout << "Could not load Background Sun Apocalypse texture";
+        }
+    if(!bgSkyApocTexture.loadFromFile("sprites/bgSkyApoc.png")){
+        std::cout << "Could not load Background Sky Apocalypse texture";
+        }
 
     // Space theme
     if(!sunSpaceTexture.loadFromFile("sprites/sunSpace.png")){
@@ -69,20 +76,10 @@ Background::Background(){
         std::cout << "Could not load Background Buildings Space texture";
         }
 
-    // Apocalypse theme
-    if(!sunApocTexture.loadFromFile("sprites/sunApoc.png")){
-        std::cout << "Could not load Background Sun Apocalypse texture";
-        }
-    if(!bgSkyApocTexture.loadFromFile("sprites/bgSkyApoc.png")){
-        std::cout << "Could not load Background Sky Apocalypse texture";
-        }
-
     backgroundSky.setPosition(sf::Vector2f(0,0));
     backgroundBuildings.setPosition(sf::Vector2f(0,0));
 
     sunShine.setTexture(sunShineTexture);
-//    sunShine.setScale({0.75,0.75});
-//    sunShine.setOrigin({sunShineTexture.getSize().x/2,sunShineTexture.getSize().y/2});
 
     if(Style == 0){
         themeNormal();
@@ -91,11 +88,12 @@ Background::Background(){
         themeSunset();
         }
     if(Style == 3){
-        themeSpace();
-    }
-    if(Style == 4){
         themeApoc();
         }
+    if(Style == 4){
+        themeSpace();
+    }
+
     dayCycle();
 }
 
@@ -120,6 +118,9 @@ void Background::resetPos(){ // First screen size of background texture is ident
     sf::Vector2f position = backgroundSky.getPosition();
     if(position.x <= -5120){ // Beginning of last frame x value
         backgroundSky.setPosition(sf::Vector2f{0.0f,0.0f});
+    }
+    position = backgroundBuildings.getPosition();
+    if(position.x <= -5120){
         backgroundBuildings.setPosition(sf::Vector2f{0.0f,0.0f});
     }
 
@@ -131,10 +132,10 @@ void Background::resetPos(){ // First screen size of background texture is ident
     if(sunPos.x <= -400 && Style == 2){ // Sunset reset position
         dayCycle();
         }
-    if(sunPos.x <= -250 && Style == 3){ // Space reset position
+    if(sunPos.x <= -250 && Style == 3){ // Apoc reset position
         dayCycle();
         }
-    if(sunPos.x <= -250 && Style == 4){ // Apoc reset position
+    if(sunPos.x <= -250 && Style == 4){ // Space reset position
         dayCycle();
         }
 }
@@ -167,11 +168,12 @@ void Background::dayCycle(){
         Sun.setPosition(sunSunsetInitialPos);
         }
     if(Style == 3){
-        Sun.setPosition(sunSpaceInitialPos);
-        }
-    if(Style == 4){
         Sun.setPosition(sunApocInitialPos);
         }
+    if(Style == 4){
+        Sun.setPosition(sunSpaceInitialPos);
+        }
+
     }
 
 void Background::shineFollow(){
@@ -227,36 +229,10 @@ void Background::themeSunset(){
     sf::Vector2f origin = Sun.getOrigin();
     Sun.setOrigin({sunTexture.getSize().x/2,sunTexture.getSize().y/2});
     }
-
-void Background::themeSpace(){
-    velCof = 0.5;
-
-    Style = 3;
-    backgroundSky.setTexture(bgSkySpaceTexture);
-    // buildings
-    backgroundSky.setColor(sf::Color({255,255,255,255}));
-
-    backgroundBuildings.setTexture(bgBuildingsSpaceTexture);
-    backgroundBuildings.setColor({255,255,255,255});
-
-  //  sunShine.setColor({135,0,0,255});
-    sunShine.setColor({255,255,255,200});
-    sunShine.setScale({0.1,0.1});
-    sunShine.setOrigin({sunShineTexture.getSize().x/2,sunShineTexture.getSize().y/2});
-
-    Sun.setTexture(sunSpaceTexture);
-    Sun.setPosition(sunSpaceInitialPos);
-    Sun.setColor(sf::Color({255,255,255,255}));
-    Sun.setScale({0.9,0.9});
-
-    sf::Vector2f origin = Sun.getOrigin();
-    Sun.setOrigin({sunSpaceTexture.getSize().x/2,sunSpaceTexture.getSize().y/2});
-    }
-
 void Background::themeApoc(){
     velCof = 1;
 
-    Style = 4;
+    Style = 3;
     backgroundSky.setTexture(bgSkyApocTexture);
     // buildings
     backgroundSky.setColor(sf::Color({255,255,255,255}));
@@ -278,5 +254,31 @@ void Background::themeApoc(){
   //  Sun.setOrigin({sunApocTexture.getSize().x,origin.y});
     Sun.setOrigin({sunApocTexture.getSize().x/2,sunApocTexture.getSize().y/2});
     }
+
+void Background::themeSpace(){
+    velCof = 0.5;
+
+    Style = 4;
+    backgroundSky.setTexture(bgSkySpaceTexture);
+    // buildings
+    backgroundSky.setColor(sf::Color({255,255,255,255}));
+
+    backgroundBuildings.setTexture(bgBuildingsSpaceTexture);
+    backgroundBuildings.setColor({255,255,255,255});
+
+  //  sunShine.setColor({135,0,0,255});
+    sunShine.setColor({255,255,255,200});
+    sunShine.setScale({0.1,0.1});
+    sunShine.setOrigin({sunShineTexture.getSize().x/2,sunShineTexture.getSize().y/2});
+
+    Sun.setTexture(sunSpaceTexture);
+    Sun.setPosition(sunSpaceInitialPos);
+    Sun.setColor(sf::Color({255,255,255,255}));
+    Sun.setScale({0.9,0.9});
+
+    sf::Vector2f origin = Sun.getOrigin();
+    Sun.setOrigin({sunSpaceTexture.getSize().x/2,sunSpaceTexture.getSize().y/2});
+    }
+
 
 

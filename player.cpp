@@ -43,7 +43,9 @@ Player::Player(){
     }
 
 void Player::update(sf::RenderWindow& window, float deltaTime, int screenHeight, int& gameState, Building& building, Plane& plane, Helicopter& helicopter, Sounds& sound) { // Continuously update the sprite inside the window
-    handleInput(deltaTime, gameState);
+    if(window.hasFocus()){
+        handleInput(deltaTime, gameState);
+        }
     applyGravity(deltaTime);
     window.draw(sprite);
     deathCheck(gameState, screenHeight, sound);

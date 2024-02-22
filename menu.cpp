@@ -14,8 +14,8 @@ int player5Score = 1;
 
 int medivalScore = 25;
 int sunsetScore = 50;
-int spaceScore = 1;
 int apocScore = 200;
+int spaceScore = 1;
 
 Menu::Menu(int screenWidth){
     if(!font.loadFromFile("sprites/Font.ttf")){
@@ -193,7 +193,7 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
     themeText.setPosition((screenWidth - themeBounds.width)/2, 320);
     unlockText.setPosition((screenWidth - unlockBounds.width)/2, 500);
 
-    // General customisation menu navigation
+    // Menu navigation
     if(menuSelect == 0){ // if on player theme
         playerText.setColor(sf::Color{255,255,0,230});
         themeText.setColor(sf::Color{255,255,255,230});
@@ -212,7 +212,7 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
         backText.setColor(sf::Color{255,255,0,230});
         }
 
-    // CHANGING CUSTOMISATIONS:
+    // Changing player
     if(playerSelect == 0){
         playerText.setString("< Player: Normal >");
         }
@@ -249,6 +249,7 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
             }
         }
 
+    // Changing theme
     if(themeSelect == 0){
         themeText.setString(" < Theme: Normal > ");
     }
@@ -269,17 +270,17 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
         }
     }
     if(themeSelect == 3){
-        themeText.setString(" < Theme: Space >");
-        if(Score::high_score < spaceScore){ // i.e it's not unlocked
-            unlockText.setString("Score " + std::to_string(spaceScore) + " points to unlock!");
+        themeText.setString(" < Theme: Apocalypse >");
+        if(Score::high_score < apocScore){ // i.e it's not unlocked
+            unlockText.setString("Score " + std::to_string(apocScore) + " points to unlock!");
             themeText.setColor({255,0,0,230});
             window.draw(unlockText);
         }
     }
     if(themeSelect == 4){
-        themeText.setString(" < Theme: Apocalypse >");
-        if(Score::high_score < apocScore){ // i.e it's not unlocked
-            unlockText.setString("Score " + std::to_string(apocScore) + " points to unlock!");
+        themeText.setString(" < Theme: Space >");
+        if(Score::high_score < spaceScore){ // i.e it's not unlocked
+            unlockText.setString("Score " + std::to_string(spaceScore) + " points to unlock!");
             themeText.setColor({255,0,0,230});
             window.draw(unlockText);
         }
@@ -292,6 +293,7 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
 
 void Menu::settingsUpdate(sf::RenderWindow& window, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, int& current_score, Score& score, int screenWidth, int& isFullscreen, int screenHeight){
 
+    // Fullscreen text
     if(isFullscreen == 1){
         fullscreenText.setString("Windowed");
         } else{
@@ -306,10 +308,10 @@ void Menu::settingsUpdate(sf::RenderWindow& window, float deltaTime, int& gameSt
     volumeText.setPosition((screenWidth - volumeTextBounds.width) / 2, 320);
 
     holdSpaceDisplay(window, player);
-
     handleInput(window, deltaTime, gameState, sound, background, player, building, helicopter, plane, current_score, score, isFullscreen, screenWidth, screenHeight);
     selectTimer += deltaTime;
 
+    // Menu navigation
     if(menuSelect == 0){
         fullscreenText.setColor(sf::Color{255,255,0,230});
         volumeText.setColor(sf::Color{255,255,255,230});
@@ -335,10 +337,10 @@ void Menu::settingsUpdate(sf::RenderWindow& window, float deltaTime, int& gameSt
 }
 
 void Menu::tryUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, int& current_score, Score& score, int& isFullscreen, int screenHeight){
-
     handleInput(window, deltaTime, gameState, sound, background, player, building, helicopter, plane, current_score, score, isFullscreen, screenWidth, screenHeight);
     selectTimer += deltaTime;
 
+    // Menu navigation
     if(menuSelect == 0){
         retryText.setColor(sf::Color{255,255,0,230});
         menuText.setColor(sf::Color{255,255,255,230});
@@ -365,7 +367,10 @@ void Menu::tryUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime,
     }
 
 void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, int& current_score, Score& score, int& isFullscreen, int screenWidth, int screenHeight){
-    // UP AND DOWN CONTROLLS
+    if(window.hasFocus()){
+    // UP AND DOWN CONTROLS
+
+    // Down
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && selectTimer > 0.2f){
         if(gameState == 0){
             menuSelect = ((menuSelect + 1)%4 + 4) % 4;
@@ -377,6 +382,8 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
         selectTimer = 0.0f;
         sound.menuSound();
         }
+
+    // Up
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && selectTimer > 0.2f){
         if(gameState == 0){
             menuSelect = ((menuSelect - 1)%4 + 4) % 4;
@@ -389,8 +396,10 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
         resetSelection(score);
         }
 
-    // MENU SELECTION
-    if(gameState == 0){ // IF ON THE MENU. OUR CHOICES ARE: PLAY, SETTINGS, QUIT
+    // ALL MENU SELECTION - pressing enter
+
+    // On menu
+    if(gameState == 0){
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && selectTimer > 0.2f){ // If Enter is pressed
             if(menuSelect == 0){ // if we press enter on play
                 background.resetGame();
@@ -426,19 +435,12 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
         }
     }
 
-    //CUSTOMISATION
+    // On customisation
     if(gameState == 2 ){
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && selectTimer > 0.2f){
-            if(menuSelect == 2){ // PRESS ENTER ON BACK
-                sound.menuSound();
-                menuSelect = 0;
-                gameState = 0;
-                selectTimer = 0;
-                }
-            }
+
         // CHANGING PLAYER AND THEME
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && selectTimer > 0.2f){ // IF PRESS RIGHT
-            if(menuSelect == 0){ // IF ON PLAYER
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && selectTimer > 0.2f){ // If press left
+            if(menuSelect == 0){ // On player
                 playerSelect = ((playerSelect + 1)%5 + 5) % 5;
                 selectTimer = 0;
                 playerChange(player, background, score);
@@ -450,8 +452,8 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
                 }
             sound.menuSound();
             }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && selectTimer > 0.2f){ // IF PRESS RIGHT
-            if(menuSelect == 0){ // IF ON PLAYER
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && selectTimer > 0.2f){ // If press right
+            if(menuSelect == 0){ // On theme
                 playerSelect = ((playerSelect - 1)%5 + 5) % 5;
                 selectTimer = 0;
                 playerChange(player, background, score);
@@ -464,9 +466,17 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
             sound.menuSound();
             }
 
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && selectTimer > 0.2f){ // Press Enter
+            if(menuSelect == 2){ // On back
+                sound.menuSound();
+                menuSelect = 0;
+                gameState = 0;
+                selectTimer = 0;
+                }
+            }
         }
 
-    //IF ON SETTINGS. OUR CHOICES ARE FULLSCREEN, VOLUME, BACK
+    //On settings
     if(gameState == 3){
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && selectTimer > 0.2f){ // have to be separate because of selectTimer > 0.2
             if(menuSelect == 0){ // if we press Enter on  Fullscreen
@@ -541,10 +551,10 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
             }
         }
     }
-
+    } // window.hasFocus() close bracket
 }
 
-void Menu::holdSpaceDisplay(sf::RenderWindow& window, Player& player){
+void Menu::holdSpaceDisplay(sf::RenderWindow& window, Player& player){ // Animation "Press space" next to player on menu screen
     holdSpaceText.setPosition(30,150*sin(Player::playerTimer) + 440);
     upArrow.setPosition(180,150*sin(Player::playerTimer) + 440);
 
@@ -582,15 +592,16 @@ void Menu::themeChange(Player& player, Background& background, Score& score, Bui
         score.themeUpdate();
         building.themeSunset();
         }
-    if(themeSelect == 3 && Score::high_score >= spaceScore && Background::Style != 3){
-        background.themeSpace();
-        score.themeUpdate();
-        }
-    if(themeSelect == 4 && Score::high_score >= apocScore && Background::Style != 4){
+    if(themeSelect == 3 && Score::high_score >= apocScore && Background::Style != 3){
         background.themeApoc();
         score.themeUpdate();
         building.themeApoc();
         }
+    if(themeSelect == 4 && Score::high_score >= spaceScore && Background::Style != 4){
+        background.themeSpace();
+        score.themeUpdate();
+        }
+
     }
 
 void Menu::resetSelection(Score& score){ // Resets player and theme selection if they are not unlocked
@@ -613,10 +624,11 @@ void Menu::resetSelection(Score& score){ // Resets player and theme selection if
     if(themeSelect == 2 && Score::high_score < sunsetScore){
         themeSelect = 0;
         }
-    if(themeSelect == 3 && Score::high_score < spaceScore){
+    if(themeSelect == 3 && Score::high_score < apocScore){
         themeSelect = 0;
         }
-    if(themeSelect == 4 && Score::high_score < apocScore){
+    if(themeSelect == 4 && Score::high_score < spaceScore){
         themeSelect = 0;
         }
+
 }
