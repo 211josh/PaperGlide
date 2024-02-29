@@ -64,6 +64,8 @@ private:
 
     void resetSelection(Score& score);
 
+    void readVol(Sounds& sound);
+
 };
 
 #endif // MENU_H_INCLUDED

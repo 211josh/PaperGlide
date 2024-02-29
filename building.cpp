@@ -17,7 +17,7 @@ Building::Building(){ // This section of the class runs once - when a new instan
     // Our game only has one building loaded at a time, i.e Building building;
     // If we wanted 2 instances of buildings, we could create a Building building2;
 
-    Building::Style = 4; // CHANGE SO ACCESSES TXT
+    Building::Style = Background::Style;
 
     if(!textureNormal.loadFromFile("sprites/Building.png")){
         std::cout << "Could not load Building (Normal) texture";

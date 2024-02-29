@@ -22,20 +22,20 @@ int gameState = 0; // 0 = main menu, 1 = gameplay, 2 = customisation, 3 = settin
 
 void loadWindow(int screenWidth, int screenHeight, int& isFullscreen, sf::RenderWindow& window){
 
-    std::ifstream readFile;
-    readFile.open( "isFullscreen.txt" );
-    if(readFile.is_open()){
-        while(!readFile.eof()){ // while not at end of file
-                readFile >> isFullscreen; // high score is equal to the contents of the file
+    std::ifstream readFullscreenFile;
+    readFullscreenFile.open( "isFullscreen.txt" );
+    if(readFullscreenFile.is_open()){
+        while(!readFullscreenFile.eof()){ // while not at end of file
+                readFullscreenFile >> isFullscreen; // 1 or 0
             }
         }
-    readFile.close();
+    readFullscreenFile.close();
 
-    if (isFullscreen == 1) {
+    if (isFullscreen) {
         window.create(sf::VideoMode(screenWidth, screenHeight), "Paper Glide", sf::Style::Fullscreen);
     } else {
         window.create(sf::VideoMode(screenWidth, screenHeight), "Paper Glide");
-        if(isFullscreen != 0){
+        if(isFullscreen != 0){ // i.e fullscreen is not equal to 1 or 0
             std::cout << "Could not retrieve fullscreen setting. Setting to windowed." << std::endl;
             }
         }

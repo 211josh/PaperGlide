@@ -1,6 +1,8 @@
 #ifndef BACKGROUND_H_INCLUDED
 #define BACKGROUND_H_INCLUDED
 
+#include <fstream>
+
 class Background{
 public:
     Background();
@@ -13,6 +15,8 @@ public:
     void themeSunset();
     void themeSpace();
     void themeApoc();
+
+    void writeTheme(); // Re-write theme saved in txt file
 
     static int Style;
 
@@ -60,6 +64,7 @@ private:
     void movement(float deltaTime);
     void dayNight(float deltaTime);
     void resetPos();
+    void readTheme(); // Read the theme saved in txt file
 };
 
 #endif // BACKGROUND_H_INCLUDED

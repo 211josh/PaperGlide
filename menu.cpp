@@ -14,8 +14,8 @@ int player5Score = 1;
 
 int medivalScore = 25;
 int sunsetScore = 50;
-int apocScore = 200;
-int spaceScore = 1;
+int apocScore = 75;
+int spaceScore = 100;
 
 Menu::Menu(int screenWidth){
     if(!font.loadFromFile("sprites/Font.ttf")){
@@ -34,9 +34,9 @@ Menu::Menu(int screenWidth){
         }
     readVolumeFile.close();
 
-    menuSelect = 0; // Menu opens on play option
+    menuSelect = 0; // Menu opens on play optionm
     playerSelect = 0; //CHANGE THIS TO OPEN AND READ FILE
-    themeSelect = 0; // CHANGE THIS TO OPEN AND READ FILE
+    themeSelect = Background::Style; // CHANGE THIS TO OPEN AND READ FILE
     selectTimer = 0; // Min time wait between changing menu option. Prevents endless fast scrolling.
 
     //Menu
@@ -407,7 +407,6 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
                 building.resetGame(score);
                 helicopter.resetGame();
                 plane.resetGame();
-
                 sound.startSound();
                 gameState = 1;
 
@@ -474,6 +473,7 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
                 menuSelect = 0;
                 gameState = 0;
                 selectTimer = 0;
+                background.writeTheme(); // Update theme text file
                 }
             }
         }
@@ -497,7 +497,7 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
                     }
                 writeFullscreenFile.close();
 
-                window.close();
+                window.close(); // restart window
                 loadWindow(screenWidth, screenHeight, isFullscreen, window);
                 }
 

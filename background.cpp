@@ -33,7 +33,7 @@ float Background::velDif = (velocity.x - maxVel.x);
 
 Background::Background(){
 
-    Background::Style = 0; // Which background is being used. Will be stored in a file
+    readTheme(); // set style to contents of themeData.txt
 
     // Normal theme
     //Sun & Moon
@@ -99,8 +99,6 @@ Background::Background(){
     if(Style == 4){
         themeSpace();
     }
-
-    dayCycle();
 }
 
 void Background::update(sf::RenderWindow& window, float deltaTime){
@@ -159,6 +157,9 @@ void Background::resetGame(){ // Function if die and retry
     resetPos();
     isDay = 1;
     dayCycle();
+    if(Style == 0){
+        backgroundSky.setColor(sf::Color({255,255,255,255}));
+        }
     }
 
 void Background::dayCycle(){
@@ -191,8 +192,6 @@ void Background::shineFollow(){
 
 void Background::themeNormal(){
     velCof = 1;
-
-    std::cout << "NORMAL" << std::endl;
     Style = 0;
     isDay = 1;
     backgroundSky.setTexture(bgSkyTexture);
@@ -218,8 +217,6 @@ void Background::themeMedival(){
 
 void Background::themeSunset(){
     velCof = 1;
-
-    std::cout << "SUNSET" << std::endl;
     Style = 2;
     backgroundSky.setTexture(bgSkySunsetTexture);
     backgroundBuildings.setTexture(bgBuildingsSunsetTexture);
@@ -307,4 +304,28 @@ void Background::dayNight(float deltaTime){
     }
 }
 
+void Background::readTheme(){
+    std::ifstream readThemeFile;
+    readThemeFile.open( "themeData.txt" );
+    if(readThemeFile.is_open()){
+        while(!readThemeFile.eof()){
+                readThemeFile >> Style;
+            }
+        } else{
+            std::cout << "Could not open themeData file. Setting to normal." << std::endl;
+        }
+    readThemeFile.close();
+    if(Style < 0 || Style > 4){ // if contents of file not valid
+        std::cout << "themeFile text invalid. Setting to normal." << std::endl;
+        Style = 0;
+    }
+}
+
+void Background::writeTheme(){
+    std::ofstream writeThemeFile("themeData.txt");
+    if(writeThemeFile.is_open()){
+        writeThemeFile << Style;
+        }
+    writeThemeFile.close();
+}
 
