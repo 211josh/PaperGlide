@@ -113,10 +113,10 @@ void Score::themeUpdate(){ // Updates text colours based on theme
     if(Background::Style == 2){ // sunset theme
         playScore.setColor(sf::Color{255,100,200,100});
     }
-    if(Background::Style == 3){ // space theme
-        playScore.setColor(sf::Color{255,255,255,100});
-    }
-    if(Background::Style == 4){ // apocalypse theme
+    if(Background::Style == 3){ // apocalypse theme
         playScore.setColor(sf::Color{130,0,0,100});
+    }
+    if(Background::Style == 4){ // space theme
+        playScore.setColor(sf::Color{255,255,255,100});
     }
 }

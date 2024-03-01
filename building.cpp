@@ -41,8 +41,11 @@ Building::Building(){ // This section of the class runs once - when a new instan
     if(Style == 2){
         themeSunset();
         }
-    if(Style == 4){
+    if(Style == 3){
         themeApoc();
+        }
+    if(Style == 4){
+        themeNormal();
         }
 
 

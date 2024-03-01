@@ -10,7 +10,7 @@ sf::Sprite Menu::upArrow;
 int player2Score = 1;
 int goldScore = 100;
 int player4Score = 1;
-int player5Score = 1;
+int kingScore = 1000;
 
 int medivalScore = 25;
 int sunsetScore = 50;
@@ -35,7 +35,7 @@ Menu::Menu(int screenWidth){
     readVolumeFile.close();
 
     menuSelect = 0; // Menu opens on play optionm
-    playerSelect = 0; //CHANGE THIS TO OPEN AND READ FILE
+    playerSelect = Player::Style; //CHANGE THIS TO OPEN AND READ FILE
     themeSelect = Background::Style; // CHANGE THIS TO OPEN AND READ FILE
     selectTimer = 0; // Min time wait between changing menu option. Prevents endless fast scrolling.
 
@@ -241,9 +241,9 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
             }
         }
     if(playerSelect == 4){
-        playerText.setString("< Player: 5 >");
-        if(Score::high_score < player5Score){ // i.e it's not unlocked
-            unlockText.setString("Score " + std::to_string(player5Score) + " points to unlock!");
+        playerText.setString("< Player: King >");
+        if(Score::high_score < kingScore){ // i.e it's not unlocked
+            unlockText.setString("Score " + std::to_string(kingScore) + " points to unlock!");
             playerText.setColor({255,0,0,230});
             window.draw(unlockText);
             }
@@ -474,6 +474,7 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
                 gameState = 0;
                 selectTimer = 0;
                 background.writeTheme(); // Update theme text file
+                player.writeTheme(); // Update player theme text file
                 }
             }
         }
@@ -491,11 +492,8 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
                     selectTimer = 0;
                     }
                 }
-                std::ofstream writeFullscreenFile("isFullscreen.txt"); // Update high score text file
-                if(writeFullscreenFile.is_open()){
-                    writeFullscreenFile << isFullscreen;
-                    }
-                writeFullscreenFile.close();
+
+                writeFullscreen(isFullscreen);
 
                 window.close(); // restart window
                 loadWindow(screenWidth, screenHeight, isFullscreen, window);
@@ -616,7 +614,7 @@ void Menu::resetSelection(Score& score){ // Resets player and theme selection if
     if(playerSelect == 3 && Score::high_score < player4Score){ // prevents double stacking "score to unlock" text
         playerSelect = 0;
         }
-    if(playerSelect == 4 && Score::high_score < player5Score){ // prevents double stacking "score to unlock" text
+    if(playerSelect == 4 && Score::high_score < kingScore){ // prevents double stacking "score to unlock" text
         playerSelect = 0;
         }
 
@@ -632,5 +630,12 @@ void Menu::resetSelection(Score& score){ // Resets player and theme selection if
     if(themeSelect == 4 && Score::high_score < spaceScore){
         themeSelect = 0;
         }
+}
 
+void Menu::writeFullscreen(int& isFullscreen){
+    std::ofstream writeFullscreenFile("isFullscreen.txt"); // Update high score text file
+    if(writeFullscreenFile.is_open()){
+        writeFullscreenFile << isFullscreen;
+        }
+    writeFullscreenFile.close();
 }

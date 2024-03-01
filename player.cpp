@@ -7,7 +7,7 @@ int Player::Style;
 
 Player::Player(){
 
-    Style = 0; // CHANGE SO IT DEPENDS ON THE TXT FILE
+    readTheme();
 
     if(!playerNormal.loadFromFile("sprites/Player.png")){
         std::cout << "Could not load Player (Normal) texture" << std::endl;
@@ -213,3 +213,24 @@ void Player::themeGold(){
     sprite.setTexture(playerGold);
     }
 
+void Player::readTheme(){
+    std::ifstream readPlayerFile;
+    readPlayerFile.open( "playerData.txt" );
+    if(readPlayerFile.is_open()){
+        while(!readPlayerFile.eof()){
+                readPlayerFile >> Style;
+            }
+        } else{ // if can't access file
+            std::cout << "Could not open playerData file. Setting to normal." << std::endl;
+            Style = 0;
+        }
+    readPlayerFile.close();
+}
+
+void Player::writeTheme(){
+    std::ofstream writePlayerFile("playerData.txt");
+    if(writePlayerFile.is_open()){
+        writePlayerFile << Style;
+        }
+    writePlayerFile.close();
+}

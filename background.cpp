@@ -306,19 +306,17 @@ void Background::dayNight(float deltaTime){
 
 void Background::readTheme(){
     std::ifstream readThemeFile;
+    std::string contents;
+
     readThemeFile.open( "themeData.txt" );
     if(readThemeFile.is_open()){
         while(!readThemeFile.eof()){
-                readThemeFile >> Style;
+                readThemeFile >> contents;
             }
-        } else{
+        } else{ // if can't access file
             std::cout << "Could not open themeData file. Setting to normal." << std::endl;
+            Style = 0;
         }
-    readThemeFile.close();
-    if(Style < 0 || Style > 4){ // if contents of file not valid
-        std::cout << "themeFile text invalid. Setting to normal." << std::endl;
-        Style = 0;
-    }
 }
 
 void Background::writeTheme(){

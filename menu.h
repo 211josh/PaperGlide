@@ -66,6 +66,8 @@ private:
 
     void readVol(Sounds& sound);
 
+    void writeFullscreen(int& isFullscreen);
+
 };
 
 #endif // MENU_H_INCLUDED

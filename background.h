@@ -2,6 +2,7 @@
 #define BACKGROUND_H_INCLUDED
 
 #include <fstream>
+#include "utility.h"
 
 class Background{
 public:
@@ -16,12 +17,13 @@ public:
     void themeSpace();
     void themeApoc();
 
-    void writeTheme(); // Re-write theme saved in txt file
-
     static int Style;
 
     static bool isDay;
     void dayCycle(); // public as retrying resets to day
+
+    void writeTheme(); // Re-write theme saved in txt file
+
 private:
 
     void shineFollow();
@@ -64,6 +66,7 @@ private:
     void movement(float deltaTime);
     void dayNight(float deltaTime);
     void resetPos();
+
     void readTheme(); // Read the theme saved in txt file
 };
 

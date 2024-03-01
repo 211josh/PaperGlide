@@ -27,6 +27,8 @@ public:
 
     static float playerTimer;
 
+    void writeTheme(); // re-write txt file for player theme
+
 private:
     sf::Texture playerNormal;
     sf::Texture playerGold;
@@ -54,6 +56,8 @@ private:
     void deathCheck(int& gameState, int screenHeight, Sounds& sound);
     void collision(int& gameState, Building& building, Plane& plane, Helicopter& helicopter, sf::RenderWindow& window);
     void hitSequence(float deltaTime, sf::RenderWindow& window, Sounds& sound, int& gameState);
+
+    void readTheme(); // check txt file for player theme
 };
 
 #endif // PLAYER_H
