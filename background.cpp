@@ -312,6 +312,7 @@ void Background::readTheme(){
     if(readThemeFile.is_open()){
         while(!readThemeFile.eof()){
                 readThemeFile >> contents;
+                Style = decrypt(contents);
             }
         } else{ // if can't access file
             std::cout << "Could not open themeData file. Setting to normal." << std::endl;
@@ -322,7 +323,7 @@ void Background::readTheme(){
 void Background::writeTheme(){
     std::ofstream writeThemeFile("themeData.txt");
     if(writeThemeFile.is_open()){
-        writeThemeFile << Style;
+        writeThemeFile << encrypt(Style);
         }
     writeThemeFile.close();
 }

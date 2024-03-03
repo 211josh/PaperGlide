@@ -633,7 +633,7 @@ void Menu::resetSelection(Score& score){ // Resets player and theme selection if
 }
 
 void Menu::writeFullscreen(int& isFullscreen){
-    std::ofstream writeFullscreenFile("isFullscreen.txt"); // Update high score text file
+    std::ofstream writeFullscreenFile("isFullscreen.txt");
     if(writeFullscreenFile.is_open()){
         writeFullscreenFile << isFullscreen;
         }

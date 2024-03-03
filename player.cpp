@@ -215,10 +215,12 @@ void Player::themeGold(){
 
 void Player::readTheme(){
     std::ifstream readPlayerFile;
+    std::string str;
     readPlayerFile.open( "playerData.txt" );
     if(readPlayerFile.is_open()){
         while(!readPlayerFile.eof()){
-                readPlayerFile >> Style;
+                readPlayerFile >> str;
+                Style = decrypt(str);
             }
         } else{ // if can't access file
             std::cout << "Could not open playerData file. Setting to normal." << std::endl;
@@ -230,7 +232,7 @@ void Player::readTheme(){
 void Player::writeTheme(){
     std::ofstream writePlayerFile("playerData.txt");
     if(writePlayerFile.is_open()){
-        writePlayerFile << Style;
+        writePlayerFile << encrypt(Style);
         }
     writePlayerFile.close();
 }

@@ -1,11 +1,16 @@
-#ifndef UTILITY_H_INCLUDED
-#define UTILITY_H_INCLUDED
+#ifndef UTILITY_H
+#define UTILITY_H
 
 #include <iostream>
+#include <algorithm>
+#include <random>
 
-// void encrypt();
-// void decrypt();
+std::string generateRandomString(int length, int seed);
+std::string generateRandomNumber(int length, int seed);
+std::string generateRandomCombo(int length, int seed);
+bool isWholeInteger(const std::string& str);
 
-std::string encrypt(std::string inputString);
+std::string encrypt(int inputNumber);
+int decrypt(std::string inputString);
 
-#endif // UTILITY_H_INCLUDED
+#endif // UTILITY_H

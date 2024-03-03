@@ -32,9 +32,11 @@ if(!font.loadFromFile("sprites/Font.ttf")){
     std::ifstream readFile;
     readFile.open( "Highscore.txt" );
     if(readFile.is_open()){
+        std::string str;
         while(!readFile.eof()){ // while not at end of file
-                readFile >> high_score; // high score is equal to the contents of the file
+                readFile >> str; // high score is equal to the contents of the file
             }
+        high_score = decrypt(str);
         }
     readFile.close();
 
@@ -91,7 +93,7 @@ void Score::displayHighScore(sf::RenderWindow& window, int screenWidth){
 
         std::ofstream writeFile("Highscore.txt"); // Update high score text file
         if(writeFile.is_open()){
-            writeFile << high_score;
+            writeFile << encrypt(high_score);
             }
         writeFile.close();
 
