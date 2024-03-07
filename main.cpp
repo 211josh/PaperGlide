@@ -25,8 +25,19 @@ void loadWindow(int screenWidth, int screenHeight, int& isFullscreen, sf::Render
     std::ifstream readFullscreenFile;
     readFullscreenFile.open( "isFullscreen.txt" );
     if(readFullscreenFile.is_open()){
+        std::string contents;
         while(!readFullscreenFile.eof()){ // while not at end of file
-                readFullscreenFile >> isFullscreen; // 1 or 0
+                readFullscreenFile >> contents; // 1 or 0
+            }
+        if(isWholeInteger(contents)){ // check isFullscreen.txt has an integer
+            isFullscreen = std::stoi(contents);
+            if(isFullscreen != 0 && isFullscreen != 1){ // check integer is valid
+                std::cout << "isFullscreen does not equal 0 or 1. Setting to 0." << std::endl;
+                isFullscreen = 0;
+                }
+            } else{
+                std::cout << "isFullscreen.txt does not contain integer value. Setting to 0." << std::endl;
+                isFullscreen = 0;
             }
         }
     readFullscreenFile.close();

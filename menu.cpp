@@ -25,14 +25,7 @@ Menu::Menu(int screenWidth){
         std::cout << "Could not load upArrow font";
     }
 
-    std::ifstream readVolumeFile;
-    readVolumeFile.open( "Volume.txt" );
-    if(readVolumeFile.is_open()){
-        while(!readVolumeFile.eof()){ // while not at end of file
-                readVolumeFile >> Sounds::volume; // high score is equal to the contents of the file
-            }
-        }
-    readVolumeFile.close();
+    readVolume();
 
     menuSelect = 0; // Menu opens on play optionm
     playerSelect = Player::Style; //CHANGE THIS TO OPEN AND READ FILE
@@ -503,6 +496,7 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
                 sound.menuSound();
                 menuSelect = 0;
                 gameState = 0;
+              //  volumeWrite();
                 std::ofstream writeVolumeFile("Volume.txt"); // Update high score text file
                 if(writeVolumeFile.is_open()){
                     writeVolumeFile << Sounds::volume;
@@ -638,4 +632,27 @@ void Menu::writeFullscreen(int& isFullscreen){
         writeFullscreenFile << isFullscreen;
         }
     writeFullscreenFile.close();
+}
+
+void Menu::readVolume(){
+    std::ifstream readVolumeFile;
+    readVolumeFile.open( "Volume.txt" );
+    if(readVolumeFile.is_open()){
+        std::string contents;
+        while(!readVolumeFile.eof()){ // while not at end of file
+                readVolumeFile >> contents;
+   //             readVolumeFile >> Sounds::volume; // high score is equal to the contents of the file
+            }
+        if(isWholeInteger(contents)){ // check isFullscreen.txt has an integer
+            Sounds::volume = std::stoi(contents);
+            if(Sounds::volume < 0 || Sounds::volume > 10){ // check integer is valid
+                std::cout << "Volume.txt does not equal a integer within range. Setting to 10." << std::endl;
+                Sounds::volume = 10;
+                }
+            } else{
+                std::cout << "Volume.txt does not contain integer value. Setting to 10." << std::endl;
+                Sounds::volume = 10;
+            }
+        }
+    readVolumeFile.close();
 }

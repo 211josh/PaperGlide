@@ -68,6 +68,8 @@ private:
 
     void writeFullscreen(int& isFullscreen);
 
+    void readVolume();
+
 };
 
 #endif // MENU_H_INCLUDED
