@@ -15,7 +15,7 @@ void loadWindow(int screenWidth, int screenHeight, int& isFullscreen, sf::Render
 
 class Menu{
 public:
-    Menu(int screenWidth);
+    Menu(int screenWidth, Score& score, Background& background);
     void menuUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, Score& score, int& isFullscreen, int screenHeight);
     void tryUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, int& current_score, Score& score, int& isFullscreen, int screenHeight);
     void settingsUpdate(sf::RenderWindow& window, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, int& current_score, Score& score, int screenWidth, int& isFullscreen, int screenHeight);
@@ -62,7 +62,7 @@ private:
     void playerChange(Player& player, Background& background, Score& score);
     void themeChange(Player& player, Background& background, Score& score, Building& building);
 
-    void resetSelection(Score& score);
+    void resetSelection(Score& score, Background& background);
 
     void readVol(Sounds& sound);
 

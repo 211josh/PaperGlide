@@ -15,6 +15,9 @@ Player::Player(){
     if(!playerGold.loadFromFile("sprites/PlayerGold.png")){
         std::cout << "Could not load Player (Gold) texture" << std::endl;
         }
+    if(!playerKing.loadFromFile("sprites/PlayerKing.png")){
+        std::cout << "Could not load Player (King) texture" << std::endl;
+        }
     if(!deathTexture.loadFromFile("sprites/Death.png")){
         std::cout << "Could not load Death screen texture" << std::endl;
         }
@@ -23,12 +26,14 @@ Player::Player(){
         }
 
     // Set texture, position and size of sprite
-    std::cout << Style << std::endl;
     if(Style == 0){
         sprite.setTexture(playerNormal);
         }
     if(Style == 1){
         sprite.setTexture(playerGold);
+        }
+    if(Style == 4){
+        sprite.setTexture(playerKing);
         }
     sprite.setPosition(sf::Vector2f(100,400));
     sprite.scale(sf::Vector2f(0.2,0.2));
@@ -166,7 +171,10 @@ void Player::hitSequence(float deltaTime, sf::RenderWindow& window, Sounds& soun
             sprite.setTexture(playerNormal);
             }
         if(Style == 1){
-        sprite.setTexture(playerGold);
+            sprite.setTexture(playerGold);
+            }
+        if(Style == 4){
+            sprite.setTexture(playerKing);
             }
         }
     }
@@ -211,6 +219,10 @@ void Player::themeNormal(){
 void Player::themeGold(){
     Style = 1;
     sprite.setTexture(playerGold);
+    }
+void Player::themeKing(){
+    Style = 4;
+    sprite.setTexture(playerKing);
     }
 
 void Player::readTheme(){

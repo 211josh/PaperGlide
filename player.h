@@ -22,6 +22,7 @@ public:
 
     void themeNormal();
     void themeGold();
+    void themeKing();
 
     static int Style;
 
@@ -32,6 +33,7 @@ public:
 private:
     sf::Texture playerNormal;
     sf::Texture playerGold;
+    sf::Texture playerKing;
 
     sf::Texture deathTexture;
     sf::Texture hitPlayer;

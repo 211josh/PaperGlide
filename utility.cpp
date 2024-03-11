@@ -13,7 +13,6 @@ std::string generateRandomString(int length, int seed){
         char randomChar = 'a' + distribution(rng);
         randomString += randomChar;
     }
-//    std::cout << randomString << std::endl;
     return randomString;
 }
 
@@ -57,12 +56,8 @@ std::string encrypt(int inputNumber){
     std::string middleSection = std::to_string(inputNumber);
     std::reverse(middleSection.begin(), middleSection.end()); // reverse numbers
 
-    std::cout << middleSection << std::endl;
-
     middleSection.insert(2, randomNumbers.substr(0,2)); // add first 2 random numbers in position 2 of middleSection
     middleSection.insert(3, randomLetters.substr(0,2)); // add first 2 random letters in position 3 of middleSection
-
-    std::cout << middleSection << std::endl;
 
     encryptedString += randomCombo.substr(0,4);
 
@@ -77,8 +72,6 @@ std::string encrypt(int inputNumber){
     encryptedString += randomNumbers.substr(6,2);
 
     encryptedString += randomCombo.substr(4,3);
-
-    std::cout << encryptedString << std::endl;
 
     return encryptedString;
 }
@@ -124,7 +117,6 @@ int decrypt(std::string inputString){
 
     value = (value/131) - 37;
     int valueInt = value;
-    std::cout << value << std::endl;
 
     if(value == valueInt){ // if value is a whole number
         return value; // encryption ID is valid and original value has been found.
@@ -132,8 +124,6 @@ int decrypt(std::string inputString){
         std::cout << "Decryption: Invalid encryptedID - reason 2. Returning 0. " << std::endl;
         return 0;
     }
-
-    std::cout << value << std::endl;
 
     return 0;
 }

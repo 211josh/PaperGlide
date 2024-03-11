@@ -78,7 +78,7 @@ int main()
     Plane plane;
     Helicopter helicopter;
     Score score;
-    Menu menu(screenWidth);
+    Menu menu(screenWidth, score, background);
 
     while (window.isOpen()){ // Game loop
         sf::Event event;

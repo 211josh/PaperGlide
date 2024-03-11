@@ -10,14 +10,14 @@ sf::Sprite Menu::upArrow;
 int player2Score = 1;
 int goldScore = 100;
 int player4Score = 1;
-int kingScore = 1000;
+int kingScore = 1;
 
 int medivalScore = 25;
 int sunsetScore = 50;
 int apocScore = 75;
 int spaceScore = 100;
 
-Menu::Menu(int screenWidth){
+Menu::Menu(int screenWidth, Score& score, Background& background){
     if(!font.loadFromFile("sprites/Font.ttf")){
         std::cout << "Could not load Menu font";
     }
@@ -27,9 +27,12 @@ Menu::Menu(int screenWidth){
 
     readVolume();
 
-    menuSelect = 0; // Menu opens on play optionm
+    menuSelect = 0; // Menu opens on play option
     playerSelect = Player::Style; //CHANGE THIS TO OPEN AND READ FILE
     themeSelect = Background::Style; // CHANGE THIS TO OPEN AND READ FILE
+
+    resetSelection(score, background);
+
     selectTimer = 0; // Min time wait between changing menu option. Prevents endless fast scrolling.
 
     //Menu
@@ -371,7 +374,7 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
             menuSelect = ((menuSelect + 1)%3 + 3) % 3;
             }
 
-        resetSelection(score);
+        resetSelection(score, background);
         selectTimer = 0.0f;
         sound.menuSound();
         }
@@ -386,7 +389,7 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
 
         selectTimer = 0.0f;
         sound.menuSound();
-        resetSelection(score);
+        resetSelection(score, background);
         }
 
     // ALL MENU SELECTION - pressing enter
@@ -561,12 +564,16 @@ void Menu::holdSpaceDisplay(sf::RenderWindow& window, Player& player){ // Animat
     }
 
 void Menu::playerChange(Player& player, Background& background, Score& score){ // event-based theme changer in settings
-    if(playerSelect == 0 && Score::high_score >= goldScore){
+    if(playerSelect == 0){
         player.themeNormal();
         }
 
     if(playerSelect == 1 && Score::high_score >= goldScore){
         player.themeGold();
+        }
+
+    if(playerSelect == 4 && Score::high_score >= kingScore){
+        player.themeKing();
         }
     }
 
@@ -598,31 +605,43 @@ void Menu::themeChange(Player& player, Background& background, Score& score, Bui
 
     }
 
-void Menu::resetSelection(Score& score){ // Resets player and theme selection if they are not unlocked
+void Menu::resetSelection(Score& score, Background& background){ // Resets player and theme selection if they are not unlocked
     if(playerSelect == 1 && Score::high_score < player2Score){ // prevents double stacking "score to unlock" text
         playerSelect = 0;
+        Player::Style = 0;
         }
     if(playerSelect == 2 && Score::high_score < goldScore){ // prevents double stacking "score to unlock" text
         playerSelect = 0;
+        Player::Style = 0;
         }
     if(playerSelect == 3 && Score::high_score < player4Score){ // prevents double stacking "score to unlock" text
         playerSelect = 0;
+        Player::Style = 0;
         }
     if(playerSelect == 4 && Score::high_score < kingScore){ // prevents double stacking "score to unlock" text
         playerSelect = 0;
+        Player::Style = 0;
         }
 
     if(themeSelect == 1 && Score::high_score < medivalScore){
         themeSelect = 0;
+        Background::Style = 0;
+        background.themeNormal();
         }
     if(themeSelect == 2 && Score::high_score < sunsetScore){
         themeSelect = 0;
+        Background::Style = 0;
+        background.themeNormal();
         }
     if(themeSelect == 3 && Score::high_score < apocScore){
         themeSelect = 0;
+        Background::Style = 0;
+        background.themeNormal();
         }
     if(themeSelect == 4 && Score::high_score < spaceScore){
         themeSelect = 0;
+        Background::Style = 0;
+        background.themeNormal();
         }
 }
 
