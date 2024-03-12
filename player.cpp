@@ -9,19 +9,19 @@ Player::Player(){
 
     readTheme();
 
-    if(!playerNormal.loadFromFile("sprites/Player.png")){
+    if(!playerNormal.loadFromFile("sprites/playerNormal.png")){
         std::cout << "Could not load Player (Normal) texture" << std::endl;
         }
-    if(!playerGold.loadFromFile("sprites/PlayerGold.png")){
+    if(!playerOrigami.loadFromFile("sprites/playerOrigami.png")){
+        std::cout << "Could not load Player (Origami) texture" << std::endl;
+        }
+    if(!playerGold.loadFromFile("sprites/playerGold.png")){
         std::cout << "Could not load Player (Gold) texture" << std::endl;
         }
-    if(!playerKing.loadFromFile("sprites/PlayerKing.png")){
+    if(!playerKing.loadFromFile("sprites/playerKing.png")){
         std::cout << "Could not load Player (King) texture" << std::endl;
         }
     if(!deathTexture.loadFromFile("sprites/Death.png")){
-        std::cout << "Could not load Death screen texture" << std::endl;
-        }
-    if(!hitPlayer.loadFromFile("sprites/hitPlayer.png")){
         std::cout << "Could not load Death screen texture" << std::endl;
         }
 
@@ -30,6 +30,9 @@ Player::Player(){
         sprite.setTexture(playerNormal);
         }
     if(Style == 1){
+        sprite.setTexture(playerOrigami);
+        }
+    if(Style == 2){
         sprite.setTexture(playerGold);
         }
     if(Style == 4){
@@ -96,12 +99,6 @@ void Player::applyGravity(float deltaTime) { // Gravity on player
     }
 
 void Player::menuFloating(float deltaTime){
-    if(Style == 0){
-        sprite.setTexture(playerNormal);
-        }
-    if(Style == 1){
-        sprite.setTexture(playerGold);
-        }
     sprite.setPosition(100,150*sin(playerTimer) + 400);
     sprite.setRotation((maxRotation/4 * cos(playerTimer)));
     }
@@ -131,12 +128,6 @@ void Player::resetGame(int gameState){
     hitSoundPlayed = 0;
     deathScreenTime = 0;
     gameOverPlayed = 0;
-    if(Style == 0){
-        sprite.setTexture(playerNormal);
-        }
-    if(Style == 1){
-        sprite.setTexture(playerGold);
-        }
     }
 
 void Player::collision(int& gameState, Building& building, Plane& plane, Helicopter& helicopter, sf::RenderWindow& window){
@@ -163,19 +154,11 @@ void Player::hitSequence(float deltaTime, sf::RenderWindow& window, Sounds& soun
     if(collided == 1 && deathScreenTime < 0.3){ // How many seconds the red screen shows for
         deathScreenTime += deltaTime;
         window.draw(deathSprite);
-        sprite.setTexture(hitPlayer);
+        sprite.setColor(sf::Color(255,100,100,255));
         }
     if(deathScreenTime >= 0.3){
         // Reset texture to normal player
-        if(Style == 0){
-            sprite.setTexture(playerNormal);
-            }
-        if(Style == 1){
-            sprite.setTexture(playerGold);
-            }
-        if(Style == 4){
-            sprite.setTexture(playerKing);
-            }
+        sprite.setColor(sf::Color(255,255,255,255));
         }
     }
 
@@ -215,9 +198,13 @@ void Player::themeNormal(){
     Style = 0;
     sprite.setTexture(playerNormal);
     }
+void Player::themeOrigami(){
+    Style = 1;
+    sprite.setTexture(playerOrigami);
+    }
 
 void Player::themeGold(){
-    Style = 1;
+    Style = 2;
     sprite.setTexture(playerGold);
     }
 void Player::themeKing(){

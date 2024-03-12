@@ -21,6 +21,7 @@ public:
     void testMode(sf::RenderWindow& window, float deltaTime);
 
     void themeNormal();
+    void themeOrigami();
     void themeGold();
     void themeKing();
 
@@ -32,11 +33,11 @@ public:
 
 private:
     sf::Texture playerNormal;
+    sf::Texture playerOrigami;
     sf::Texture playerGold;
     sf::Texture playerKing;
 
     sf::Texture deathTexture;
-    sf::Texture hitPlayer;
 
     sf::Sprite sprite;
     sf::Sprite deathSprite;

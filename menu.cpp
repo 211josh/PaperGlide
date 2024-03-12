@@ -7,7 +7,7 @@
 sf::Sprite Menu::upArrow;
 
 // Scores required for unlocks
-int player2Score = 1;
+int origamiScore = 1;
 int goldScore = 100;
 int player4Score = 1;
 int kingScore = 1;
@@ -213,9 +213,9 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
         playerText.setString("< Player: Normal >");
         }
     if(playerSelect == 1){
-        playerText.setString("< Player: 2 >");
-        if(Score::high_score < player2Score){ // i.e it's not unlocked
-            unlockText.setString("Score " + std::to_string(player2Score) + " points to unlock!");
+        playerText.setString("< Player: Origami >");
+        if(Score::high_score < origamiScore){ // i.e it's not unlocked
+            unlockText.setString("Score " + std::to_string(origamiScore) + " points to unlock!");
             playerText.setColor({255,0,0,230});
             window.draw(unlockText);
             }
@@ -567,8 +567,11 @@ void Menu::playerChange(Player& player, Background& background, Score& score){ /
     if(playerSelect == 0){
         player.themeNormal();
         }
+    if(playerSelect == 1 && Score::high_score >= origamiScore){
+        player.themeOrigami();
+        }
 
-    if(playerSelect == 1 && Score::high_score >= goldScore){
+    if(playerSelect == 2 && Score::high_score >= goldScore){
         player.themeGold();
         }
 
@@ -606,7 +609,7 @@ void Menu::themeChange(Player& player, Background& background, Score& score, Bui
     }
 
 void Menu::resetSelection(Score& score, Background& background){ // Resets player and theme selection if they are not unlocked
-    if(playerSelect == 1 && Score::high_score < player2Score){ // prevents double stacking "score to unlock" text
+    if(playerSelect == 1 && Score::high_score < origamiScore){ // prevents double stacking "score to unlock" text
         playerSelect = 0;
         Player::Style = 0;
         }
