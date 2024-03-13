@@ -12,6 +12,9 @@ Player::Player(){
     if(!playerNormal.loadFromFile("sprites/playerNormal.png")){
         std::cout << "Could not load Player (Normal) texture" << std::endl;
         }
+    if(!playerPixel.loadFromFile("sprites/playerPixel.png")){
+        std::cout << "Could not load Player (Pixel) texture" << std::endl;
+        }
     if(!playerOrigami.loadFromFile("sprites/playerOrigami.png")){
         std::cout << "Could not load Player (Origami) texture" << std::endl;
         }
@@ -30,10 +33,14 @@ Player::Player(){
         sprite.setTexture(playerNormal);
         }
     if(Style == 1){
-        sprite.setTexture(playerOrigami);
-        }
+        sprite.setTexture(playerPixel);
+    }
+
     if(Style == 2){
         sprite.setTexture(playerGold);
+        }
+    if(Style == 3){
+        sprite.setTexture(playerOrigami);
         }
     if(Style == 4){
         sprite.setTexture(playerKing);
@@ -198,14 +205,17 @@ void Player::themeNormal(){
     Style = 0;
     sprite.setTexture(playerNormal);
     }
-void Player::themeOrigami(){
+void Player::themePixel(){
     Style = 1;
-    sprite.setTexture(playerOrigami);
-    }
-
+    sprite.setTexture(playerPixel);
+}
 void Player::themeGold(){
     Style = 2;
     sprite.setTexture(playerGold);
+    }
+void Player::themeOrigami(){
+    Style = 3;
+    sprite.setTexture(playerOrigami);
     }
 void Player::themeKing(){
     Style = 4;

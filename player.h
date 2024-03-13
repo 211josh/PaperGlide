@@ -21,6 +21,7 @@ public:
     void testMode(sf::RenderWindow& window, float deltaTime);
 
     void themeNormal();
+    void themePixel();
     void themeOrigami();
     void themeGold();
     void themeKing();
@@ -33,6 +34,7 @@ public:
 
 private:
     sf::Texture playerNormal;
+    sf::Texture playerPixel;
     sf::Texture playerOrigami;
     sf::Texture playerGold;
     sf::Texture playerKing;

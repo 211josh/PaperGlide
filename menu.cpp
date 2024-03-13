@@ -7,9 +7,9 @@
 sf::Sprite Menu::upArrow;
 
 // Scores required for unlocks
-int origamiScore = 1;
+int playerPixelScore = 50;
 int goldScore = 100;
-int player4Score = 1;
+int origamiScore = 1;
 int kingScore = 1;
 
 int medivalScore = 25;
@@ -213,13 +213,14 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
         playerText.setString("< Player: Normal >");
         }
     if(playerSelect == 1){
-        playerText.setString("< Player: Origami >");
-        if(Score::high_score < origamiScore){ // i.e it's not unlocked
-            unlockText.setString("Score " + std::to_string(origamiScore) + " points to unlock!");
+        playerText.setString("< Player: Pixel >");
+        if(Score::high_score < playerPixelScore){ // i.e it's not unlocked
+            unlockText.setString("Score " + std::to_string(playerPixelScore) + " points to unlock!");
             playerText.setColor({255,0,0,230});
             window.draw(unlockText);
             }
         }
+
     if(playerSelect == 2){
         playerText.setString("< Player: Gold >");
         if(Score::high_score < goldScore){ // i.e it's not unlocked
@@ -228,10 +229,11 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
             window.draw(unlockText);
             }
         }
+
     if(playerSelect == 3){
-        playerText.setString("< Player: 4 >");
-        if(Score::high_score < player4Score){ // i.e it's not unlocked
-            unlockText.setString("Score " + std::to_string(player4Score) + " points to unlock!");
+        playerText.setString("< Player: Origami >");
+        if(Score::high_score < origamiScore){ // i.e it's not unlocked
+            unlockText.setString("Score " + std::to_string(origamiScore) + " points to unlock!");
             playerText.setColor({255,0,0,230});
             window.draw(unlockText);
             }
@@ -250,7 +252,7 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
         themeText.setString(" < Theme: Normal > ");
     }
     if(themeSelect == 1){
-        themeText.setString(" < Theme: Medival >");
+        themeText.setString(" < Theme: Pixel >");
         if(Score::high_score < medivalScore){ // i.e it's not unlocked
             unlockText.setString("Score " + std::to_string(medivalScore) + " points to unlock!");
             themeText.setColor({255,0,0,230});
@@ -567,12 +569,15 @@ void Menu::playerChange(Player& player, Background& background, Score& score){ /
     if(playerSelect == 0){
         player.themeNormal();
         }
-    if(playerSelect == 1 && Score::high_score >= origamiScore){
-        player.themeOrigami();
+    if(playerSelect == 1 && Score::high_score >= playerPixelScore){
+        player.themePixel();
         }
 
     if(playerSelect == 2 && Score::high_score >= goldScore){
         player.themeGold();
+        }
+    if(playerSelect == 3 && Score::high_score >= origamiScore){
+        player.themeOrigami();
         }
 
     if(playerSelect == 4 && Score::high_score >= kingScore){
@@ -609,15 +614,17 @@ void Menu::themeChange(Player& player, Background& background, Score& score, Bui
     }
 
 void Menu::resetSelection(Score& score, Background& background){ // Resets player and theme selection if they are not unlocked
-    if(playerSelect == 1 && Score::high_score < origamiScore){ // prevents double stacking "score to unlock" text
+    if(playerSelect == 1 && Score::high_score < playerPixelScore){ // prevents double stacking "score to unlock" text
         playerSelect = 0;
         Player::Style = 0;
         }
+
     if(playerSelect == 2 && Score::high_score < goldScore){ // prevents double stacking "score to unlock" text
         playerSelect = 0;
         Player::Style = 0;
         }
-    if(playerSelect == 3 && Score::high_score < player4Score){ // prevents double stacking "score to unlock" text
+
+    if(playerSelect == 3 && Score::high_score < origamiScore){ // prevents double stacking "score to unlock" text
         playerSelect = 0;
         Player::Style = 0;
         }
