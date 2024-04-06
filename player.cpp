@@ -125,7 +125,6 @@ void Player::deathCheck(int& gameState, int screenHeight, Sounds& sound){
         }
     }
 
-
 void Player::resetGame(int gameState){
     if(gameState == 4){
         sprite.setPosition(100,400);
@@ -135,6 +134,7 @@ void Player::resetGame(int gameState){
     hitSoundPlayed = 0;
     deathScreenTime = 0;
     gameOverPlayed = 0;
+    sprite.setColor(sf::Color(255,255,255,255));
     }
 
 void Player::collision(int& gameState, Building& building, Plane& plane, Helicopter& helicopter, sf::RenderWindow& window){

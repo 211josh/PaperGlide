@@ -55,6 +55,13 @@ Background::Background(){
     if(!bgBuildingsTexture.loadFromFile("sprites/backgroundBuildings.png")){
         std::cout << "Could not load Background Buildings texture";
         }
+    // Pixel theme
+    if(!sunPixelTexture.loadFromFile("sprites/sunPixel.png")){
+        std::cout <<"Could not load Sun (Pixel) texture";
+    }
+    if(!moonPixelTexture.loadFromFile("sprites/moonPixel.png")){
+        std::cout <<"Could not load Moon (Pixel) texture";
+    }
 
     // Sunset theme
     if(!bgSkySunsetTexture.loadFromFile("sprites/bgSkySunset.png")){
@@ -89,6 +96,9 @@ Background::Background(){
 
     if(Style == 0){
         themeNormal();
+        }
+    if(Style == 1){
+        themePixel();
         }
     if(Style == 2){
         themeSunset();
@@ -132,7 +142,7 @@ void Background::resetPos(){ // First screen size of background texture is ident
     }
 
     sf::Vector2f sunPos = Sun.getPosition();
-    if(sunPos.x <= -150 && Style == 0){ // Normal reset position
+    if(sunPos.x <= -150 && (Style == 0 || Style == 1)){ // Normal reset position
         isDay = !isDay;
         dayCycle();
         transition = 1; // begin transition to day/night
@@ -157,9 +167,6 @@ void Background::resetGame(){ // Function if die and retry
     resetPos();
     isDay = 1;
     dayCycle();
-    if(Style == 0){
-        backgroundSky.setColor(sf::Color({255,255,255,255}));
-        }
     }
 
 void Background::dayCycle(){
@@ -170,6 +177,16 @@ void Background::dayCycle(){
             Sun.setColor(sf::Color({255,255,160,255}));
         } else{
             Sun.setTexture(moonTexture);
+            Sun.setColor(sf::Color({255,255,255,255}));
+            }
+        }
+    if(Style == 1){ // Pixel theme
+        Sun.setPosition(sunInitialPos);
+        if(isDay == 1){
+            Sun.setTexture(sunPixelTexture);
+            Sun.setColor(sf::Color({255,255,160,255}));
+        } else{
+            Sun.setTexture(moonPixelTexture);
             Sun.setColor(sf::Color({255,255,255,255}));
             }
         }
@@ -211,9 +228,27 @@ void Background::themeNormal(){
     Sun.setOrigin({sunTexture.getSize().x/2,sunTexture.getSize().y/2});
     }
 
-void Background::themeMedival(){
+void Background::themePixel(){
     velCof = 1;
+    Style = 1;
+    isDay = 1;
+    backgroundSky.setTexture(bgSkyTexture);
+    backgroundBuildings.setTexture(bgBuildingsTexture);
+    backgroundBuildings.setColor(sf::Color({255,255,255,100}));
+
+    Sun.setTexture(sunPixelTexture);
+    Sun.setPosition(sunInitialPos);
+    Sun.setColor(sf::Color({255,255,160,255}));
+    Sun.setScale({0.75,0.75});
+
+    sunShine.setColor({255,255,255,200});
+    sunShine.setScale({0.9,0.9});
+    sunShine.setOrigin({sunShineTexture.getSize().x/2,sunShineTexture.getSize().y/2});
+
+    sf::Vector2f origin = Sun.getOrigin(); // sets origin of sun to right side to ensure sun is off screen
+    Sun.setOrigin({sunTexture.getSize().x/2,sunTexture.getSize().y/2});
     }
+
 
 void Background::themeSunset(){
     velCof = 1;

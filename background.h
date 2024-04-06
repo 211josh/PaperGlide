@@ -12,7 +12,7 @@ public:
     void resetGame();
 
     void themeNormal();
-    void themeMedival();
+    void themePixel();
     void themeSunset();
     void themeSpace();
     void themeApoc();
@@ -36,7 +36,9 @@ private:
     sf::Texture sunShineTexture;
 
     sf::Texture sunTexture;
+    sf::Texture sunPixelTexture;
     sf::Texture moonTexture;
+    sf::Texture moonPixelTexture;
     sf::Texture sunSpaceTexture;
     sf::Texture sunApocTexture;
 

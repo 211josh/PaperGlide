@@ -106,10 +106,7 @@ void Score::displayHighScore(sf::RenderWindow& window, int screenWidth){
     }
 
 void Score::themeUpdate(){ // Updates text colours based on theme
-    if(Background::Style == 0){ // normal theme
-        playScore.setColor(sf::Color{255,255,255,100});
-    }
-    if(Background::Style == 1){ // medival theme
+    if(Background::Style == 0 || Background::Style == 1){ // normal theme & pixel theme
         playScore.setColor(sf::Color{255,255,255,100});
     }
     if(Background::Style == 2){ // sunset theme

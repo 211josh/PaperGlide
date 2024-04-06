@@ -7,15 +7,15 @@
 sf::Sprite Menu::upArrow;
 
 // Scores required for unlocks
-int playerPixelScore = 50;
-int goldScore = 100;
-int origamiScore = 1;
-int kingScore = 1;
+int playerPixelScore = 5;
+int goldScore = 10;
+int origamiScore = 15;
+int kingScore = 20;
 
-int medivalScore = 25;
-int sunsetScore = 50;
-int apocScore = 75;
-int spaceScore = 100;
+int pixelScore = 10;
+int sunsetScore = 15;
+int apocScore = 20;
+int spaceScore = 25;
 
 Menu::Menu(int screenWidth, Score& score, Background& background){
     if(!font.loadFromFile("sprites/Font.ttf")){
@@ -26,7 +26,6 @@ Menu::Menu(int screenWidth, Score& score, Background& background){
     }
 
     readVolume();
-
     menuSelect = 0; // Menu opens on play option
     playerSelect = Player::Style; //CHANGE THIS TO OPEN AND READ FILE
     themeSelect = Background::Style; // CHANGE THIS TO OPEN AND READ FILE
@@ -77,6 +76,10 @@ Menu::Menu(int screenWidth, Score& score, Background& background){
     playerText.setFont(font);
     themeText.setFont(font);
     unlockText.setFont(font);
+    unlockText.setColor(sf::Color{255,0,0,255});
+    playerText.setCharacterSize(90);
+    themeText.setCharacterSize(90);
+    unlockText.setCharacterSize(40);
 
     // Retry
     retryText.setFont(font);
@@ -176,18 +179,7 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
     holdSpaceDisplay(window, player);
     handleInput(window, deltaTime, gameState, sound, background, player, building, helicopter, plane, Score::current_score, score, isFullscreen, screenWidth, screenHeight);
     selectTimer += deltaTime;
-
-    playerText.setCharacterSize(90);
-    themeText.setCharacterSize(90);
-    unlockText.setCharacterSize(40);
-
-    sf::FloatRect playerBounds = playerText.getLocalBounds();
-    sf::FloatRect themeBounds = themeText.getLocalBounds();
-    sf::FloatRect unlockBounds = unlockText.getLocalBounds();
-
-    playerText.setPosition((screenWidth - playerBounds.width)/2, 240);
-    themeText.setPosition((screenWidth - themeBounds.width)/2, 320);
-    unlockText.setPosition((screenWidth - unlockBounds.width)/2, 500);
+    unlockText.setString("");
 
     // Menu navigation
     if(menuSelect == 0){ // if on player theme
@@ -217,7 +209,6 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
         if(Score::high_score < playerPixelScore){ // i.e it's not unlocked
             unlockText.setString("Score " + std::to_string(playerPixelScore) + " points to unlock!");
             playerText.setColor({255,0,0,230});
-            window.draw(unlockText);
             }
         }
 
@@ -226,7 +217,6 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
         if(Score::high_score < goldScore){ // i.e it's not unlocked
             unlockText.setString("Score " + std::to_string(goldScore) + " points to unlock!");
             playerText.setColor({255,0,0,230});
-            window.draw(unlockText);
             }
         }
 
@@ -235,7 +225,6 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
         if(Score::high_score < origamiScore){ // i.e it's not unlocked
             unlockText.setString("Score " + std::to_string(origamiScore) + " points to unlock!");
             playerText.setColor({255,0,0,230});
-            window.draw(unlockText);
             }
         }
     if(playerSelect == 4){
@@ -243,7 +232,6 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
         if(Score::high_score < kingScore){ // i.e it's not unlocked
             unlockText.setString("Score " + std::to_string(kingScore) + " points to unlock!");
             playerText.setColor({255,0,0,230});
-            window.draw(unlockText);
             }
         }
 
@@ -253,10 +241,9 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
     }
     if(themeSelect == 1){
         themeText.setString(" < Theme: Pixel >");
-        if(Score::high_score < medivalScore){ // i.e it's not unlocked
-            unlockText.setString("Score " + std::to_string(medivalScore) + " points to unlock!");
+        if(Score::high_score < pixelScore){ // i.e it's not unlocked
+            unlockText.setString("Score " + std::to_string(pixelScore) + " points to unlock!");
             themeText.setColor({255,0,0,230});
-            window.draw(unlockText);
         }
     }
     if(themeSelect == 2){
@@ -264,7 +251,6 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
         if(Score::high_score < sunsetScore){ // i.e it's not unlocked
             unlockText.setString("Score " + std::to_string(sunsetScore) + " points to unlock!");
             themeText.setColor({255,0,0,230});
-            window.draw(unlockText);
         }
     }
     if(themeSelect == 3){
@@ -272,7 +258,6 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
         if(Score::high_score < apocScore){ // i.e it's not unlocked
             unlockText.setString("Score " + std::to_string(apocScore) + " points to unlock!");
             themeText.setColor({255,0,0,230});
-            window.draw(unlockText);
         }
     }
     if(themeSelect == 4){
@@ -280,13 +265,21 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
         if(Score::high_score < spaceScore){ // i.e it's not unlocked
             unlockText.setString("Score " + std::to_string(spaceScore) + " points to unlock!");
             themeText.setColor({255,0,0,230});
-            window.draw(unlockText);
         }
     }
+
+    sf::FloatRect playerBounds = playerText.getLocalBounds();
+    sf::FloatRect themeBounds = themeText.getLocalBounds();
+    sf::FloatRect unlockBounds = unlockText.getLocalBounds();
+
+    playerText.setPosition((screenWidth - playerBounds.width)/2, 240);
+    themeText.setPosition((screenWidth - themeBounds.width)/2, 320);
+    unlockText.setPosition((screenWidth - unlockBounds.width)/2, 500);
 
     window.draw(playerText);
     window.draw(themeText);
     window.draw(backText);
+    window.draw(unlockText);
     }
 
 void Menu::settingsUpdate(sf::RenderWindow& window, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, int& current_score, Score& score, int screenWidth, int& isFullscreen, int screenHeight){
@@ -591,10 +584,10 @@ void Menu::themeChange(Player& player, Background& background, Score& score, Bui
         score.themeUpdate();
         building.themeNormal();
         }
-    if(themeSelect == 1 && Score::high_score >= medivalScore && Background::Style != 1){
-        background.themeMedival();
+    if(themeSelect == 1 && Score::high_score >= pixelScore && Background::Style != 1){
+        background.themePixel();
         score.themeUpdate();
-        building.themeMedival();
+        building.themeNormal();
         }
     if(themeSelect == 2 && Score::high_score >= sunsetScore && Background::Style != 2){
         background.themeSunset();
@@ -633,25 +626,33 @@ void Menu::resetSelection(Score& score, Background& background){ // Resets playe
         Player::Style = 0;
         }
 
-    if(themeSelect == 1 && Score::high_score < medivalScore){
+    if(themeSelect == 1 && Score::high_score < pixelScore){
         themeSelect = 0;
+        if(Background::Style != 0){
+            background.themeNormal();
+        }
         Background::Style = 0;
-        background.themeNormal();
         }
     if(themeSelect == 2 && Score::high_score < sunsetScore){
         themeSelect = 0;
+        if(Background::Style != 0){
+            background.themeNormal();
+        }
         Background::Style = 0;
-        background.themeNormal();
         }
     if(themeSelect == 3 && Score::high_score < apocScore){
         themeSelect = 0;
+        if(Background::Style != 0){
+            background.themeNormal();
+        }
         Background::Style = 0;
-        background.themeNormal();
         }
     if(themeSelect == 4 && Score::high_score < spaceScore){
         themeSelect = 0;
+        if(Background::Style != 0){
+            background.themeNormal();
+        }
         Background::Style = 0;
-        background.themeNormal();
         }
 }
 

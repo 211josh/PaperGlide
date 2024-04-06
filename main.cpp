@@ -87,8 +87,10 @@ int main()
                 window.close();
                 }
             }
+        window.setVerticalSyncEnabled(true);
 
-        float deltaTime = clock.restart().asSeconds(); // Change in time since last frame
+        float deltaTime = clock.restart().asSeconds(); // clock starts and restarts in seconds
+        std::cout << 1.f/deltaTime << std::endl;
 
         // Menu state
         if(gameState == 0){ // Order of update dictates layer
