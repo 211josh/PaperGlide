@@ -126,6 +126,14 @@ Menu::Menu(int screenWidth, Score& score, Background& background){
     // Up arrow
     upArrow.setTexture(arrowTexture);
     upArrow.setColor(sf::Color{255,255,255,200});
+
+    // Error screen
+    errorText.setFont(font);
+    errorText.setCharacterSize(40);
+    errorText.setColor(sf::Color(255,0,0,255));
+    errorText.setString("ERROR: Missing game files. Please re-install the game.");
+    sf::FloatRect errorTextBounds = errorText.getLocalBounds();
+    errorText.setPosition((screenWidth - errorTextBounds.width) / 2 , 320);
     }
 
 
@@ -601,6 +609,7 @@ void Menu::themeChange(Player& player, Background& background, Score& score, Bui
         }
     if(themeSelect == 4 && Score::high_score >= spaceScore && Background::Style != 4){
         background.themeSpace();
+        building.themeSpace();
         score.themeUpdate();
         }
 
@@ -685,4 +694,9 @@ void Menu::readVolume(){
             }
         }
     readVolumeFile.close();
+}
+
+void Menu::errorScreen(sf::RenderWindow& window){
+    window.clear(sf::Color(178,215,255,255));
+    window.draw(errorText);
 }

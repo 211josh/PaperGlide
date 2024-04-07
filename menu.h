@@ -20,6 +20,7 @@ public:
     void tryUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, int& current_score, Score& score, int& isFullscreen, int screenHeight);
     void settingsUpdate(sf::RenderWindow& window, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, int& current_score, Score& score, int screenWidth, int& isFullscreen, int screenHeight);
     void customiseUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, Score& score, int& isFullscreen, int screenHeight);
+    void errorScreen(sf::RenderWindow& window);
 
     int menuSelect; // determines which option to select. 0 for play, 1 for settings, 2 for quit.
     int playerSelect;
@@ -52,6 +53,9 @@ private:
     sf::Text retryText;
     sf::Text menuText;
     sf::Text quit2Text;
+
+    // Error text
+    sf::Text errorText;
 
     static sf::Sprite upArrow;
     sf::Texture arrowTexture;

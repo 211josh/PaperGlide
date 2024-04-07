@@ -187,16 +187,14 @@ void Player::testMode(sf::RenderWindow& window, float deltaTime){
     }
 
     if(Collision::PixelPerfectTest(sprite, Helicopter::sprite)){ // BUILDING COLLISION
-        std::cout << "COLLISION" << std::endl;
-        } else{
+        std::cout << "HELI COLLISION" << std::endl;
+        } else if (Collision::PixelPerfectTest(sprite, Plane::sprite)){ // BUILDING COLLISION
+        std::cout << "PLANE COLLISION" << std::endl;
+        } else if(Collision::PixelPerfectTest(sprite, Building::sprite)){ // BUILDING COLLISION
+        std::cout << "BUILDING COLLISION" << std::endl;
+        } else {
         std::cout << "NO COLLISION" << std::endl;
         }
-
-//    if(Collision::PixelPerfectTest(sprite, Plane::sprite)){ // BUILDING COLLISION
-//        std::cout << "COLLISION" << std::endl;
-//        } else{
-//        std::cout << "NO COLLISION" << std::endl;
-//        }
 
     window.draw(sprite);
     }

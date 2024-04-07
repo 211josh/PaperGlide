@@ -86,7 +86,7 @@ void Plane::animation(float deltaTime){
     }
 
 void Plane::testMode(sf::RenderWindow& window, float deltaTime){
-    sprite.setPosition({500,300});
+    sprite.setPosition({100,50});
     animation(deltaTime);
     window.draw(sprite);
     }

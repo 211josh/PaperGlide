@@ -21,6 +21,8 @@ public: // Can be accessed outside the class
     void themeMedival();
     void themeSunset();
     void themeApoc();
+    void themeSpace();
+    void testMode(sf::RenderWindow& window, float deltaTime);
 
     static int Style;
 
@@ -31,6 +33,9 @@ private: // Can only be accessed by code inside the class
     sf::Texture textureSunset;
     sf::Texture textureMedival;
     sf::Texture textureApoc;
+    sf::Texture textureSpace;
+
+    static sf::IntRect rectFirstSprite;
 
     static sf::Vector2f initialVel;
     static sf::Vector2f velocity;
@@ -39,9 +44,11 @@ private: // Can only be accessed by code inside the class
 
     static float spawnTimer;
     static float spawnInterval;
+    float animationTimer;
 
     void movement(float deltaTime);
     void randomProp(Score& score);
+    void animation(float deltaTime);
 };
 
 #endif // BUILDING_H_INCLUDED

@@ -20,6 +20,49 @@ int isFullscreen; // 0 for windowed, 1 for fullscreen
 
 int gameState = 0; // 0 = main menu, 1 = gameplay, 2 = customisation, 3 = settings, 4 = try again, 5 = dev mode
 
+int trailerMode = 0; // 0 to turn off trailer mode ( theme swapping )
+float trailerTime = 0;
+int trailerTheme = 0;
+
+void trailer(float& trailerTime, float deltaTime, Player& player, Building& building, Background& background){
+    trailerTime += deltaTime;
+    std::cout << trailerTime << std::endl;
+    if(trailerTime > 3){
+        trailerTime = 0;
+        trailerTheme = (trailerTheme + 1) % 5;
+        switch(trailerTheme){
+        case 0:
+            player.themeNormal();
+            building.themeNormal();
+            background.themeNormal();
+            break;
+        case 1:
+            player.themePixel();
+            building.themeNormal();
+            background.themePixel();
+            break;
+        case 2:
+            player.themeGold();
+            building.themeSunset();
+            background.themeSunset(); /// ADD NORMAL -> NIGHT -> PIXEL -> REST
+            break;
+        case 3:
+            player.themeOrigami();
+            building.themeApoc();
+            background.themeApoc();
+            break;
+        case 4:
+            player.themeKing();
+            building.themeNormal();
+            background.themeSpace();
+            break;
+        }
+
+
+    }
+
+}
+
 void loadWindow(int screenWidth, int screenHeight, int& isFullscreen, sf::RenderWindow& window){
 
     std::ifstream readFullscreenFile;
@@ -90,7 +133,7 @@ int main()
         window.setVerticalSyncEnabled(true);
 
         float deltaTime = clock.restart().asSeconds(); // clock starts and restarts in seconds
-        std::cout << 1.f/deltaTime << std::endl;
+    //    std::cout << 1.f/deltaTime << std::endl;
 
         // Menu state
         if(gameState == 0){ // Order of update dictates layer
@@ -109,6 +152,10 @@ int main()
             helicopter.update(window, deltaTime);
             plane.update(window, deltaTime); // Layers of graphics depends on order of update
             player.update(window, deltaTime, screenHeight, gameState, building, plane, helicopter, sounds);
+            if(trailerMode == 1){
+                trailer(trailerTime,deltaTime, player, building, background);
+            }
+
             window.display();
         }
 
@@ -148,9 +195,13 @@ int main()
             player.testMode(window,deltaTime);
             helicopter.testMode(window, deltaTime);
             plane.testMode(window, deltaTime);
+            building.testMode(window, deltaTime);
             window.display();
         }
-
+        if(gameState == 6){ // Missing file mode telling user to re-install
+            menu.errorScreen(window);
+            window.display();
+        }
     }
     return 0;
 }
