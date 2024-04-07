@@ -24,7 +24,7 @@ int trailerMode = 0; // 0 to turn off trailer mode ( theme swapping )
 float trailerTime = 0;
 int trailerTheme = 0;
 
-void trailer(float& trailerTime, float deltaTime, Player& player, Building& building, Background& background){
+void trailer(float& trailerTime, float deltaTime, Player& player, Building& building, Background& background, Plane& plane, Helicopter& helicopter){
     trailerTime += deltaTime;
     std::cout << trailerTime << std::endl;
     if(trailerTime > 3){
@@ -34,12 +34,12 @@ void trailer(float& trailerTime, float deltaTime, Player& player, Building& buil
         case 0:
             player.themeNormal();
             building.themeNormal();
-            background.themeNormal();
+            background.themeNormal(plane, helicopter);
             break;
         case 1:
             player.themePixel();
             building.themeNormal();
-            background.themePixel();
+            background.themePixel(plane, helicopter);
             break;
         case 2:
             player.themeGold();
@@ -115,13 +115,13 @@ int main()
     sf::Clock clock;
 
     Sounds sounds;
-    Background background;
     Player player;
     Building building;
     Plane plane;
     Helicopter helicopter;
+    Background background(plane, helicopter);
     Score score;
-    Menu menu(screenWidth, score, background);
+    Menu menu(screenWidth, score, background, plane, helicopter);
 
     while (window.isOpen()){ // Game loop
         sf::Event event;
@@ -153,7 +153,7 @@ int main()
             plane.update(window, deltaTime); // Layers of graphics depends on order of update
             player.update(window, deltaTime, screenHeight, gameState, building, plane, helicopter, sounds);
             if(trailerMode == 1){
-                trailer(trailerTime,deltaTime, player, building, background);
+                trailer(trailerTime,deltaTime, player, building, background, plane, helicopter);
             }
 
             window.display();

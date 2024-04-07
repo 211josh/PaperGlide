@@ -3,16 +3,18 @@
 
 #include <fstream>
 #include "utility.h"
+#include "plane.h"
+#include "helicopter.h"
 
 class Background{
 public:
-    Background();
+    Background(Plane& plane, Helicopter& helicopter);
     void update(sf::RenderWindow& window, float deltaTime);
     void increaseVel(float velRange);
     void resetGame();
 
-    void themeNormal();
-    void themePixel();
+    void themeNormal(Plane& plane, Helicopter& helicopter);
+    void themePixel(Plane& plane, Helicopter& helicopter);
     void themeSunset();
     void themeSpace();
     void themeApoc();

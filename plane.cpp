@@ -18,6 +18,9 @@ Plane::Plane(){
     if(!texture.loadFromFile("sprites/Plane.png")){
         std::cout << "Could not load Plane texture";
         }
+    if(!texturePixel.loadFromFile("sprites/planePixel.png")){
+        std::cout << "Could not load Plane (Pixel) texture";
+        }
     sprite.setTexture(texture);
     sprite.setTextureRect(rectFirstSprite);
     sprite.setPosition(2000,2000);
@@ -90,3 +93,11 @@ void Plane::testMode(sf::RenderWindow& window, float deltaTime){
     animation(deltaTime);
     window.draw(sprite);
     }
+
+void Plane::themeNormal(){
+    sprite.setTexture(texture);
+}
+
+void Plane::themePixel(){
+    sprite.setTexture(texturePixel);
+}

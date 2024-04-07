@@ -18,9 +18,13 @@ float Helicopter::spawnTimer = 0;
 float Helicopter::spawnTimerMax; // Maximum amount of spawn delay between plane leaving and re-entering screen
 
 Helicopter::Helicopter() {
-if(!texture.loadFromFile("sprites/Helicopter.png")){
-    std::cout <<"Could not load Helicopter texture";
-    }
+    if(!texture.loadFromFile("sprites/Helicopter.png")){
+        std::cout <<"Could not load Helicopter texture";
+        }
+    if(!texturePixel.loadFromFile("sprites/heliPixel.png")){
+        std::cout <<"Could not load Helicopter (Pixel) texture";
+        }
+
 
     sprite.setTexture(texture);
     sprite.setTextureRect(rectFirstSprite);
@@ -100,3 +104,10 @@ void Helicopter::testMode(sf::RenderWindow& window, float deltaTime){
     animation(deltaTime);
     window.draw(sprite);
     }
+
+void Helicopter::themeNormal(){
+    sprite.setTexture(texture);
+}
+void Helicopter::themePixel(){
+    sprite.setTexture(texturePixel);
+}

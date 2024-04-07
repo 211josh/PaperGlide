@@ -10,12 +10,17 @@ public:
     void increaseVel(float velRange);
     void resetGame();
 
+    // Themes
+    void themeNormal();
+    void themePixel();
+
     void testMode(sf::RenderWindow& window, float deltaTime);
 
     static sf::Sprite sprite;
 
 private:
     sf::Texture texture;
+    sf::Texture texturePixel;
     static sf::IntRect rectFirstSprite;
 
     static float spawnTimer;

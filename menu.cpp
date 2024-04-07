@@ -17,7 +17,7 @@ int sunsetScore = 15;
 int apocScore = 20;
 int spaceScore = 25;
 
-Menu::Menu(int screenWidth, Score& score, Background& background){
+Menu::Menu(int screenWidth, Score& score, Background& background, Plane& plane, Helicopter& helicopter){
     if(!font.loadFromFile("sprites/Font.ttf")){
         std::cout << "Could not load Menu font";
     }
@@ -30,7 +30,7 @@ Menu::Menu(int screenWidth, Score& score, Background& background){
     playerSelect = Player::Style; //CHANGE THIS TO OPEN AND READ FILE
     themeSelect = Background::Style; // CHANGE THIS TO OPEN AND READ FILE
 
-    resetSelection(score, background);
+    resetSelection(score, background, plane, helicopter);
 
     selectTimer = 0; // Min time wait between changing menu option. Prevents endless fast scrolling.
 
@@ -377,7 +377,7 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
             menuSelect = ((menuSelect + 1)%3 + 3) % 3;
             }
 
-        resetSelection(score, background);
+        resetSelection(score, background, plane, helicopter);
         selectTimer = 0.0f;
         sound.menuSound();
         }
@@ -392,7 +392,7 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
 
         selectTimer = 0.0f;
         sound.menuSound();
-        resetSelection(score, background);
+        resetSelection(score, background, plane, helicopter);
         }
 
     // ALL MENU SELECTION - pressing enter
@@ -447,7 +447,7 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
             if(menuSelect == 1){
                 themeSelect = ((themeSelect + 1)%5 + 5) % 5;
                 selectTimer = 0;
-                themeChange(player, background, score, building);
+                themeChange(player, background, score, building, plane, helicopter);
                 sound.menuSound();
                 }
             }
@@ -461,7 +461,7 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
             if(menuSelect == 1){
                 themeSelect = ((themeSelect - 1)%5 + 5) % 5;
                 selectTimer = 0;
-                themeChange(player, background, score, building);
+                themeChange(player, background, score, building, plane, helicopter);
                 sound.menuSound();
                 }
             }
@@ -586,14 +586,14 @@ void Menu::playerChange(Player& player, Background& background, Score& score){ /
         }
     }
 
-void Menu::themeChange(Player& player, Background& background, Score& score, Building& building){
+void Menu::themeChange(Player& player, Background& background, Score& score, Building& building, Plane& plane, Helicopter& helicopter){
     if(themeSelect == 0 && Background::Style != 0){ // the double condition prevents the sun resetting when themes aren't unlocked
-        background.themeNormal();
+        background.themeNormal(plane, helicopter);
         score.themeUpdate();
         building.themeNormal();
         }
     if(themeSelect == 1 && Score::high_score >= pixelScore && Background::Style != 1){
-        background.themePixel();
+        background.themePixel(plane, helicopter);
         score.themeUpdate();
         building.themeNormal();
         }
@@ -615,7 +615,7 @@ void Menu::themeChange(Player& player, Background& background, Score& score, Bui
 
     }
 
-void Menu::resetSelection(Score& score, Background& background){ // Resets player and theme selection if they are not unlocked
+void Menu::resetSelection(Score& score, Background& background, Plane& plane, Helicopter& helicopter){ // Resets player and theme selection if they are not unlocked
     if(playerSelect == 1 && Score::high_score < playerPixelScore){ // prevents double stacking "score to unlock" text
         playerSelect = 0;
         Player::Style = 0;
@@ -638,28 +638,28 @@ void Menu::resetSelection(Score& score, Background& background){ // Resets playe
     if(themeSelect == 1 && Score::high_score < pixelScore){
         themeSelect = 0;
         if(Background::Style != 0){
-            background.themeNormal();
+            background.themeNormal(plane, helicopter);
         }
         Background::Style = 0;
         }
     if(themeSelect == 2 && Score::high_score < sunsetScore){
         themeSelect = 0;
         if(Background::Style != 0){
-            background.themeNormal();
+            background.themeNormal(plane, helicopter);
         }
         Background::Style = 0;
         }
     if(themeSelect == 3 && Score::high_score < apocScore){
         themeSelect = 0;
         if(Background::Style != 0){
-            background.themeNormal();
+            background.themeNormal(plane, helicopter);
         }
         Background::Style = 0;
         }
     if(themeSelect == 4 && Score::high_score < spaceScore){
         themeSelect = 0;
         if(Background::Style != 0){
-            background.themeNormal();
+            background.themeNormal(plane, helicopter);
         }
         Background::Style = 0;
         }

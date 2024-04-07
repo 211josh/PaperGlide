@@ -31,7 +31,7 @@ int Background::Style;
 
 float Background::velDif = (velocity.x - maxVel.x);
 
-Background::Background(){
+Background::Background(Plane& plane, Helicopter& helicopter){
 
     readTheme(); // set style to contents of themeData.txt
 
@@ -95,10 +95,10 @@ Background::Background(){
     sunShine.setTexture(sunShineTexture);
 
     if(Style == 0){
-        themeNormal();
+        themeNormal(plane, helicopter);
         }
     if(Style == 1){
-        themePixel();
+        themePixel(plane, helicopter);
         }
     if(Style == 2){
         themeSunset();
@@ -207,7 +207,11 @@ void Background::shineFollow(){
     sunShine.setPosition(sunPos);
     }
 
-void Background::themeNormal(){
+void Background::themeNormal(Plane& plane, Helicopter& helicopter){
+
+    plane.themeNormal();
+    helicopter.themeNormal();
+
     velCof = 1;
     Style = 0;
     isDay = 1;
@@ -228,7 +232,11 @@ void Background::themeNormal(){
     Sun.setOrigin({sunTexture.getSize().x/2,sunTexture.getSize().y/2});
     }
 
-void Background::themePixel(){
+void Background::themePixel(Plane& plane, Helicopter& helicopter){
+
+    plane.themePixel();
+    helicopter.themePixel();
+
     velCof = 1;
     Style = 1;
     isDay = 1;
