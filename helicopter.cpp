@@ -24,6 +24,9 @@ Helicopter::Helicopter() {
     if(!texturePixel.loadFromFile("sprites/heliPixel.png")){
         std::cout <<"Could not load Helicopter (Pixel) texture";
         }
+    if(!textureSpace.loadFromFile("sprites/heliSpace.png")){
+        std::cout <<"Could not load Helicopter (Space) texture";
+        }
 
 
     sprite.setTexture(texture);
@@ -110,4 +113,7 @@ void Helicopter::themeNormal(){
 }
 void Helicopter::themePixel(){
     sprite.setTexture(texturePixel);
+}
+void Helicopter::themeSpace(){
+    sprite.setTexture(textureSpace);
 }

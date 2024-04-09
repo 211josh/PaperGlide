@@ -21,6 +21,9 @@ Plane::Plane(){
     if(!texturePixel.loadFromFile("sprites/planePixel.png")){
         std::cout << "Could not load Plane (Pixel) texture";
         }
+    if(!textureSpace.loadFromFile("sprites/planeSpace.png")){
+        std::cout << "Could not load Plane (Space) texture";
+        }
     sprite.setTexture(texture);
     sprite.setTextureRect(rectFirstSprite);
     sprite.setPosition(2000,2000);
@@ -100,4 +103,8 @@ void Plane::themeNormal(){
 
 void Plane::themePixel(){
     sprite.setTexture(texturePixel);
+}
+
+void Plane::themeSpace(){
+    sprite.setTexture(textureSpace);
 }

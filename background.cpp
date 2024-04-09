@@ -12,7 +12,7 @@ float Background::transitionInterval = 4; // Time it takes for transition from n
 float velCof; // Velocity coefficient
 
 // Sun across screen
-sf::Vector2f sunInitialPos{1650,150}; // 1500,150
+sf::Vector2f sunInitialPos{1150,150}; // 1650,150
 sf::Vector2f sunSunsetInitialPos{1800,650};
 sf::Vector2f sunApocInitialPos{1600,150};
 sf::Vector2f sunSpaceInitialPos{1600,360};
@@ -94,20 +94,26 @@ Background::Background(Plane& plane, Helicopter& helicopter){
 
     sunShine.setTexture(sunShineTexture);
 
+
     if(Style == 0){
         themeNormal(plane, helicopter);
+        Sun.setPosition(sunInitialPos);
         }
     if(Style == 1){
         themePixel(plane, helicopter);
+        Sun.setPosition(sunInitialPos);
         }
     if(Style == 2){
-        themeSunset();
+        themeSunset(plane, helicopter);
+        Sun.setPosition(sunSunsetInitialPos);
         }
     if(Style == 3){
-        themeApoc();
+        themeApoc(plane, helicopter);
+        Sun.setPosition(sunApocInitialPos);
         }
     if(Style == 4){
-        themeSpace();
+        themeSpace(plane, helicopter);
+        Sun.setPosition(sunSpaceInitialPos);
     }
 }
 
@@ -214,14 +220,21 @@ void Background::themeNormal(Plane& plane, Helicopter& helicopter){
 
     velCof = 1;
     Style = 0;
-    isDay = 1;
     backgroundSky.setTexture(bgSkyTexture);
     backgroundBuildings.setTexture(bgBuildingsTexture);
     backgroundBuildings.setColor(sf::Color({255,255,255,100}));
 
-    Sun.setTexture(sunTexture);
-    Sun.setPosition(sunInitialPos);
-    Sun.setColor(sf::Color({255,255,160,255}));
+    sf::Vector2f pos = Sun.getPosition();
+    Sun.setPosition(pos.x,sunInitialPos.y);
+
+    if(isDay == 1){
+        Sun.setTexture(sunTexture);
+        Sun.setColor(sf::Color({255,255,160,255}));
+    } else{
+        Sun.setTexture(moonTexture);
+        Sun.setColor(sf::Color({255,255,255,255}));
+    }
+   // Sun.setPosition(sunInitialPos);
     Sun.setScale({0.75,0.75});
 
     sunShine.setColor({255,255,255,200});
@@ -239,14 +252,20 @@ void Background::themePixel(Plane& plane, Helicopter& helicopter){
 
     velCof = 1;
     Style = 1;
-    isDay = 1;
     backgroundSky.setTexture(bgSkyTexture);
     backgroundBuildings.setTexture(bgBuildingsTexture);
     backgroundBuildings.setColor(sf::Color({255,255,255,100}));
 
-    Sun.setTexture(sunPixelTexture);
-    Sun.setPosition(sunInitialPos);
-    Sun.setColor(sf::Color({255,255,160,255}));
+    sf::Vector2f pos = Sun.getPosition();
+    Sun.setPosition(pos.x,sunInitialPos.y);
+    if(isDay == 1){
+        Sun.setTexture(sunPixelTexture);
+        Sun.setColor(sf::Color({255,255,160,255}));
+    } else{
+        Sun.setTexture(moonPixelTexture);
+        Sun.setColor(sf::Color({255,255,255,255}));
+    }
+    // Sun.setPosition(sunInitialPos);
     Sun.setScale({0.75,0.75});
 
     sunShine.setColor({255,255,255,200});
@@ -258,7 +277,12 @@ void Background::themePixel(Plane& plane, Helicopter& helicopter){
     }
 
 
-void Background::themeSunset(){
+void Background::themeSunset(Plane& plane, Helicopter& helicopter){
+    plane.themeNormal();
+    helicopter.themeNormal();
+    isDay = 1;
+
+
     velCof = 1;
     Style = 2;
     backgroundSky.setTexture(bgSkySunsetTexture);
@@ -266,8 +290,11 @@ void Background::themeSunset(){
     backgroundBuildings.setColor(sf::Color({255,255,255,255}));
     backgroundSky.setColor(sf::Color({255,255,255,255}));
 
+    sf::Vector2f pos = Sun.getPosition();
+    Sun.setPosition(pos.x,sunSunsetInitialPos.y);
+
     Sun.setTexture(sunTexture);
-    Sun.setPosition(sunSunsetInitialPos);
+   // Sun.setPosition(sunSunsetInitialPos);
     Sun.setColor(sf::Color({255,0,255,255}));
     Sun.setScale({2.2,2.2});
 
@@ -277,7 +304,12 @@ void Background::themeSunset(){
     sf::Vector2f origin = Sun.getOrigin();
     Sun.setOrigin({sunTexture.getSize().x/2,sunTexture.getSize().y/2});
     }
-void Background::themeApoc(){
+void Background::themeApoc(Plane& plane, Helicopter& helicopter){
+    plane.themeNormal();
+    helicopter.themeNormal();
+
+    isDay = 1;
+
     velCof = 1;
 
     Style = 3;
@@ -289,12 +321,15 @@ void Background::themeApoc(){
     backgroundBuildings.setColor({135,0,0,100});
 
   //  sunShine.setColor({135,0,0,255});
-    sunShine.setColor({255,0,0,200});
-    sunShine.setScale({1.4,1.4});
+    sunShine.setColor({255,0,0,255});
+    sunShine.setScale({1,1});
     sunShine.setOrigin({sunShineTexture.getSize().x/2,sunShineTexture.getSize().y/2});
 
+    sf::Vector2f pos = Sun.getPosition();
+    Sun.setPosition(pos.x,sunApocInitialPos.y);
+
     Sun.setTexture(sunApocTexture);
-    Sun.setPosition(sunApocInitialPos);
+  //  Sun.setPosition(sunApocInitialPos);
     Sun.setColor(sf::Color({255,255,255,255}));
     Sun.setScale({0.9,0.9});
 
@@ -303,7 +338,11 @@ void Background::themeApoc(){
     Sun.setOrigin({sunApocTexture.getSize().x/2,sunApocTexture.getSize().y/2});
     }
 
-void Background::themeSpace(){
+void Background::themeSpace(Plane& plane, Helicopter& helicopter){
+    plane.themeSpace();
+    helicopter.themeSpace();
+
+    isDay = 1;
     velCof = 0.5;
 
     Style = 4;
@@ -319,8 +358,11 @@ void Background::themeSpace(){
     sunShine.setScale({0.1,0.1});
     sunShine.setOrigin({sunShineTexture.getSize().x/2,sunShineTexture.getSize().y/2});
 
+    sf::Vector2f pos = Sun.getPosition();
+    Sun.setPosition(pos.x,sunSpaceInitialPos.y);
+
     Sun.setTexture(sunSpaceTexture);
-    Sun.setPosition(sunSpaceInitialPos);
+//    Sun.setPosition(sunSpaceInitialPos);
     Sun.setColor(sf::Color({255,255,255,255}));
     Sun.setScale({0.9,0.9});
 
@@ -371,3 +413,9 @@ void Background::writeTheme(){
     writeThemeFile.close();
 }
 
+void Background::trailerNight(){
+    Sun.setTexture(moonTexture);
+    backgroundSky.setColor(sf::Color({40,40,40,255}));
+    Sun.setColor(sf::Color({255,255,255,255}));
+    isDay = 0;
+}

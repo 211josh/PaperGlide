@@ -13,6 +13,7 @@ public:
     // Themes
     void themeNormal();
     void themePixel();
+    void themeSpace();
 
     void testMode(sf::RenderWindow& window, float deltaTime);
 
@@ -21,6 +22,7 @@ public:
 private:
     sf::Texture texture;
     sf::Texture texturePixel;
+    sf::Texture textureSpace;
     static sf::IntRect rectFirstSprite;
 
     static float spawnTimer;

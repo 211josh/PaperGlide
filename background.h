@@ -15,9 +15,12 @@ public:
 
     void themeNormal(Plane& plane, Helicopter& helicopter);
     void themePixel(Plane& plane, Helicopter& helicopter);
-    void themeSunset();
-    void themeSpace();
-    void themeApoc();
+    void themeSunset(Plane& plane, Helicopter& helicopter);
+    void themeSpace(Plane& plane, Helicopter& helicopter);
+    void themeApoc(Plane& plane, Helicopter& helicopter);
+
+    void dayNight(float deltaTime);
+    void trailerNight();
 
     static int Style;
 
@@ -68,7 +71,6 @@ private:
     static float velDif;
 
     void movement(float deltaTime);
-    void dayNight(float deltaTime);
     void resetPos();
 
     void readTheme(); // Read the theme saved in txt file

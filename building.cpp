@@ -114,6 +114,7 @@ void Building::themeNormal(){
 void Building::themeSunset(){
     sprite.setTexture(textureSunset);
     Style = 2;
+    std::cout << "TEST" << std::endl;
     }
 
 void Building::themeApoc(){

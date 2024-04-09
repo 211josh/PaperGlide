@@ -598,17 +598,17 @@ void Menu::themeChange(Player& player, Background& background, Score& score, Bui
         building.themeNormal();
         }
     if(themeSelect == 2 && Score::high_score >= sunsetScore && Background::Style != 2){
-        background.themeSunset();
+        background.themeSunset(plane, helicopter);
         score.themeUpdate();
         building.themeSunset();
         }
     if(themeSelect == 3 && Score::high_score >= apocScore && Background::Style != 3){
-        background.themeApoc();
+        background.themeApoc(plane, helicopter);
         score.themeUpdate();
         building.themeApoc();
         }
     if(themeSelect == 4 && Score::high_score >= spaceScore && Background::Style != 4){
-        background.themeSpace();
+        background.themeSpace(plane, helicopter);
         building.themeSpace();
         score.themeUpdate();
         }

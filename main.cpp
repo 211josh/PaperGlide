@@ -29,7 +29,7 @@ void trailer(float& trailerTime, float deltaTime, Player& player, Building& buil
     std::cout << trailerTime << std::endl;
     if(trailerTime > 3){
         trailerTime = 0;
-        trailerTheme = (trailerTheme + 1) % 5;
+        trailerTheme = (trailerTheme + 1) % 6;
         switch(trailerTheme){
         case 0:
             player.themeNormal();
@@ -37,30 +37,30 @@ void trailer(float& trailerTime, float deltaTime, Player& player, Building& buil
             background.themeNormal(plane, helicopter);
             break;
         case 1:
+            background.trailerNight();
+            break;
+        case 2:
             player.themePixel();
             building.themeNormal();
             background.themePixel(plane, helicopter);
             break;
-        case 2:
+        case 3:
             player.themeGold();
             building.themeSunset();
-            background.themeSunset(); /// ADD NORMAL -> NIGHT -> PIXEL -> REST
-            break;
-        case 3:
-            player.themeOrigami();
-            building.themeApoc();
-            background.themeApoc();
+            background.themeSunset(plane, helicopter); /// ADD NORMAL -> NIGHT -> PIXEL -> REST
             break;
         case 4:
+            player.themeOrigami();
+            building.themeApoc();
+            background.themeApoc(plane, helicopter);
+            break;
+        case 5:
             player.themeKing();
-            building.themeNormal();
-            background.themeSpace();
+            building.themeSpace();
+            background.themeSpace(plane, helicopter);
             break;
         }
-
-
     }
-
 }
 
 void loadWindow(int screenWidth, int screenHeight, int& isFullscreen, sf::RenderWindow& window){
@@ -116,10 +116,10 @@ int main()
 
     Sounds sounds;
     Player player;
-    Building building;
     Plane plane;
     Helicopter helicopter;
     Background background(plane, helicopter);
+    Building building;
     Score score;
     Menu menu(screenWidth, score, background, plane, helicopter);
 
