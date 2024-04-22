@@ -1,7 +1,5 @@
 #include "sounds.h"
 
-int Sounds::volume = 10;
-
 Sounds::Sounds(){
 if(!point.loadFromFile("sounds/point.ogg")){
     std::cout << "Could not load point Sound file" << std::endl;
@@ -21,6 +19,8 @@ if(!gameOverSoundFile.loadFromFile("sounds/gameOver.ogg")){
 
     gameOver.setBuffer(gameOverSoundFile);
     gameOver.setPitch(1.0f);
+
+    volume = 10;
 
     hit.setBuffer(hitSoundFile);
     hit.setPitch(1.0f);

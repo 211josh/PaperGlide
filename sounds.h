@@ -14,7 +14,7 @@ public:
     void hitSound();
     void gameOverSound();
 
-    static int volume; // 1 to 10.
+    int volume; // 1 to 10.
 
 private:
     sf::Sound sound;

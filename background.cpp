@@ -4,32 +4,6 @@
 
 #include "background.h"
 
-// Day night transitions
-float Background::transitionTime = 0;
-int Background::transition = 0;
-float Background::transitionInterval = 4; // Time it takes for transition from night to day vice versa
-
-float velCof; // Velocity coefficient
-
-// Sun across screen
-sf::Vector2f sunInitialPos{1150,150}; // 1650,150
-sf::Vector2f sunSunsetInitialPos{1800,650};
-sf::Vector2f sunApocInitialPos{1600,150};
-sf::Vector2f sunSpaceInitialPos{1600,360};
-
-sf::Vector2f Background::initialVel{-187.0f,0.0f};
-
-sf::Vector2f Background::velocity = Background::initialVel;
-sf::Vector2f Background::sunVelocity{-50.0f,0.0f}; // 50 is good
-// sun velocity doesn't change
-
-sf::Vector2f Background::maxVel{-800.0,0.0f};
-
-bool Background::isDay = 1;
-int Background::Style;
-
-
-float Background::velDif = (velocity.x - maxVel.x);
 
 Background::Background(Plane& plane, Helicopter& helicopter){
 
@@ -89,6 +63,30 @@ Background::Background(Plane& plane, Helicopter& helicopter){
         std::cout << "Could not load Background Buildings Space texture";
         }
 
+    // Variable declaration
+    // Day night transitions
+    transitionTime = 0;
+    transition = 0;
+    transitionInterval = 4; // Time it takes for transition from night to day vice versa
+
+    // Sun across screen
+    sunInitialPos = {1650,150}; // 1650,150 - change for trailer mode
+    sunSunsetInitialPos = {1800,650};
+    sunApocInitialPos = {1600,150};
+    sunSpaceInitialPos = {1600,360};
+
+    initialVel = {-187.0f,0.0f};
+
+    velocity = initialVel;
+    sunVelocity = {-50.0f,0.0f}; // 50 is good
+    // sun velocity doesn't change
+
+    maxVel = {-800.0,0.0f};
+    velDif = (velocity.x - maxVel.x); // used for incremental increase in speed
+
+    isDay = 1;
+
+    //
     backgroundSky.setPosition(sf::Vector2f(0,0));
     backgroundBuildings.setPosition(sf::Vector2f(0,0));
 

@@ -1,25 +1,24 @@
 #include "building.h"
 
-sf::Sprite Building::sprite;
-
-sf::Vector2f Building::initialVel{-750.0f,0.0f}; // Initial velocity of building
-sf::Vector2f Building::velocity = Building::initialVel;
-sf::Vector2f Building::maxVel{-1500.0,0.0f}; // Max velocity it can reach
-float Building::velDif = (velocity.x - maxVel.x); // Calculated for incremental increase of velocity based on score
-
-// Velocity is included in the spawn interval because the velocity increases
-float Building::spawnTimer = 0.0f; // Resets at spawnInterval, moving the building back to the right side of the screen
-float Building::spawnInterval = -(1600.0f/(velocity.x)); // Time between building position reset. -1600 was found through trial and error
-
-sf::IntRect Building::rectFirstSprite(0,0,512,2048); // For animation. First texture is (0,0) to (550,300)
-
-int Building::Style;
-
-Building::Building(){ // This section of the class runs once - when a new instance of Building is created. In our case, it's Building building; in main.
+Building::Building(Background& background){ // This section of the class runs once - when a new instance of Building is created. In our case, it's Building building; in main.
     // Our game only has one building loaded at a time, i.e Building building;
     // If we wanted 2 instances of buildings, we could create a Building building2;
 
-    Building::Style = Background::Style;
+    // Variable declarations
+    initialVel = {-750.0f,0.0f}; // Initial velocity of building
+    velocity = initialVel;
+    maxVel = {-1500.0,0.0f}; // Max velocity it can reach
+    velDif = (velocity.x - maxVel.x); // Calculated for incremental increase of velocity based on score
+
+    // Velocity is included in the spawn interval because the velocity increases
+    spawnTimer = 0.0f; // Resets at spawnInterval, moving the building back to the right side of the screen
+    spawnInterval = -(1600.0f/(velocity.x)); // Time between building position reset. -1600 was found through trial and error
+
+    rectFirstSprite = {0,0,512,2048}; // For animation. First texture is (0,0) to (550,300)
+
+    Style = background.Style;
+
+    //
 
     if(!textureNormal.loadFromFile("sprites/Building.png")){
         std::cout << "Could not load Building (Normal) texture";
@@ -52,8 +51,6 @@ Building::Building(){ // This section of the class runs once - when a new instan
     if(Style == 4){
         themeSpace();
         }
-
-
 }
 
 // The update function runs once every game loop

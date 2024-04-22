@@ -18,7 +18,7 @@ public:
     void menuUpdate(sf::RenderWindow& window, float deltaTime); // Update for menu state
     void resetGame(int gameState);
 
-    void testMode(sf::RenderWindow& window, float deltaTime);
+    void testMode(sf::RenderWindow& window, float deltaTime, Helicopter& helicopter, Plane& plane, Building& building);
 
     void themeNormal();
     void themePixel();
@@ -26,9 +26,9 @@ public:
     void themeGold();
     void themeKing();
 
-    static int Style;
+    int Style;
 
-    static float playerTimer;
+    float playerTimer;
 
     void writeTheme(); // re-write txt file for player theme
 
@@ -44,16 +44,16 @@ private:
     sf::Sprite sprite;
     sf::Sprite deathSprite;
 
-    static float speed; // Static means the value is shared for all instances of that class
-    static float gravity;
-    static float terminalVel;
-    static float maxRotation;
-    static bool collided;
-    static bool hitSoundPlayed;
-    static bool gameOverPlayed;
-    static float deathScreenTime;
+    float speed; // Static means the value is shared for all instances of that class
+    float gravity;
+    float terminalVel;
+    float maxRotation;
+    bool collided;
+    bool hitSoundPlayed;
+    bool gameOverPlayed;
+    float deathScreenTime;
 
-    static sf::Vector2f velocity;
+    sf::Vector2f velocity;
 
     void handleInput(float deltaTime, int gameState);
     void applyGravity(float deltaTime);

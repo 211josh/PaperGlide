@@ -17,9 +17,7 @@
 int screenWidth = 1280;
 int screenHeight = 720;
 int isFullscreen; // 0 for windowed, 1 for fullscreen
-
 int gameState = 0; // 0 = main menu, 1 = gameplay, 2 = customisation, 3 = settings, 4 = try again, 5 = dev mode
-
 int trailerMode = 0; // 0 to turn off trailer mode ( theme swapping )
 float trailerTime = 0;
 int trailerTheme = 0;
@@ -119,9 +117,9 @@ int main()
     Plane plane;
     Helicopter helicopter;
     Background background(plane, helicopter);
-    Building building;
-    Score score;
-    Menu menu(screenWidth, score, background, plane, helicopter);
+    Building building(background);
+    Score score(background);
+    Menu menu(screenWidth, score, background, plane, helicopter, player, sounds);
 
     while (window.isOpen()){ // Game loop
         sf::Event event;
@@ -133,7 +131,7 @@ int main()
         window.setVerticalSyncEnabled(true);
 
         float deltaTime = clock.restart().asSeconds(); // clock starts and restarts in seconds
-    //    std::cout << 1.f/deltaTime << std::endl;
+    //    std::cout << 1.f/deltaTime << std::endl; // FPS counter
 
         // Menu state
         if(gameState == 0){ // Order of update dictates layer
@@ -172,7 +170,7 @@ int main()
             background.update(window,deltaTime);
             player.menuUpdate(window,deltaTime);
             score.displayHighScore(window, screenWidth);
-            menu.settingsUpdate(window, deltaTime, gameState, sounds, background, player, building, helicopter, plane, Score::current_score, score, screenWidth, isFullscreen, screenHeight);
+            menu.settingsUpdate(window, deltaTime, gameState, sounds, background, player, building, helicopter, plane, score, screenWidth, isFullscreen, screenHeight);
             window.display();
         }
 
@@ -185,14 +183,14 @@ int main()
             helicopter.update(window,deltaTime);
             score.tryUpdate(window,screenWidth,screenHeight);
             score.displayHighScore(window, screenWidth);
-            menu.tryUpdate(window, screenWidth, deltaTime, gameState, sounds, background, player, building, helicopter, plane, Score::current_score, score, isFullscreen, screenHeight);
+            menu.tryUpdate(window, screenWidth, deltaTime, gameState, sounds, background, player, building, helicopter, plane, score, isFullscreen, screenHeight);
             player.update(window, deltaTime, screenHeight, gameState, building, plane, helicopter, sounds);
             window.display();
         }
 
         if(gameState == 5){ // Developer mode for testing. Only entered manually
             background.update(window,deltaTime);
-            player.testMode(window,deltaTime);
+            player.testMode(window,deltaTime, helicopter, plane, building);
             helicopter.testMode(window, deltaTime);
             plane.testMode(window, deltaTime);
             building.testMode(window, deltaTime);

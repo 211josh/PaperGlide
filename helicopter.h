@@ -19,29 +19,29 @@ public:
 
     void testMode(sf::RenderWindow& window, float deltaTime);
 
-    static sf::Sprite sprite;
+    sf::Sprite sprite;
 
 private:
     sf::Texture texture;
     sf::Texture texturePixel;
     sf::Texture textureSpace;
 
-    static float spawnTimer;
-    static float spawnTimerMax;
+    float spawnTimer;
+    float spawnTimerMax;
 
-    static sf::Vector2f initialVel;
-    static sf::Vector2f velocity; // Initial velocity
-    static sf::Vector2f maxVel;
-    static float velDif;
-    static float heliTimer;
-    static float animationTimer;
-    static float initialyPos;
+    sf::Vector2f initialVel;
+    sf::Vector2f velocity; // Initial velocity
+    sf::Vector2f maxVel;
+    float velDif;
+    float heliTimer;
+    float animationTimer;
+    float initialyPos;
 
     void movement(float deltaTime);
     void randomProp();
     void animation(float deltaTime);
 
-    static sf::IntRect rectFirstSprite;
+    sf::IntRect rectFirstSprite;
 
 };
 

@@ -1,14 +1,14 @@
 #include "score.h"
 
-int Score::current_score = 0;
-int Score::high_score = 0;
-bool Score::pointAdded = 0;
-float Score::velRange = 100; // velRange = score for sprites to hit max velocities
 
-Score::Score(){
-if(!font.loadFromFile("sprites/Font.ttf")){
-    std::cout << "Could not load Score font";
+Score::Score(Background& background){
+    if(!font.loadFromFile("sprites/Font.ttf")){
+        std::cout << "Could not load Score font";
     }
+    current_score = 0;
+    high_score = 0;
+    pointAdded = 0;
+    velRange = 100; // velRange = score for sprites to hit max velocities
 
     // Play state Score display properties
     playScore.setFont(font); // Score behind screen
@@ -40,7 +40,7 @@ if(!font.loadFromFile("sprites/Font.ttf")){
         }
     readFile.close();
 
-    themeUpdate();
+    themeUpdate(background);
     }
 
 void Score::update(sf::RenderWindow& window, int screenWidth, int screenHeight, Sounds& sound, Background& background, Helicopter& helicopter, Plane& plane, Building& building, float deltaTime){
@@ -105,17 +105,17 @@ void Score::displayHighScore(sf::RenderWindow& window, int screenWidth){
     window.draw(highScore);
     }
 
-void Score::themeUpdate(){ // Updates text colours based on theme
-    if(Background::Style == 0 || Background::Style == 1){ // normal theme & pixel theme
+void Score::themeUpdate(Background& background){ // Updates text colours based on theme
+    if(background.Style == 0 || background.Style == 1){ // normal theme & pixel theme
         playScore.setColor(sf::Color{255,255,255,100});
     }
-    if(Background::Style == 2){ // sunset theme
+    if(background.Style == 2){ // sunset theme
         playScore.setColor(sf::Color{255,100,200,100});
     }
-    if(Background::Style == 3){ // apocalypse theme
+    if(background.Style == 3){ // apocalypse theme
         playScore.setColor(sf::Color{130,0,0,100});
     }
-    if(Background::Style == 4){ // space theme
+    if(background.Style == 4){ // space theme
         playScore.setColor(sf::Color{255,255,255,100});
     }
 }

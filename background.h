@@ -22,9 +22,9 @@ public:
     void dayNight(float deltaTime);
     void trailerNight();
 
-    static int Style;
+    int Style; // theme style
 
-    static bool isDay;
+    bool isDay;
     void dayCycle(); // public as retrying resets to day
 
     void writeTheme(); // Re-write theme saved in txt file
@@ -56,19 +56,22 @@ private:
     sf::Sprite sunShine;
     sf::Sprite backgroundBuildings;
 
-//    static sf::Vector2f sunInitialPos;
-//    static sf::Vector2f sunSunsetInitialPos;
+    sf::Vector2f sunInitialPos;
+    sf::Vector2f sunSunsetInitialPos;
+    sf::Vector2f sunApocInitialPos;
+    sf::Vector2f sunSpaceInitialPos;
 
-    static sf::Vector2f initialVel;
-    static sf::Vector2f velocity;
-    static sf::Vector2f sunVelocity;
-    static sf::Vector2f maxVel;
+    sf::Vector2f initialVel;
+    sf::Vector2f velocity;
+    sf::Vector2f sunVelocity;
+    sf::Vector2f maxVel;
 
-    static float transitionTime;
-    static int transition;
-    static float transitionInterval;
+    float transitionTime;
+    int transition;
+    float transitionInterval;
 
-    static float velDif;
+    float velDif;
+    float velCof; // velocity co-efficient
 
     void movement(float deltaTime);
     void resetPos();

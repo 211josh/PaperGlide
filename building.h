@@ -11,7 +11,7 @@ class Score;
 
 class Building { // Building sprite
 public: // Can be accessed outside the class
-    Building();
+    Building(Background& background);
     void update(sf::RenderWindow& window, float deltaTime, Score& score); // void = no return value
     void increaseVel(float velRange);
     void resetGame(Score& score);
@@ -24,9 +24,9 @@ public: // Can be accessed outside the class
     void themeSpace();
     void testMode(sf::RenderWindow& window, float deltaTime);
 
-    static int Style;
+    int Style;
 
-    static sf::Sprite sprite;
+    sf::Sprite sprite;
 
 private: // Can only be accessed by code inside the class
     sf::Texture textureNormal;
@@ -35,15 +35,15 @@ private: // Can only be accessed by code inside the class
     sf::Texture textureApoc;
     sf::Texture textureSpace;
 
-    static sf::IntRect rectFirstSprite;
+    sf::IntRect rectFirstSprite;
 
-    static sf::Vector2f initialVel;
-    static sf::Vector2f velocity;
-    static sf::Vector2f maxVel;
-    static float velDif;
+    sf::Vector2f initialVel;
+    sf::Vector2f velocity;
+    sf::Vector2f maxVel;
+    float velDif;
 
-    static float spawnTimer;
-    static float spawnInterval;
+    float spawnTimer;
+    float spawnInterval;
     float animationTimer;
 
     void movement(float deltaTime);

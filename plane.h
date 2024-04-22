@@ -17,22 +17,22 @@ public:
 
     void testMode(sf::RenderWindow& window, float deltaTime);
 
-    static sf::Sprite sprite;
+    sf::Sprite sprite;
 
 private:
     sf::Texture texture;
     sf::Texture texturePixel;
     sf::Texture textureSpace;
-    static sf::IntRect rectFirstSprite;
+    sf::IntRect rectFirstSprite;
 
-    static float spawnTimer;
-    static float spawnTimerMax;
-    static float animationTimer;
+    float spawnTimer;
+    float spawnTimerMax;
+    float animationTimer;
 
-    static sf::Vector2f initialVel; // Initial velocity
-    static sf::Vector2f velocity; // Initial velocity
-    static sf::Vector2f maxVel;
-    static float velDif;
+    sf::Vector2f initialVel; // Initial velocity
+    sf::Vector2f velocity; // Initial velocity
+    sf::Vector2f maxVel;
+    float velDif;
 
     void movement(float deltaTime);
 

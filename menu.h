@@ -15,10 +15,10 @@ void loadWindow(int screenWidth, int screenHeight, int& isFullscreen, sf::Render
 
 class Menu{
 public:
-    Menu(int screenWidth, Score& score, Background& background, Plane& plane, Helicopter& helicopter);
+    Menu(int screenWidth, Score& score, Background& background, Plane& plane, Helicopter& helicopter, Player& player, Sounds& sound);
     void menuUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, Score& score, int& isFullscreen, int screenHeight);
-    void tryUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, int& current_score, Score& score, int& isFullscreen, int screenHeight);
-    void settingsUpdate(sf::RenderWindow& window, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, int& current_score, Score& score, int screenWidth, int& isFullscreen, int screenHeight);
+    void tryUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, Score& score, int& isFullscreen, int screenHeight);
+    void settingsUpdate(sf::RenderWindow& window, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, Score& score, int screenWidth, int& isFullscreen, int screenHeight);
     void customiseUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, Score& score, int& isFullscreen, int screenHeight);
     void errorScreen(sf::RenderWindow& window);
 
@@ -57,22 +57,20 @@ private:
     // Error text
     sf::Text errorText;
 
-    static sf::Sprite upArrow;
+    sf::Sprite upArrow;
     sf::Texture arrowTexture;
 
-    void handleInput(sf::RenderWindow& window, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, int& current_score, Score& score, int& isFullscreen, int screenWidth, int screenHeight);
+    void handleInput(sf::RenderWindow& window, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, Score& score, int& isFullscreen, int screenWidth, int screenHeight);
     void holdSpaceDisplay(sf::RenderWindow& window, Player& player);
 
     void playerChange(Player& player, Background& background, Score& score);
     void themeChange(Player& player, Background& background, Score& score, Building& building, Plane& plane, Helicopter& helicopter);
 
-    void resetSelection(Score& score, Background& background, Plane& plane, Helicopter& helicopter);
-
-    void readVol(Sounds& sound);
+    void resetSelection(Score& score, Background& background, Plane& plane, Helicopter& helicopter, Player& player);
 
     void writeFullscreen(int& isFullscreen);
 
-    void readVolume();
+    void readVolume(Sounds& sound);
 
 };
 

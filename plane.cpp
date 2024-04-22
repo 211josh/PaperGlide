@@ -1,19 +1,6 @@
 #include "plane.h"
 #include <iostream>
 
-sf::Sprite Plane::sprite;
-
-float Plane::spawnTimer = 0;
-float Plane::animationTimer = 0;
-float Plane::spawnTimerMax; // Maximum amount of spawn delay between plane leaving and re-entering screen
-
-sf::Vector2f Plane::initialVel{-1050.0f,0.0f}; // Initial velocity
-sf::Vector2f Plane::velocity = Plane::initialVel; // Initial velocity
-sf::Vector2f Plane::maxVel{-2000.0f,0.0f};
-float Plane::velDif = (velocity.x - maxVel.x);
-
-sf::IntRect Plane::rectFirstSprite(0,0,550,300); // For animation. First texture is (0,0) to (550,300)
-
 Plane::Plane(){
     if(!texture.loadFromFile("sprites/Plane.png")){
         std::cout << "Could not load Plane texture";
@@ -24,28 +11,42 @@ Plane::Plane(){
     if(!textureSpace.loadFromFile("sprites/planeSpace.png")){
         std::cout << "Could not load Plane (Space) texture";
         }
+
+
+    // Variable declaration
+    spawnTimer = 0;
+    animationTimer = 0;
+    spawnTimerMax; // Maximum amount of spawn delay between plane leaving and re-entering screen
+
+    initialVel = {-1050.0f,0.0f}; // Initial velocity
+    velocity = initialVel; // Initial velocity
+    maxVel = {-2000.0f,0.0f};
+    velDif = (velocity.x - maxVel.x);
+
+    rectFirstSprite = {0,0,550,300}; // For animation. First texture is (0,0) to (550,300)
+
     sprite.setTexture(texture);
     sprite.setTextureRect(rectFirstSprite);
     sprite.setPosition(2000,2000);
     }
 
-    void Plane::update(sf::RenderWindow& window, float deltaTime){
+void Plane::update(sf::RenderWindow& window, float deltaTime){
 
-        animation(deltaTime);
+    animation(deltaTime);
 
-        spawnTimerMax = -750.0f / velocity.x; // slowest: 0.75s max. fastest: 0.375 second max.
+    spawnTimerMax = -750.0f / velocity.x; // slowest: 0.75s max. fastest: 0.375 second max.
 
-        sf::Vector2f position = sprite.getPosition();
-        if(position.x < -100){
-            spawnTimer += deltaTime;
-            if(spawnTimer > spawnTimerMax){
-                randomProp();
-                }
-            } // random prop sets a random beginning time between 0 and spawntimermax. when plane goes offscreen, timer begins to increase.
-              // this adds an element of randomness for how long the plane respawns on the other side of the screen
+    sf::Vector2f position = sprite.getPosition();
+    if(position.x < -100){
+        spawnTimer += deltaTime;
+        if(spawnTimer > spawnTimerMax){
+            randomProp();
+            }
+        } // random prop sets a random beginning time between 0 and spawntimermax. when plane goes offscreen, timer begins to increase.
+          // this adds an element of randomness for how long the plane respawns on the other side of the screen
 
-        movement(deltaTime);
-        window.draw(sprite);
+    movement(deltaTime);
+    window.draw(sprite);
     }
 
 void Plane::movement(float deltaTime){ // Movement across screen

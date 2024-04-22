@@ -3,8 +3,6 @@
 
 #include "player.h"
 
-int Player::Style;
-
 Player::Player(){
 
     readTheme();
@@ -55,6 +53,19 @@ Player::Player(){
     // Set origin point to centre of sprite
     sf::FloatRect bounds = sprite.getLocalBounds();
     sprite.setOrigin(bounds.width / 2.0f, bounds.height / 2.0f);
+
+    // Variable declarations
+    playerTimer = 0;
+    collided = 0; // Prevents unlimited hit sequences
+    hitSoundPlayed = 0; // Prevents unlimited hit sound
+    gameOverPlayed = 0; // Prevents infinite game over sound
+    deathScreenTime = 0; // How long the hit screen / player texture change lasts
+
+    speed = -2500.0f; // Speed of upwards movements
+    gravity = speed * -0.5f; // Gravity strength
+    terminalVel = 1000.0f; // Terminal vertical velocity
+    maxRotation = 70.0f; // Max rotation of sprite [-max,max]
+    velocity = {0.0f,0.0f}; // Initial velocity
     }
 
 void Player::update(sf::RenderWindow& window, float deltaTime, int screenHeight, int& gameState, Building& building, Plane& plane, Helicopter& helicopter, Sounds& sound) { // Continuously update the sprite inside the window
@@ -68,23 +79,11 @@ void Player::update(sf::RenderWindow& window, float deltaTime, int screenHeight,
     hitSequence(deltaTime, window, sound, gameState);
     }
 
-float Player::playerTimer = 0;
-bool Player::collided = 0; // Prevents unlimited hit sequences
-bool Player::hitSoundPlayed = 0; // Prevents unlimited hit sound
-bool Player::gameOverPlayed = 0; // Prevents infinite game over sound
-float Player::deathScreenTime = 0; // How long the hit screen / player texture change lasts
-
 void Player::menuUpdate(sf::RenderWindow& window, float deltaTime){ // In menu state, player hovers on left of screen
     playerTimer += deltaTime;
     menuFloating(deltaTime);
     window.draw(sprite);
     }
-
-float Player::speed = -2500.0f; // Speed of upwards movements
-float Player::gravity = speed * -0.5f; // Gravity strength
-float Player::terminalVel = 1000.0f; // Terminal vertical velocity
-float Player::maxRotation = 70.0f; // Max rotation of sprite [-max,max]
-sf::Vector2f Player::velocity{0.0f,0.0f}; // Initial velocity
 
 void Player::handleInput(float deltaTime, int gameState) { // Control player with Space
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && collided == 0){
@@ -139,15 +138,15 @@ void Player::resetGame(int gameState){
 
 void Player::collision(int& gameState, Building& building, Plane& plane, Helicopter& helicopter, sf::RenderWindow& window){
 
-    if(Collision::PixelPerfectTest(sprite, Building::sprite)){ // BUILDING COLLISION
+    if(Collision::PixelPerfectTest(sprite, building.sprite)){ // BUILDING COLLISION
         collided = 1;
         }
 
-    if(Collision::PixelPerfectTest(sprite, Plane::sprite)){ // PLANE COLLISION
+    if(Collision::PixelPerfectTest(sprite, plane.sprite)){ // PLANE COLLISION
         collided = 1;
         }
 
-    if(Collision::PixelPerfectTest(sprite, Helicopter::sprite)){ // HELICOPTER COLLISION
+    if(Collision::PixelPerfectTest(sprite, helicopter.sprite)){ // HELICOPTER COLLISION
         collided = 1;
         }
 
@@ -169,7 +168,7 @@ void Player::hitSequence(float deltaTime, sf::RenderWindow& window, Sounds& soun
         }
     }
 
-void Player::testMode(sf::RenderWindow& window, float deltaTime){
+void Player::testMode(sf::RenderWindow& window, float deltaTime, Helicopter& helicopter, Plane& plane, Building& building){
     sf::Vector2f velocityX = {200,0};
     sf::Vector2f velocityY = {0,200};
 
@@ -186,11 +185,11 @@ void Player::testMode(sf::RenderWindow& window, float deltaTime){
         sprite.move(velocityY*deltaTime);
     }
 
-    if(Collision::PixelPerfectTest(sprite, Helicopter::sprite)){ // BUILDING COLLISION
+    if(Collision::PixelPerfectTest(sprite, helicopter.sprite)){ // BUILDING COLLISION
         std::cout << "HELI COLLISION" << std::endl;
-        } else if (Collision::PixelPerfectTest(sprite, Plane::sprite)){ // BUILDING COLLISION
+        } else if (Collision::PixelPerfectTest(sprite, plane.sprite)){ // BUILDING COLLISION
         std::cout << "PLANE COLLISION" << std::endl;
-        } else if(Collision::PixelPerfectTest(sprite, Building::sprite)){ // BUILDING COLLISION
+        } else if(Collision::PixelPerfectTest(sprite, building.sprite)){ // BUILDING COLLISION
         std::cout << "BUILDING COLLISION" << std::endl;
         } else {
         std::cout << "NO COLLISION" << std::endl;

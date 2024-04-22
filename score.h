@@ -14,7 +14,7 @@ class Building; // Forward declaration of Building class to prevent circular dep
 
 class Score{
 public:
-    Score();
+    Score(Background& background);
     void update(sf::RenderWindow& window, int screenWidth, int screenHeight, Sounds& sound, Background& background, Helicopter& helicopter, Plane& plane, Building& building, float deltaTime);
     void tryUpdate(sf::RenderWindow& window, int screenWidth, int screenHeight);
     void displayHighScore(sf::RenderWindow& window, int screenWidth);
@@ -22,12 +22,12 @@ public:
     void addScore(Sounds& sound, Background& background, Helicopter& helicopter, Plane& plane, Building& building);
     void checkScore(Sounds& sound, Background& background, Helicopter& helicopter, Plane& plane, Building& building, float deltaTime);
 
-    void themeUpdate();
+    void themeUpdate(Background& background);
 
-    static int current_score;
-    static int high_score;
-    static bool pointAdded;
-    static float velRange; // The current score determines the velocity of sprites. The range depicts what score you must reach for their max vels
+    int current_score;
+    int high_score;
+    bool pointAdded;
+    float velRange; // The current score determines the velocity of sprites. The range depicts what score you must reach for their max vels
 
 private:
     sf::Font font;

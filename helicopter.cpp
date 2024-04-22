@@ -1,21 +1,5 @@
 #include "helicopter.h"
 
-sf::Sprite Helicopter::sprite;
-
-sf::Vector2f Helicopter::initialVel{-150.0f,0.0f};
-sf::Vector2f Helicopter::velocity = Helicopter::initialVel;
-sf::Vector2f Helicopter:: maxVel{-400.0f,0.0f};
-
-sf::IntRect Helicopter::rectFirstSprite(0,0,550,300); // For animation. First texture is (0,0) to (550,400)
-
-float Helicopter::velDif = (velocity.x - maxVel.x);
-
-float Helicopter::heliTimer = 0;
-float Helicopter::animationTimer = 0;
-float Helicopter::initialyPos;
-
-float Helicopter::spawnTimer = 0;
-float Helicopter::spawnTimerMax; // Maximum amount of spawn delay between plane leaving and re-entering screen
 
 Helicopter::Helicopter() {
     if(!texture.loadFromFile("sprites/Helicopter.png")){
@@ -28,7 +12,23 @@ Helicopter::Helicopter() {
         std::cout <<"Could not load Helicopter (Space) texture";
         }
 
+    // Variable initialisation
 
+    initialVel = {-150.0f,0.0f};
+    velocity = initialVel;
+    maxVel = {-400.0f,0.0f};
+
+    rectFirstSprite = {0,0,550,300}; // For animation. First texture is (0,0) to (550,400)
+
+    velDif = (velocity.x - maxVel.x);
+    heliTimer = 0;
+    animationTimer = 0;
+    initialyPos;
+    spawnTimer = 0;
+    spawnTimerMax; // Maximum amount of spawn delay between plane leaving and re-entering screen
+
+
+    //
     sprite.setTexture(texture);
     sprite.setTextureRect(rectFirstSprite);
     resetGame();
