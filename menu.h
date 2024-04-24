@@ -27,6 +27,16 @@ public:
     int themeSelect;
     float selectTimer; // Prevents fast menu scrolling
 
+    int playerPixelScore;
+    int goldScore;
+    int origamiScore;
+    int kingScore;
+
+    int pixelScore;
+    int sunsetScore;
+    int apocScore;
+    int spaceScore;
+
 private:
     sf::Font font;
 

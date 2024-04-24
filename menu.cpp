@@ -4,17 +4,6 @@
 
 #include "menu.h"
 
-// Scores required for unlocks
-int playerPixelScore = 5;
-int goldScore = 10;
-int origamiScore = 15;
-int kingScore = 20;
-
-int pixelScore = 10;
-int sunsetScore = 15;
-int apocScore = 20;
-int spaceScore = 25;
-
 Menu::Menu(int screenWidth, Score& score, Background& background, Plane& plane, Helicopter& helicopter, Player& player, Sounds& sound){
     if(!font.loadFromFile("sprites/Font.ttf")){
         std::cout << "Could not load Menu font";
@@ -32,6 +21,18 @@ Menu::Menu(int screenWidth, Score& score, Background& background, Plane& plane, 
     resetSelection(score, background, plane, helicopter, player);
 
     selectTimer = 0; // Min time wait between changing menu option. Prevents endless fast scrolling.
+
+    /// Var declarations
+    // Scores required for unlocks
+    playerPixelScore = 10;
+    goldScore = 25;
+    origamiScore = 50;
+    kingScore = 1000;
+
+    pixelScore = 10;
+    sunsetScore = 25;
+    apocScore = 50;
+    spaceScore = 100;
 
     //Menu
     titleText.setOutlineColor(sf::Color{0,0,0,255});
@@ -75,7 +76,7 @@ Menu::Menu(int screenWidth, Score& score, Background& background, Plane& plane, 
     playerText.setFont(font);
     themeText.setFont(font);
     unlockText.setFont(font);
-    unlockText.setColor(sf::Color{255,0,0,255});
+    unlockText.setFillColor(sf::Color{255,0,0,255});
     playerText.setCharacterSize(90);
     themeText.setCharacterSize(90);
     unlockText.setCharacterSize(40);
@@ -119,7 +120,7 @@ Menu::Menu(int screenWidth, Score& score, Background& background, Plane& plane, 
     holdSpaceText.setFont(font);
     holdSpaceText.setString("Hold Space");
     holdSpaceText.setCharacterSize(25);
-    holdSpaceText.setColor(sf::Color{255,255,255,200});
+    holdSpaceText.setFillColor(sf::Color{255,255,255,200});
     holdSpaceText.setOrigin(sf::Vector2f(0.0f,0.0f));
 
     // Up arrow
@@ -129,7 +130,7 @@ Menu::Menu(int screenWidth, Score& score, Background& background, Plane& plane, 
     // Error screen
     errorText.setFont(font);
     errorText.setCharacterSize(40);
-    errorText.setColor(sf::Color(255,0,0,255));
+    errorText.setFillColor(sf::Color(255,0,0,255));
     errorText.setString("ERROR: Missing game files. Please re-install the game.");
     sf::FloatRect errorTextBounds = errorText.getLocalBounds();
     errorText.setPosition((screenWidth - errorTextBounds.width) / 2 , 320);
@@ -143,35 +144,35 @@ void Menu::menuUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime
     selectTimer += deltaTime;
 
     if(menuSelect == 0){ // if on play
-        playText.setColor(sf::Color{255,255,0,230});
-        customiseText.setColor(sf::Color{255,255,255,230});
-        settingsText.setColor(sf::Color{255,255,255,230});
-        quitText.setColor(sf::Color{255,255,255,230});
+        playText.setFillColor(sf::Color{255,255,0,230});
+        customiseText.setFillColor(sf::Color{255,255,255,230});
+        settingsText.setFillColor(sf::Color{255,255,255,230});
+        quitText.setFillColor(sf::Color{255,255,255,230});
         }
 
     if(menuSelect == 1){ // if on customise
-        playText.setColor(sf::Color{255,255,255,230});
-        customiseText.setColor(sf::Color{255,255,0,230});
-        settingsText.setColor(sf::Color{255,255,255,230});
-        quitText.setColor(sf::Color{255,255,255,230});
+        playText.setFillColor(sf::Color{255,255,255,230});
+        customiseText.setFillColor(sf::Color{255,255,0,230});
+        settingsText.setFillColor(sf::Color{255,255,255,230});
+        quitText.setFillColor(sf::Color{255,255,255,230});
 
     }
 
     if(menuSelect == 2){ // if on settings
-        playText.setColor(sf::Color{255,255,255,230});
-        customiseText.setColor(sf::Color{255,255,255,230});
-        settingsText.setColor(sf::Color{255,255,0,230});
-        quitText.setColor(sf::Color{255,255,255,230});
+        playText.setFillColor(sf::Color{255,255,255,230});
+        customiseText.setFillColor(sf::Color{255,255,255,230});
+        settingsText.setFillColor(sf::Color{255,255,0,230});
+        quitText.setFillColor(sf::Color{255,255,255,230});
         }
 
     if(menuSelect == 3){ // if on quit
-        playText.setColor(sf::Color{255,255,255,230});
-        customiseText.setColor(sf::Color{255,255,255,230});
-        settingsText.setColor(sf::Color{255,255,255,230});
-        quitText.setColor(sf::Color{255,255,0,230});
+        playText.setFillColor(sf::Color{255,255,255,230});
+        customiseText.setFillColor(sf::Color{255,255,255,230});
+        settingsText.setFillColor(sf::Color{255,255,255,230});
+        quitText.setFillColor(sf::Color{255,255,0,230});
         }
 
-    versionText.setColor(sf::Color{255,255,255,70});
+    versionText.setFillColor(sf::Color{255,255,255,70});
 
     window.draw(titleText);
     window.draw(playText);
@@ -190,21 +191,21 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
 
     // Menu navigation
     if(menuSelect == 0){ // if on player theme
-        playerText.setColor(sf::Color{255,255,0,230});
-        themeText.setColor(sf::Color{255,255,255,230});
-        backText.setColor(sf::Color{255,255,255,230});
+        playerText.setFillColor(sf::Color{255,255,0,230});
+        themeText.setFillColor(sf::Color{255,255,255,230});
+        backText.setFillColor(sf::Color{255,255,255,230});
         }
 
     if(menuSelect == 1){ // if on theme
-        playerText.setColor(sf::Color{255,255,255,230});
-        themeText.setColor(sf::Color{255,255,0,230});
-        backText.setColor(sf::Color{255,255,255,230});
+        playerText.setFillColor(sf::Color{255,255,255,230});
+        themeText.setFillColor(sf::Color{255,255,0,230});
+        backText.setFillColor(sf::Color{255,255,255,230});
     }
 
     if(menuSelect == 2){ // if on back
-        playerText.setColor(sf::Color{255,255,255,230});
-        themeText.setColor(sf::Color{255,255,255,230});
-        backText.setColor(sf::Color{255,255,0,230});
+        playerText.setFillColor(sf::Color{255,255,255,230});
+        themeText.setFillColor(sf::Color{255,255,255,230});
+        backText.setFillColor(sf::Color{255,255,0,230});
         }
 
     // Changing player
@@ -215,7 +216,7 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
         playerText.setString("< Player: Pixel >");
         if(score.high_score < playerPixelScore){ // i.e it's not unlocked
             unlockText.setString("Score " + std::to_string(playerPixelScore) + " points to unlock!");
-            playerText.setColor({255,0,0,230});
+            playerText.setFillColor({255,0,0,230});
             }
         }
 
@@ -223,7 +224,7 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
         playerText.setString("< Player: Gold >");
         if(score.high_score < goldScore){ // i.e it's not unlocked
             unlockText.setString("Score " + std::to_string(goldScore) + " points to unlock!");
-            playerText.setColor({255,0,0,230});
+            playerText.setFillColor({255,0,0,230});
             }
         }
 
@@ -231,14 +232,14 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
         playerText.setString("< Player: Origami >");
         if(score.high_score < origamiScore){ // i.e it's not unlocked
             unlockText.setString("Score " + std::to_string(origamiScore) + " points to unlock!");
-            playerText.setColor({255,0,0,230});
+            playerText.setFillColor({255,0,0,230});
             }
         }
     if(playerSelect == 4){
         playerText.setString("< Player: King >");
         if(score.high_score < kingScore){ // i.e it's not unlocked
             unlockText.setString("Score " + std::to_string(kingScore) + " points to unlock!");
-            playerText.setColor({255,0,0,230});
+            playerText.setFillColor({255,0,0,230});
             }
         }
 
@@ -250,28 +251,28 @@ void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float delt
         themeText.setString(" < Theme: Pixel >");
         if(score.high_score < pixelScore){ // i.e it's not unlocked
             unlockText.setString("Score " + std::to_string(pixelScore) + " points to unlock!");
-            themeText.setColor({255,0,0,230});
+            themeText.setFillColor({255,0,0,230});
         }
     }
     if(themeSelect == 2){
         themeText.setString(" < Theme: Pink Sunset >");
         if(score.high_score < sunsetScore){ // i.e it's not unlocked
             unlockText.setString("Score " + std::to_string(sunsetScore) + " points to unlock!");
-            themeText.setColor({255,0,0,230});
+            themeText.setFillColor({255,0,0,230});
         }
     }
     if(themeSelect == 3){
         themeText.setString(" < Theme: Apocalypse >");
         if(score.high_score < apocScore){ // i.e it's not unlocked
             unlockText.setString("Score " + std::to_string(apocScore) + " points to unlock!");
-            themeText.setColor({255,0,0,230});
+            themeText.setFillColor({255,0,0,230});
         }
     }
     if(themeSelect == 4){
         themeText.setString(" < Theme: Space >");
         if(score.high_score < spaceScore){ // i.e it's not unlocked
             unlockText.setString("Score " + std::to_string(spaceScore) + " points to unlock!");
-            themeText.setColor({255,0,0,230});
+            themeText.setFillColor({255,0,0,230});
         }
     }
 
@@ -311,21 +312,21 @@ void Menu::settingsUpdate(sf::RenderWindow& window, float deltaTime, int& gameSt
 
     // Menu navigation
     if(menuSelect == 0){
-        fullscreenText.setColor(sf::Color{255,255,0,230});
-        volumeText.setColor(sf::Color{255,255,255,230});
-        backText.setColor(sf::Color{255,255,255,230});
+        fullscreenText.setFillColor(sf::Color{255,255,0,230});
+        volumeText.setFillColor(sf::Color{255,255,255,230});
+        backText.setFillColor(sf::Color{255,255,255,230});
         }
 
     if(menuSelect == 1){
-        fullscreenText.setColor(sf::Color{255,255,255,230});
-        volumeText.setColor(sf::Color{255,255,0,230});
-        backText.setColor(sf::Color{255,255,255,230});
+        fullscreenText.setFillColor(sf::Color{255,255,255,230});
+        volumeText.setFillColor(sf::Color{255,255,0,230});
+        backText.setFillColor(sf::Color{255,255,255,230});
         }
 
     if(menuSelect == 2){
-        fullscreenText.setColor(sf::Color{255,255,255,230});
-        volumeText.setColor(sf::Color{255,255,255,230});
-        backText.setColor(sf::Color{255,255,0,230});
+        fullscreenText.setFillColor(sf::Color{255,255,255,230});
+        volumeText.setFillColor(sf::Color{255,255,255,230});
+        backText.setFillColor(sf::Color{255,255,0,230});
         }
 
     window.draw(titleText);
@@ -340,24 +341,24 @@ void Menu::tryUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime,
 
     // Menu navigation
     if(menuSelect == 0){
-        retryText.setColor(sf::Color{255,255,0,230});
-        menuText.setColor(sf::Color{255,255,255,230});
-        quit2Text.setColor(sf::Color{255,255,255,230});
+        retryText.setFillColor(sf::Color{255,255,0,230});
+        menuText.setFillColor(sf::Color{255,255,255,230});
+        quit2Text.setFillColor(sf::Color{255,255,255,230});
         }
 
     if(menuSelect == 1){
-        retryText.setColor(sf::Color{255,255,255,230});
-        menuText.setColor(sf::Color{255,255,0,230});
-        quit2Text.setColor(sf::Color{255,255,255,230});
+        retryText.setFillColor(sf::Color{255,255,255,230});
+        menuText.setFillColor(sf::Color{255,255,0,230});
+        quit2Text.setFillColor(sf::Color{255,255,255,230});
         }
 
     if(menuSelect == 2){
-        retryText.setColor(sf::Color{255,255,255,230});
-        menuText.setColor(sf::Color{255,255,255,230});
-        quit2Text.setColor(sf::Color{255,255,0,230});
+        retryText.setFillColor(sf::Color{255,255,255,230});
+        menuText.setFillColor(sf::Color{255,255,255,230});
+        quit2Text.setFillColor(sf::Color{255,255,0,230});
         }
 
-    versionText.setColor(sf::Color{255,255,255,70});
+    versionText.setFillColor(sf::Color{255,255,255,70});
 
     window.draw(retryText);
     window.draw(menuText);

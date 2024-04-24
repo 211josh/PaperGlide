@@ -4,6 +4,7 @@
 #include <iostream>
 #include <algorithm>
 #include <random>
+#include <string>
 
 std::string generateRandomString(int length, int seed);
 std::string generateRandomNumber(int length, int seed);

@@ -13,20 +13,20 @@ Score::Score(Background& background){
     // Play state Score display properties
     playScore.setFont(font); // Score behind screen
     playScore.setCharacterSize(300);
-    playScore.setColor(sf::Color{255,255,255,100}); // r g b occupancy/255
+    playScore.setFillColor(sf::Color{255,255,255,100}); // r g b occupancy/255
     playScore.setOrigin(sf::Vector2f(0.0f,0.0f));
     playScore.setString(std::to_string(current_score));
 
     // Try again state Score display properties
     tryScore.setFont(font); // Score on try again screen
     tryScore.setCharacterSize(150);
-    tryScore.setColor(sf::Color{255,255,255,230});
+    tryScore.setFillColor(sf::Color{255,255,255,230});
     tryScore.setOrigin(sf::Vector2f(0.0f,0.0f));
 
     // High Score display
     highScore.setFont(font);
     highScore.setCharacterSize(100);
-    highScore.setColor(sf::Color{255,255,255,255});
+    highScore.setFillColor(sf::Color{255,255,255,255});
     highScore.setOrigin(sf::Vector2f(0.0f,0.0f));
 
     std::ifstream readFile;
@@ -107,15 +107,15 @@ void Score::displayHighScore(sf::RenderWindow& window, int screenWidth){
 
 void Score::themeUpdate(Background& background){ // Updates text colours based on theme
     if(background.Style == 0 || background.Style == 1){ // normal theme & pixel theme
-        playScore.setColor(sf::Color{255,255,255,100});
+        playScore.setFillColor(sf::Color{255,255,255,100});
     }
     if(background.Style == 2){ // sunset theme
-        playScore.setColor(sf::Color{255,100,200,100});
+        playScore.setFillColor(sf::Color{255,100,200,100});
     }
     if(background.Style == 3){ // apocalypse theme
-        playScore.setColor(sf::Color{130,0,0,100});
+        playScore.setFillColor(sf::Color{130,0,0,100});
     }
     if(background.Style == 4){ // space theme
-        playScore.setColor(sf::Color{255,255,255,100});
+        playScore.setFillColor(sf::Color{255,255,255,100});
     }
 }
