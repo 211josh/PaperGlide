@@ -169,6 +169,7 @@ void Background::resetGame(){ // Function if die and retry
     velocity = initialVel;
     resetPos();
     isDay = 1;
+    backgroundSky.setColor(sf::Color(255, 255, 255, 255));
     dayCycle();
     }
 

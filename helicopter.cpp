@@ -77,6 +77,7 @@ void Helicopter::randomProp(){ // Random properties between different helicopter
     initialyPos = yPos;
 
     spawnTimer = (static_cast<float>(std::rand()) / RAND_MAX) * spawnTimerMax; // float between 0 and spawnTimerMax
+
     }
 
 void Helicopter::increaseVel(float velRange){

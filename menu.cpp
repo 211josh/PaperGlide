@@ -401,7 +401,6 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
     if(gameState == 0){
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && selectTimer > 0.2f){ // If Enter is pressed
             if(menuSelect == 0){ // if we press enter on play
-                background.isDay = 1;
                 background.resetGame();
                 player.resetGame(gameState);
                 building.resetGame(score);
@@ -529,7 +528,6 @@ void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState
     if(gameState == 4){ // IF ON TRY AGAIN MENU. OUR CHOICES ARE RETRY, MENU, QUIT
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && selectTimer > 0.2f){
             if(menuSelect == 0){ // if we press Enter on Retry
-                background.isDay = 1;
                 background.resetGame();
                 player.resetGame(gameState);
                 building.resetGame(score);
