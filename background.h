@@ -1,82 +1,57 @@
-#ifndef BACKGROUND_H_INCLUDED
-#define BACKGROUND_H_INCLUDED
+#include "obstacle.h"
 
-#include <fstream>
-#include "utility.h"
-#include "plane.h"
-#include "helicopter.h"
+#include <SFML/Graphics.hpp>
 
-class Background{
+#ifndef BACKGROUND_H
+#define BACKGROUND_H
+
+class Background : public Obstacle {
 public:
-    Background(Plane& plane, Helicopter& helicopter);
-    void update(sf::RenderWindow& window, float deltaTime);
-    void increaseVel(float velRange);
-    void resetGame();
-
-    void themeNormal(Plane& plane, Helicopter& helicopter);
-    void themePixel(Plane& plane, Helicopter& helicopter);
-    void themeSunset(Plane& plane, Helicopter& helicopter);
-    void themeSpace(Plane& plane, Helicopter& helicopter);
-    void themeApoc(Plane& plane, Helicopter& helicopter);
-
-    void dayNight(float deltaTime);
-    void trailerNight();
-
-    int Style; // theme style
-
-    bool isDay;
-    void dayCycle(); // public as retrying resets to day
-
-    void writeTheme(); // Re-write theme saved in txt file
+    Background(Data& data);
+    void update(sf::RenderWindow& window, Data& data);
+    void setTheme(Data& data) override;
+    void respawn(Data& data); // overload of obstacle respawn
 
 private:
+    void loadTextures();
+    bool isDay;
 
-    void shineFollow();
+    void dayNight(Data& data);
 
-    sf::Texture bgSkyTexture;
-    sf::Texture bgSkySunsetTexture;
-    sf::Texture bgSkySpaceTexture;
-    sf::Texture bgSkyApocTexture;
-
-    sf::Texture sunShineTexture;
-
-    sf::Texture sunTexture;
-    sf::Texture sunPixelTexture;
-    sf::Texture moonTexture;
-    sf::Texture moonPixelTexture;
-    sf::Texture sunSpaceTexture;
-    sf::Texture sunApocTexture;
-
-    sf::Texture bgBuildingsTexture;
-    sf::Texture bgBuildingsSpaceTexture;
-    sf::Texture bgBuildingsSunsetTexture;
-
-    sf::Sprite backgroundSky;
-    sf::Sprite Sun;
-    sf::Sprite sunShine;
-    sf::Sprite backgroundBuildings;
+    bool daynightComplete;
+    float daynightTimer;
+    float daynightInterval;
 
     sf::Vector2f sunInitialPos;
-    sf::Vector2f sunSunsetInitialPos;
-    sf::Vector2f sunApocInitialPos;
-    sf::Vector2f sunSpaceInitialPos;
 
-    sf::Vector2f initialVel;
-    sf::Vector2f velocity;
-    sf::Vector2f sunVelocity;
-    sf::Vector2f maxVel;
+    sf::Sprite sky;
+    sf::Sprite buildings;
+    sf::Sprite sun;
+    sf::Sprite sunShine;
 
-    float transitionTime;
-    int transition;
-    float transitionInterval;
+    sf::Texture skyNormal;
+    sf::Texture skyPixel;
+    sf::Texture skySunset;
+    sf::Texture skyApoc;
+    sf::Texture skySpace;
 
-    float velDif;
-    float velCof; // velocity co-efficient
+    sf::Texture buildingsNormal;
+    sf::Texture buildingsPixel;
+    sf::Texture buildingsSunset;
+    sf::Texture buildingsApoc;
+    sf::Texture buildingsSpace;
 
-    void movement(float deltaTime);
-    void resetPos();
+    sf::Texture sunNormal;
+    sf::Texture moonNormal;
 
-    void readTheme(); // Read the theme saved in txt file
+    sf::Texture sunPixel;
+    sf::Texture moonPixel;
+
+    sf::Texture sunApoc;
+
+    sf::Texture sunSpace;
+
+    sf::Texture tsunShine;
 };
 
-#endif // BACKGROUND_H_INCLUDED
+#endif

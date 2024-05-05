@@ -1,58 +1,57 @@
 #include "sounds.h"
 
-Sounds::Sounds(){
-if(!point.loadFromFile("sounds/point.ogg")){
-    std::cout << "Could not load point Sound file" << std::endl;
+Sounds::Sounds() {
+    if (!menuBuffer.loadFromFile("sounds/menu.ogg")) {
+        std::cout << "Could not load Menu sound file " << std::endl;
     }
-if(!menu.loadFromFile("sounds/menu.ogg")){
-    std::cout << "Could not load Menu sound file " << std::endl;
+    if (!startBuffer.loadFromFile("sounds/start.ogg")) {
+        std::cout << "Could not load Start sound file" << std::endl;
     }
-if(!start.loadFromFile("sounds/start.ogg")){
-    std::cout << "Could not load Start sound file" << std::endl;
+    if (!pointBuffer.loadFromFile("sounds/point.ogg")) {
+        std::cout << "Could not load point Sound file" << std::endl;
     }
-if(!hitSoundFile.loadFromFile("sounds/hit.ogg")){
-    std::cout << "Could not load hit sound file" << std::endl;
+    if (!hitBuffer.loadFromFile("sounds/hit.ogg")) {
+        std::cout << "Could not load hit sound file" << std::endl;
     }
-if(!gameOverSoundFile.loadFromFile("sounds/gameOver.ogg")){
-    std::cout << "Could not load Game Over sound file" << std::endl;
+    if (!gameoverBuffer.loadFromFile("sounds/gameover.ogg")) {
+        std::cout << "Could not load Game Over sound file" << std::endl;
     }
+    // Buffer
+    menu.setBuffer(menuBuffer);
+    start.setBuffer(startBuffer);
+    point.setBuffer(pointBuffer);
+    hit.setBuffer(hitBuffer);
+    gameover.setBuffer(gameoverBuffer);
 
-    gameOver.setBuffer(gameOverSoundFile);
-    gameOver.setPitch(1.0f);
-
-    volume = 10;
-
-    hit.setBuffer(hitSoundFile);
-    hit.setPitch(1.0f);
+    // Pitch
+    menu.setPitch(1);
+    start.setPitch(1);
+    point.setPitch(0.9);
+    hit.setPitch(1);
+    gameover.setPitch(1);
 }
 
-void Sounds::pointSound(){ // Sound when score point is given
-    sound.setBuffer(point);
-    sound.setVolume(0.75*volume);
-    sound.setPitch(0.9f);
-    sound.play();
-    }
+void Sounds::menuSound(Data& data) {
+    menu.setVolume(2 * data.volume);
+    menu.play();
+}
 
-void Sounds::menuSound(){ // Sound for swapping options on menu
-    sound.setBuffer(menu);
-    sound.setVolume(2*volume);
-    sound.setPitch(1.0f);
-    sound.play();
-    }
+void Sounds::startSound(Data& data) {
+    start.setVolume(4 * data.volume);
+    start.play();
+}
 
-void Sounds::startSound(){ // Sound for starting game
-    sound.setBuffer(start);
-    sound.setVolume(4*volume);
-    sound.setPitch(1.0f);
-    sound.play();
-    }
+void Sounds::pointSound(Data& data) {
+    point.setVolume(0.75 * data.volume);
+    point.play();
+}
 
-void Sounds::hitSound(){
-    hit.setVolume(2*volume);
+void Sounds::hitSound(Data& data) {
+    hit.setVolume(2 * data.volume);
     hit.play();
-    }
+}
 
-void Sounds::gameOverSound(){
-    gameOver.setVolume(10*volume);
-    gameOver.play();
-    }
+void Sounds::gameoverSound(Data& data) {
+    gameover.setVolume(10 * data.volume);
+    gameover.play();
+}

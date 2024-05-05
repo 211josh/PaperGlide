@@ -1,87 +1,55 @@
-#ifndef MENU_H_INCLUDED
-#define MENU_H_INCLUDED
+#include <SFML/Graphics.hpp>
+#include <iostream>
+#include <unordered_map>
 
-#include <fstream>
-
+#include "data.h"
 #include "sounds.h"
-#include "background.h"
-#include "player.h"
-#include "building.h"
-#include "helicopter.h"
-#include "plane.h"
-#include "score.h"
 
-void loadWindow(int screenWidth, int screenHeight, int& isFullscreen, sf::RenderWindow& window);
+#ifndef MENU_H
+#define MENU_H
 
-class Menu{
+class Menu {
 public:
-    Menu(int screenWidth, Score& score, Background& background, Plane& plane, Helicopter& helicopter, Player& player, Sounds& sound);
-    void menuUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, Score& score, int& isFullscreen, int screenHeight);
-    void tryUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, Score& score, int& isFullscreen, int screenHeight);
-    void settingsUpdate(sf::RenderWindow& window, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, Score& score, int screenWidth, int& isFullscreen, int screenHeight);
-    void customiseUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, Score& score, int& isFullscreen, int screenHeight);
-    void errorScreen(sf::RenderWindow& window);
-
-    int menuSelect; // determines which option to select. 0 for play, 1 for settings, 2 for quit.
-    int playerSelect;
-    int themeSelect;
-    float selectTimer; // Prevents fast menu scrolling
-
-    int playerPixelScore;
-    int goldScore;
-    int origamiScore;
-    int kingScore;
-
-    int pixelScore;
-    int sunsetScore;
-    int apocScore;
-    int spaceScore;
+	Menu(Data& data);
+	void update(sf::RenderWindow& window, Data& data, Sounds& sounds);
+	void playUpdate(sf::RenderWindow& window, Data& data, Sounds& sounds); // checks for change in gamestate during play
 
 private:
-    sf::Font font;
+	void handleInput(sf::RenderWindow& window, Data& data, Sounds& sounds); // all other functions are called by events in handleInput
 
-    // Menu text
-    sf::Text titleText;
-    sf::Text playText;
-    sf::Text customiseText;
-    sf::Text settingsText;
-    sf::Text quitText;
-    sf::Text versionText;
-    sf::Text holdSpaceText;
+	void goPlay(Data& data);
+	void goMenu(Data& data);
+	void goCustomise(Data& data);
+	void goSettings(Data& data);
+	void goRetry(Data& data);
 
-    // Customisation text
-    sf::Text playerText;
-    sf::Text themeText;
-    sf::Text unlockText;
+	void positionText(Data& data);
+	void colorText(Data& data);
 
-    // Settings text
-    sf::Text fullscreenText;
-    sf::Text volumeText;
-    sf::Text backText;
+	int menuSelect;
 
-    // Retry text
-    sf::Text retryText;
-    sf::Text menuText;
-    sf::Text quit2Text;
+	int currentScore;
 
-    // Error text
-    sf::Text errorText;
+	int playerTheme;
+	int theme;
 
-    sf::Sprite upArrow;
-    sf::Texture arrowTexture;
+	bool locked;
 
-    void handleInput(sf::RenderWindow& window, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, Score& score, int& isFullscreen, int screenWidth, int screenHeight);
-    void holdSpaceDisplay(sf::RenderWindow& window, Player& player);
+	float selectTimer;
+	int menuOptions;
 
-    void playerChange(Player& player, Background& background, Score& score);
-    void themeChange(Player& player, Background& background, Score& score, Building& building, Plane& plane, Helicopter& helicopter);
-
-    void resetSelection(Score& score, Background& background, Plane& plane, Helicopter& helicopter, Player& player);
-
-    void writeFullscreen(int& isFullscreen);
-
-    void readVolume(Sounds& sound);
-
+	sf::Font font;
+	
+	sf::Text title;
+	sf::Text playScore;
+	sf::Text tryagainScore;
+	sf::Text option1;
+	sf::Text option2;
+	sf::Text option3;
+	sf::Text option4;
+	sf::Text highScore;
+	sf::Text unlockText;
+	sf::Text versionText;
 };
 
-#endif // MENU_H_INCLUDED
+#endif 

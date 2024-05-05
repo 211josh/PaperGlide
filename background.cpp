@@ -1,422 +1,270 @@
-#include <SFML/Graphics.hpp>
-#include <iostream>
-#include <fstream>
-
 #include "background.h"
 
-Background::Background(Plane& plane, Helicopter& helicopter){
+Background::Background(Data& data) {
+	isDay = 1;
+	daynightComplete = 1;
+	daynightInterval = 4;
+	
+	loadTextures();
+	setTheme(data);
 
-    readTheme(); // set style to contents of themeData.txt
+	initialVel = { -187,0 };
+	maximumVel = { -800, 0 };
+	velDif = maximumVel - initialVel;
 
-    // Normal theme
-    //Sun & Moon
-    if(!sunTexture.loadFromFile("sprites/Sun.png")){
-        std::cout <<"Could not load Sun texture";
-    }
-    if(!sunShineTexture.loadFromFile("sprites/sunShine.png")){
-        std::cout <<"Could not load Sun texture";
-    }
+	respawnTrigger = -5120;
 
-    if(!moonTexture.loadFromFile("sprites/Moon.png")){
-        std::cout <<"Could not load Moon texture";
-    }
+	xLower = 0;
+	xOffset = 0;
 
-    // Background
-    if(!bgSkyTexture.loadFromFile("sprites/backgroundSky.png")){
-        std::cout << "Could not load Background Sky texture";
-        }
-    if(!bgBuildingsTexture.loadFromFile("sprites/backgroundBuildings.png")){
-        std::cout << "Could not load Background Buildings texture";
-        }
-    // Pixel theme
-    if(!sunPixelTexture.loadFromFile("sprites/sunPixel.png")){
-        std::cout <<"Could not load Sun (Pixel) texture";
-    }
-    if(!moonPixelTexture.loadFromFile("sprites/moonPixel.png")){
-        std::cout <<"Could not load Moon (Pixel) texture";
-    }
+	yLower = 0;
+	yOffset = 0;
 
-    // Sunset theme
-    if(!bgSkySunsetTexture.loadFromFile("sprites/bgSkySunset.png")){
-        std::cout << "Could not load Background Sky Sunset texture";
-        }
-    if(!bgBuildingsSunsetTexture.loadFromFile("sprites/bgBuildingsSunset.png")){
-        std::cout << "Could not load Background Buildings Sunset texture";
-        }
-    // Apocalypse theme
-    if(!sunApocTexture.loadFromFile("sprites/sunApoc.png")){
-        std::cout << "Could not load Background Sun Apocalypse texture";
-        }
-    if(!bgSkyApocTexture.loadFromFile("sprites/bgSkyApoc.png")){
-        std::cout << "Could not load Background Sky Apocalypse texture";
-        }
+	initialScale = 1;
+	scaleLower = 1;
+	scaleOffset = 0;
 
-    // Space theme
-    if(!sunSpaceTexture.loadFromFile("sprites/sunSpace.png")){
-        std::cout << "Could not load Background Sun Space texture";
-        }
-    if(!bgSkySpaceTexture.loadFromFile("sprites/bgSkySpace.png")){
-        std::cout << "Could not load Background Sky Space texture";
-        }
-    if(!bgBuildingsSpaceTexture.loadFromFile("sprites/bgBuildingsSpace.png")){
-        std::cout << "Could not load Background Buildings Space texture";
-        }
-
-    // Variable declaration
-    // Day night transitions
-    transitionTime = 0;
-    transition = 0;
-    transitionInterval = 4; // Time it takes for transition from night to day vice versa
-
-    // Sun across screen
-    sunInitialPos = {1650,150}; // 1650,150 - change for trailer mode
-    sunSunsetInitialPos = {1800,650};
-    sunApocInitialPos = {1600,150};
-    sunSpaceInitialPos = {1600,360};
-
-    initialVel = {-187.0f,0.0f};
-
-    velocity = initialVel;
-    sunVelocity = {-50.0f,0.0f}; // 50 is good
-    // sun velocity doesn't change
-
-    maxVel = {-800.0,0.0f};
-    velDif = (velocity.x - maxVel.x); // used for incremental increase in speed
-
-    isDay = 1;
-
-    //
-    backgroundSky.setPosition(sf::Vector2f(0,0));
-    backgroundBuildings.setPosition(sf::Vector2f(0,0));
-
-    sunShine.setTexture(sunShineTexture);
-
-
-    if(Style == 0){
-        themeNormal(plane, helicopter);
-        Sun.setPosition(sunInitialPos);
-        }
-    if(Style == 1){
-        themePixel(plane, helicopter);
-        Sun.setPosition(sunInitialPos);
-        }
-    if(Style == 2){
-        themeSunset(plane, helicopter);
-        Sun.setPosition(sunSunsetInitialPos);
-        }
-    if(Style == 3){
-        themeApoc(plane, helicopter);
-        Sun.setPosition(sunApocInitialPos);
-        }
-    if(Style == 4){
-        themeSpace(plane, helicopter);
-        Sun.setPosition(sunSpaceInitialPos);
-    }
+	sunShine.setTexture(tsunShine);
+	sun.setPosition(sunInitialPos);
+	sunShine.setOrigin(tsunShine.getSize().x / 2, tsunShine.getSize().y / 2);
 }
 
-void Background::update(sf::RenderWindow& window, float deltaTime){
-    shineFollow();
-    movement(deltaTime);
-    resetPos();
-    if(transition == 1){
-        dayNight(deltaTime);
-    }
-    window.draw(backgroundSky);
-    window.draw(sunShine);
-    window.draw(Sun);
-    window.draw(backgroundBuildings);
+void Background::update(sf::RenderWindow& window, Data& data) {
+	sf::Vector2f skyPos = sky.getPosition();
+	sf::Vector2f buildingsPos = buildings.getPosition();
+	sf::Vector2f sunPos = sun.getPosition();
 
+	if (data.theme == 4) {
+		movement(data, sky, 0.5);
+	} else {
+		movement(data, sky, 1);
+	}
+	movement(data, buildings, 1);
+
+	if (skyPos.x < respawnTrigger) {
+		Obstacle::respawn(data, sky);
+	}
+	if (buildingsPos.x < respawnTrigger) {
+		Obstacle::respawn(data, buildings);
+	}
+	
+	movement(data, sun, 0.35);
+	if (data.theme == 2) {
+		if (sunPos.x < -550) {
+			sun.setPosition(sunInitialPos);
+		}
+	} else { // if not theme sunset
+		if (sunPos.x < -250) {
+			sun.setPosition(sunInitialPos);
+			if (data.theme == 0 || data.theme == 1) {
+				isDay = !isDay;
+				setTheme(data); // because of sun/moon
+				daynightComplete = 0;
+			}
+			setTheme(data); // because of sun/moon
+		}
+	}
+	sunShine.setPosition(sunPos);
+
+	if (!daynightComplete) {
+		dayNight(data);
+	}
+
+	window.draw(sky);
+	window.draw(sunShine);
+	window.draw(sun);
+	window.draw(buildings);
 }
 
-void Background::movement(float deltaTime){
-    backgroundSky.move(velCof*velocity*deltaTime);
-    backgroundBuildings.move(velocity*deltaTime);
-    Sun.move(sunVelocity*deltaTime);
+void Background::dayNight(Data& data) {
+	daynightTimer += data.deltaTime;
+	if (daynightTimer < daynightInterval) {
+		if (isDay) { // if it's becoming day time
+			sf::Uint8 colorComponent = static_cast<sf::Uint8>(40 + (255 - 40) * (daynightTimer / daynightInterval));
+			sky.setColor(sf::Color(colorComponent, colorComponent, colorComponent, 255));
+		} else { // if it's becoming night time
+			sf::Uint8 colorComponent = static_cast<sf::Uint8>(255 - (255 - 40) * (daynightTimer / daynightInterval));
+			sky.setColor(sf::Color(colorComponent, colorComponent, colorComponent, 255));
+		}
+	} else {
+		daynightComplete = 1;
+		daynightTimer = 0;
+		if (isDay) {
+			sky.setColor(sf::Color({ 255,255,255,255 }));
+		} else {
+			sky.setColor(sf::Color({ 40,40,40,255 }));
+		}
+	}
 }
 
-void Background::resetPos(){ // First screen size of background texture is identical to last. Reset pos for infinite scroll illusion
-    sf::Vector2f position = backgroundSky.getPosition();
-    if(position.x <= -5120){ // Beginning of last frame x value
-        backgroundSky.setPosition(sf::Vector2f{0.0f,0.0f});
-    }
-    position = backgroundBuildings.getPosition();
-    if(position.x <= -5120){
-        backgroundBuildings.setPosition(sf::Vector2f{0.0f,0.0f});
-    }
 
-    sf::Vector2f sunPos = Sun.getPosition();
-    if(sunPos.x <= -150 && (Style == 0 || Style == 1)){ // Normal reset position
-        isDay = !isDay;
-        dayCycle();
-        transition = 1; // begin transition to day/night
-        }
-    if(sunPos.x <= -400 && Style == 2){ // Sunset reset position
-        dayCycle();
-        }
-    if(sunPos.x <= -250 && Style == 3){ // Apoc reset position
-        dayCycle();
-        }
-    if(sunPos.x <= -250 && Style == 4){ // Space reset position
-        dayCycle();
-        }
+void Background::setTheme(Data& data) {
+	sf::Vector2f sunPos = sun.getPosition();
+	switch (data.theme) {
+	case 0:
+		sky.setTexture(skyNormal);
+		buildings.setTexture(buildingsNormal);
+		buildings.setColor({ 255,255,255,100 });
+
+		sunInitialPos = {1650,150};
+		if (isDay) {
+			sun.setTexture(sunNormal);
+			sun.setColor(sf::Color({ 255,255,160,255 }));
+		} else {
+			sun.setTexture(moonNormal);
+			sun.setColor(sf::Color({ 255,255,255,255 }));
+		}
+		sun.setScale({ 0.75,0.75 });
+
+		sunShine.setColor({ 255,255,255,200 });
+		sunShine.setScale({ 0.9,0.9 });
+		sun.setOrigin(sunNormal.getSize().x / 2, sunNormal.getSize().y / 2);
+		
+		break;
+	case 1:
+		sky.setTexture(skyPixel);
+		buildings.setTexture(buildingsPixel);
+		buildings.setColor({ 255,255,255,100 });
+
+		sunInitialPos = { 1650,150 };
+		if (isDay) {
+			sun.setTexture(sunPixel);
+			sun.setColor(sf::Color({ 255,255,160,255 }));
+		} else {
+			sun.setTexture(moonPixel);
+			sun.setColor(sf::Color({ 255,255,255,255 }));
+		}
+		
+		sun.setScale({ 0.75,0.75 });
+
+		sunShine.setColor({ 255,255,255,200 });
+		sunShine.setScale({ 0.9,0.9 });
+		sun.setOrigin(sunPixel.getSize().x / 2, sunPixel.getSize().y / 2);
+		break;
+	case 2:
+		sky.setTexture(skySunset);
+		sky.setColor(sf::Color{ 255,255,255,255 });
+		daynightComplete = 1;
+		isDay = 1;
+		buildings.setTexture(buildingsSunset);
+		buildings.setColor({ 255,255,255,255 });
+
+		sun.setTexture(sunNormal);
+		sunInitialPos = { 1800,650 };
+
+		sun.setColor(sf::Color({ 255,0,255,255 }));
+		sun.setScale({ 2.2, 2.2 });
+
+		sunShine.setColor({ 255,255,255,200 });
+		sunShine.setScale({ 0,0 });
+		sun.setOrigin(sunNormal.getSize().x / 2, sunNormal.getSize().y / 2);
+		break;
+	case 3:
+		sky.setTexture(skyApoc);
+		sky.setColor(sf::Color{ 255,255,255,255 });
+		daynightComplete = 1;
+		isDay = 1;
+		buildings.setTexture(buildingsApoc);
+		buildings.setColor({ 135,0,0,100 });
+
+		sun.setTexture(sunApoc);
+		sunInitialPos = { 1600,150 };
+
+		sun.setColor(sf::Color({ 255,255,255,255 }));
+		sun.setScale({ 0.9,0.9 });
+
+		sunShine.setColor({ 255,0,0,255 });
+		sunShine.setScale({ 1,1 });
+		sun.setOrigin(sunApoc.getSize().x / 2, sunApoc.getSize().y / 2);
+		break;
+	case 4:
+		sky.setTexture(skySpace);
+		sky.setColor(sf::Color{ 255,255,255,255 });
+		daynightComplete = 1;
+		isDay = 1;
+		buildings.setTexture(buildingsSpace);
+		buildings.setColor({ 255,255,255,255 });
+
+		sun.setTexture(sunSpace);
+		sunInitialPos = { 1600,360 };
+
+		sun.setColor(sf::Color({ 255,255,255,255 }));
+		sun.setScale({ 0.9,0.9 });
+
+		sunShine.setColor({ 255,255,255,200 });
+		sunShine.setScale({ 0.1,0.1 });
+		sun.setOrigin(sunSpace.getSize().x / 2, sunSpace.getSize().y / 2);
+		break;
+	}
+
+	sun.setPosition(sunPos.x, sunInitialPos.y);
 }
 
-void Background::increaseVel(float velRange){ // Increase velocity
-    velocity.x -= velDif/velRange;
-    }
+void Background::respawn(Data& data) {
+	isDay = 1;
+	sky.setColor({ 255,255,255,255 });
+	daynightComplete = 1;
 
-void Background::resetGame(){ // Function if die and retry
-    velocity = initialVel;
-    resetPos();
-    isDay = 1;
-    backgroundSky.setColor(sf::Color(255, 255, 255, 255));
-    dayCycle();
-    }
-
-void Background::dayCycle(){
-    if(Style == 0){ // Normal theme
-        Sun.setPosition(sunInitialPos);
-        if(isDay == 1){
-            Sun.setTexture(sunTexture);
-            Sun.setColor(sf::Color({255,255,160,255}));
-        } else{
-            Sun.setTexture(moonTexture);
-            Sun.setColor(sf::Color({255,255,255,255}));
-            }
-        }
-    if(Style == 1){ // Pixel theme
-        Sun.setPosition(sunInitialPos);
-        if(isDay == 1){
-            Sun.setTexture(sunPixelTexture);
-            Sun.setColor(sf::Color({255,255,160,255}));
-        } else{
-            Sun.setTexture(moonPixelTexture);
-            Sun.setColor(sf::Color({255,255,255,255}));
-            }
-        }
-    if(Style == 2){
-        Sun.setPosition(sunSunsetInitialPos);
-        }
-    if(Style == 3){
-        Sun.setPosition(sunApocInitialPos);
-        }
-    if(Style == 4){
-        Sun.setPosition(sunSpaceInitialPos);
-        }
-
-    }
-
-void Background::shineFollow(){
-    sf::Vector2f sunPos = Sun.getPosition();
-    sunShine.setPosition(sunPos);
-    }
-
-void Background::themeNormal(Plane& plane, Helicopter& helicopter){
-
-    plane.themeNormal();
-    helicopter.themeNormal();
-
-    velCof = 1;
-    Style = 0;
-    backgroundSky.setTexture(bgSkyTexture);
-    backgroundBuildings.setTexture(bgBuildingsTexture);
-    backgroundBuildings.setColor(sf::Color({255,255,255,100}));
-
-    sf::Vector2f pos = Sun.getPosition();
-    Sun.setPosition(pos.x,sunInitialPos.y);
-
-    if(isDay == 1){
-        Sun.setTexture(sunTexture);
-        Sun.setColor(sf::Color({255,255,160,255}));
-    } else{
-        Sun.setTexture(moonTexture);
-        Sun.setColor(sf::Color({255,255,255,255}));
-    }
-   // Sun.setPosition(sunInitialPos);
-    Sun.setScale({0.75,0.75});
-
-    sunShine.setColor({255,255,255,200});
-    sunShine.setScale({0.9,0.9});
-    sunShine.setOrigin({static_cast<float>(sunShineTexture.getSize().x/2),static_cast<float>(sunShineTexture.getSize().y/2)});
-
-    sf::Vector2f origin = Sun.getOrigin(); // sets origin of sun to right side to ensure sun is off screen
-    Sun.setOrigin({ static_cast<float>(sunTexture.getSize().x/2),static_cast<float>(sunTexture.getSize().y/2)});
-    }
-
-void Background::themePixel(Plane& plane, Helicopter& helicopter){
-
-    plane.themePixel();
-    helicopter.themePixel();
-
-    velCof = 1;
-    Style = 1;
-    backgroundSky.setTexture(bgSkyTexture);
-    backgroundBuildings.setTexture(bgBuildingsTexture);
-    backgroundBuildings.setColor(sf::Color({255,255,255,100}));
-
-    sf::Vector2f pos = Sun.getPosition();
-    Sun.setPosition(pos.x,sunInitialPos.y);
-    if(isDay == 1){
-        Sun.setTexture(sunPixelTexture);
-        Sun.setColor(sf::Color({255,255,160,255}));
-    } else{
-        Sun.setTexture(moonPixelTexture);
-        Sun.setColor(sf::Color({255,255,255,255}));
-    }
-    // Sun.setPosition(sunInitialPos);
-    Sun.setScale({0.75,0.75});
-
-    sunShine.setColor({255,255,255,200});
-    sunShine.setScale({0.9,0.9});
-    sunShine.setOrigin({ static_cast<float>(sunShineTexture.getSize().x/2),static_cast<float>(sunShineTexture.getSize().y/2)});
-
-    sf::Vector2f origin = Sun.getOrigin(); // sets origin of sun to right side to ensure sun is off screen
-    Sun.setOrigin({ static_cast<float>(sunTexture.getSize().x/2),static_cast<float>(sunTexture.getSize().y/2)});
-    }
-
-
-void Background::themeSunset(Plane& plane, Helicopter& helicopter){
-    plane.themeNormal();
-    helicopter.themeNormal();
-    isDay = 1;
-
-
-    velCof = 1;
-    Style = 2;
-    backgroundSky.setTexture(bgSkySunsetTexture);
-    backgroundBuildings.setTexture(bgBuildingsSunsetTexture);
-    backgroundBuildings.setColor(sf::Color({255,255,255,255}));
-    backgroundSky.setColor(sf::Color({255,255,255,255}));
-
-    sf::Vector2f pos = Sun.getPosition();
-    Sun.setPosition(pos.x,sunSunsetInitialPos.y);
-
-    Sun.setTexture(sunTexture);
-   // Sun.setPosition(sunSunsetInitialPos);
-    Sun.setColor(sf::Color({255,0,255,255}));
-    Sun.setScale({2.2,2.2});
-
-    sunShine.setColor({0,0,0,0}); // no sun shine on sunset theme
-    sunShine.setScale({0,0});
-
-    sf::Vector2f origin = Sun.getOrigin();
-    Sun.setOrigin({ static_cast<float>(sunTexture.getSize().x/2),static_cast<float>(sunTexture.getSize().y/2)});
-    }
-void Background::themeApoc(Plane& plane, Helicopter& helicopter){
-    plane.themeNormal();
-    helicopter.themeNormal();
-
-    isDay = 1;
-
-    velCof = 1;
-
-    Style = 3;
-    backgroundSky.setTexture(bgSkyApocTexture);
-    // buildings
-    backgroundSky.setColor(sf::Color({255,255,255,255}));
-
-    backgroundBuildings.setTexture(bgBuildingsTexture);
-    backgroundBuildings.setColor({135,0,0,100});
-
-  //  sunShine.setColor({135,0,0,255});
-    sunShine.setColor({255,0,0,255});
-    sunShine.setScale({1,1});
-    sunShine.setOrigin({ static_cast<float>(sunShineTexture.getSize().x/2),static_cast<float>(sunShineTexture.getSize().y/2)});
-
-    sf::Vector2f pos = Sun.getPosition();
-    Sun.setPosition(pos.x,sunApocInitialPos.y);
-
-    Sun.setTexture(sunApocTexture);
-  //  Sun.setPosition(sunApocInitialPos);
-    Sun.setColor(sf::Color({255,255,255,255}));
-    Sun.setScale({0.9,0.9});
-
-    sf::Vector2f origin = Sun.getOrigin();
-  //  Sun.setOrigin({sunApocTexture.getSize().x,origin.y});
-    Sun.setOrigin({ static_cast<float>(sunApocTexture.getSize().x/2),static_cast<float>(sunApocTexture.getSize().y/2)});
-    }
-
-void Background::themeSpace(Plane& plane, Helicopter& helicopter){
-    plane.themeSpace();
-    helicopter.themeSpace();
-
-    isDay = 1;
-    velCof = 0.5;
-
-    Style = 4;
-    backgroundSky.setTexture(bgSkySpaceTexture);
-    // buildings
-    backgroundSky.setColor(sf::Color({255,255,255,255}));
-
-    backgroundBuildings.setTexture(bgBuildingsSpaceTexture);
-    backgroundBuildings.setColor({255,255,255,255});
-
-  //  sunShine.setColor({135,0,0,255});
-    sunShine.setColor({255,255,255,200});
-    sunShine.setScale({0.1,0.1});
-    sunShine.setOrigin({ static_cast<float>(sunShineTexture.getSize().x/2),static_cast<float>(sunShineTexture.getSize().y/2)});
-
-    sf::Vector2f pos = Sun.getPosition();
-    Sun.setPosition(pos.x,sunSpaceInitialPos.y);
-
-    Sun.setTexture(sunSpaceTexture);
-//    Sun.setPosition(sunSpaceInitialPos);
-    Sun.setColor(sf::Color({255,255,255,255}));
-    Sun.setScale({0.9,0.9});
-
-    sf::Vector2f origin = Sun.getOrigin();
-    Sun.setOrigin({ static_cast<float>(sunSpaceTexture.getSize().x/2),static_cast<float>(sunSpaceTexture.getSize().y/2)});
-    }
-
-void Background::dayNight(float deltaTime){
-    transitionTime += deltaTime;
-    if(transitionTime < transitionInterval){
-        if (isDay) { // if it's becoming day time
-            sf::Uint8 colorComponent = static_cast<sf::Uint8>(40 + (255 - 40) * (transitionTime / transitionInterval));
-            backgroundSky.setColor(sf::Color(colorComponent, colorComponent, colorComponent, 255));
-        }
-        else { // if it's becoming night time
-            sf::Uint8 colorComponent = static_cast<sf::Uint8>(255 - (255 - 40) * (transitionTime / transitionInterval));
-            backgroundSky.setColor(sf::Color(colorComponent, colorComponent, colorComponent, 255));
-        }
-    } else{
-        transition = 0;
-        transitionTime = 0;
-        if(isDay){
-            backgroundSky.setColor(sf::Color({255,255,255,255}));
-        } else{
-            backgroundSky.setColor(sf::Color({40,40,40,255}));
-        }
-    }
+	setTheme(data);
+	sun.setPosition(sunInitialPos);
 }
 
-void Background::readTheme(){
-    std::ifstream readThemeFile;
-    std::string contents;
+void Background::loadTextures() {
+	if (!skyNormal.loadFromFile("sprites/backgrounds/skyNormal.png")) {
+		std::cout << "Failed to load skyNormal.png" << std::endl;
+	}
+	if (!skyPixel.loadFromFile("sprites/backgrounds/skyNormal.png")) {
+		std::cout << "Failed to load skyNormal.png" << std::endl;
+	}
+	if (!skySunset.loadFromFile("sprites/backgrounds/skySunset.png")) {
+		std::cout << "Failed to load skySunset.png" << std::endl;
+	}
+	if (!skyApoc.loadFromFile("sprites/backgrounds/skyApoc.png")) {
+		std::cout << "Failed to load skyApoc.png" << std::endl;
+	}
+	if (!skySpace.loadFromFile("sprites/backgrounds/skySpace.png")) {
+		std::cout << "Failed to load skySpace.png" << std::endl;
+	}
 
-    readThemeFile.open( "themeData.txt" );
-    if(readThemeFile.is_open()){
-        while(!readThemeFile.eof()){
-                readThemeFile >> contents;
-                Style = decrypt(contents);
-            }
-        } else{ // if can't access file
-            std::cout << "Could not open themeData file. Setting to normal." << std::endl;
-            Style = 0;
-        }
-}
+	if (!buildingsNormal.loadFromFile("sprites/backgrounds/buildingsNormal.png")) {
+		std::cout << "Failed to load buildingsNormal.png" << std::endl;
+	}
+	if (!buildingsPixel.loadFromFile("sprites/backgrounds/buildingsNormal.png")) {
+		std::cout << "Failed to load buildingsNormal.png" << std::endl;
+	}
+	if (!buildingsSunset.loadFromFile("sprites/backgrounds/buildingsSunset.png")) {
+		std::cout << "Failed to load buildingsSunset.png" << std::endl;
+	}
+	if (!buildingsApoc.loadFromFile("sprites/backgrounds/buildingsApoc.png")) {
+		std::cout << "Failed to load buildingsApoc.png" << std::endl;
+	}
+	if (!buildingsSpace.loadFromFile("sprites/backgrounds/buildingsSpace.png")) {
+		std::cout << "Failed to load buildingsSpace.png" << std::endl;
+	}
 
-void Background::writeTheme(){
-    std::ofstream writeThemeFile("themeData.txt");
-    if(writeThemeFile.is_open()){
-        writeThemeFile << encrypt(Style);
-        }
-    writeThemeFile.close();
-}
+	if (!sunNormal.loadFromFile("sprites/suns/sunNormal.png")) {
+		std::cout << "Failed to load sunNormal.png." << std::endl;
+	}
+	if (!moonNormal.loadFromFile("sprites/suns/moonNormal.png")) {
+		std::cout << "Failed to load moonNormal.png." << std::endl;
+	}
 
-void Background::trailerNight(){
-    Sun.setTexture(moonTexture);
-    backgroundSky.setColor(sf::Color({40,40,40,255}));
-    Sun.setColor(sf::Color({255,255,255,255}));
-    isDay = 0;
-}
+	if (!sunPixel.loadFromFile("sprites/suns/sunPixel.png")) {
+		std::cout << "Failed to load sunPixel.png." << std::endl;
+	}
+	if (!moonPixel.loadFromFile("sprites/suns/moonPixel.png")) {
+		std::cout << "Failed to load moonPixel.png." << std::endl;
+	}
+
+	if (!sunApoc.loadFromFile("sprites/suns/sunApoc.png")) {
+		std::cout << "Failed to load sunApoc.png." << std::endl;
+	}
+
+	if (!sunSpace.loadFromFile("sprites/suns/sunSpace.png")) {
+		std::cout << "Failed to load sunSpace.png." << std::endl;
+	}
+
+	if (!tsunShine.loadFromFile("sprites/suns/sunShine.png")) {
+		std::cout << "Failed to load sunShine.png." << std::endl;
+	}
+}	

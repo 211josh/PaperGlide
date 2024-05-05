@@ -1,701 +1,386 @@
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-#include <iostream>
-
 #include "menu.h"
 
-Menu::Menu(int screenWidth, Score& score, Background& background, Plane& plane, Helicopter& helicopter, Player& player, Sounds& sound){
-    if(!font.loadFromFile("sprites/Font.ttf")){
+Menu::Menu(Data& data) {
+    if (!font.loadFromFile("sprites/Font.ttf")) {
         std::cout << "Could not load Menu font";
     }
-    if(!arrowTexture.loadFromFile("sprites/upArrow.png")){
-        std::cout << "Could not load upArrow font";
-    }
-    sf::Sprite upArrow;
+    currentScore = 0;
 
-    readVolume(sound);
-    menuSelect = 0; // Menu opens on play option
-    playerSelect = player.Style; //CHANGE THIS TO OPEN AND READ FILE
-    themeSelect = background.Style; // CHANGE THIS TO OPEN AND READ FILE
-
-    resetSelection(score, background, plane, helicopter, player);
-
-    selectTimer = 0; // Min time wait between changing menu option. Prevents endless fast scrolling.
-
-    /// Var declarations
-    // Scores required for unlocks
-    playerPixelScore = 10;
-    goldScore = 25;
-    origamiScore = 50;
-    kingScore = 1000;
-
-    pixelScore = 10;
-    sunsetScore = 25;
-    apocScore = 50;
-    spaceScore = 100;
-
-    //Menu
-    titleText.setOutlineColor(sf::Color{0,0,0,255});
-    titleText.setOutlineThickness(10);
-
-    titleText.setFont(font);
-    playText.setFont(font);
-    customiseText.setFont(font);
-    settingsText.setFont(font);
-    quitText.setFont(font);
+    // Set fonts
+    title.setFont(font);
+    playScore.setFont(font);
+    tryagainScore.setFont(font);
+    option1.setFont(font);
+    option2.setFont(font);
+    option3.setFont(font);
+    option4.setFont(font);
+    highScore.setFont(font);
+    unlockText.setFont(font);
     versionText.setFont(font);
 
-    titleText.setString("PAPERGLIDE");
-    playText.setString("Play"); // Words on menu screen
-    customiseText.setString("Customise");
-    settingsText.setString("Settings");
-    quitText.setString("Quit");
-    versionText.setString("v1.0");
-
-    titleText.setCharacterSize(150);
-    playText.setCharacterSize(90); // Word sizes
-    customiseText.setCharacterSize(90);
-    settingsText.setCharacterSize(90);
-    quitText.setCharacterSize(90);
-    versionText.setCharacterSize(90);
-
-    sf::FloatRect titleTextBounds = titleText.getLocalBounds();
-    sf::FloatRect playTextBounds = playText.getLocalBounds(); // Retrieve menu option bounds
-    sf::FloatRect customiseTextBounds = customiseText.getLocalBounds();
-    sf::FloatRect settingsTextBounds = settingsText.getLocalBounds();
-    sf::FloatRect quitTextBounds = quitText.getLocalBounds();
-
-    titleText.setPosition((screenWidth - titleTextBounds.width)/2, 20);
-    playText.setPosition((screenWidth - playTextBounds.width) / 2, 240); // Centres text based on text and screen width
-    customiseText.setPosition((screenWidth - customiseTextBounds.width)/2, 300);
-    settingsText.setPosition((screenWidth - settingsTextBounds.width) / 2, 360);
-    quitText.setPosition((screenWidth - quitTextBounds.width) / 2, 420);
-    versionText.setPosition(1200,675);
-
-    // Customisation
-    playerText.setFont(font);
-    themeText.setFont(font);
-    unlockText.setFont(font);
-    unlockText.setFillColor(sf::Color{255,0,0,255});
-    playerText.setCharacterSize(90);
-    themeText.setCharacterSize(90);
+    // Set size
+    title.setCharacterSize(150);
+    playScore.setCharacterSize(300);
+    tryagainScore.setCharacterSize(150);
+    option1.setCharacterSize(90);
+    option2.setCharacterSize(90);
+    option3.setCharacterSize(90);
+    option4.setCharacterSize(90);
+    highScore.setCharacterSize(100);
     unlockText.setCharacterSize(40);
+    versionText.setCharacterSize(40);
 
-    // Retry
-    retryText.setFont(font);
-    menuText.setFont(font);
-    quit2Text.setFont(font);
+    // Set text
+    playScore.setString("0");
+    title.setString("PAPERGLIDE");
+    versionText.setString("V1.0");
 
-    retryText.setString("Retry");
-    menuText.setString("Menu");
-    quit2Text.setString("Quit");
+    // Positioning
+    sf::FloatRect titleBounds = title.getLocalBounds();
+    title.setPosition((data.screenWidth - titleBounds.width) / 2, 20);
+    versionText.setPosition({ 1195,665 });
 
-    retryText.setCharacterSize(90);
-    menuText.setCharacterSize(90);
-    quit2Text.setCharacterSize(90);
+    // Color
+    title.setOutlineColor(sf::Color{ 0,0,0,255 });
+    title.setOutlineThickness(10);
+    playScore.setFillColor({ 255,255,255,230 });
+    tryagainScore.setFillColor({255, 255, 255, 230});
+    highScore.setFillColor({ 255,255,255,230 });
+    unlockText.setFillColor(sf::Color{ 255,0,0,255 });
+    versionText.setFillColor({ 255,255,255,100 });
+    menuSelect = 0;
+    playerTheme = data.playerTheme;
+    theme = data.theme;
 
-    sf::FloatRect retryBounds = retryText.getLocalBounds(); // Retrieve menu option bounds
-    sf::FloatRect menuBounds = menuText.getLocalBounds();
-    sf::FloatRect quit2Bounds = quit2Text.getLocalBounds();
+    selectTimer = 0;
 
-    retryText.setPosition((screenWidth - retryBounds.width) / 2, 240); // Centres text based on text and screen width
-    menuText.setPosition((screenWidth - menuBounds.width) / 2, 320);
-    quit2Text.setPosition((screenWidth - quit2Bounds.width) / 2, 400);
-
-    // Settings
-    fullscreenText.setFont(font);
-    volumeText.setFont(font);
-    backText.setFont(font);
-
-    backText.setString("Back");
-
-    volumeText.setCharacterSize(90);
-    backText.setCharacterSize(90);
-
-    sf::FloatRect backTextBounds = backText.getLocalBounds();
-
-    backText.setPosition((screenWidth - backTextBounds.width) / 2, 400);
-
-    // Hold space
-    holdSpaceText.setFont(font);
-    holdSpaceText.setString("Hold Space");
-    holdSpaceText.setCharacterSize(25);
-    holdSpaceText.setFillColor(sf::Color{255,255,255,200});
-    holdSpaceText.setOrigin(sf::Vector2f(0.0f,0.0f));
-
-    // Up arrow
-    upArrow.setTexture(arrowTexture);
-    upArrow.setColor(sf::Color{255,255,255,200});
-
-    // Error screen
-    errorText.setFont(font);
-    errorText.setCharacterSize(40);
-    errorText.setFillColor(sf::Color(255,0,0,255));
-    errorText.setString("ERROR: Missing game files. Please re-install the game.");
-    sf::FloatRect errorTextBounds = errorText.getLocalBounds();
-    errorText.setPosition((screenWidth - errorTextBounds.width) / 2 , 320);
-    }
-
-
-void Menu::menuUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, Score& score, int& isFullscreen, int screenHeight){
-
-    holdSpaceDisplay(window, player);
-    handleInput(window, deltaTime, gameState, sound, background, player, building, helicopter, plane, score, isFullscreen, screenWidth, screenHeight);
-    selectTimer += deltaTime;
-
-    if(menuSelect == 0){ // if on play
-        playText.setFillColor(sf::Color{255,255,0,230});
-        customiseText.setFillColor(sf::Color{255,255,255,230});
-        settingsText.setFillColor(sf::Color{255,255,255,230});
-        quitText.setFillColor(sf::Color{255,255,255,230});
-        }
-
-    if(menuSelect == 1){ // if on customise
-        playText.setFillColor(sf::Color{255,255,255,230});
-        customiseText.setFillColor(sf::Color{255,255,0,230});
-        settingsText.setFillColor(sf::Color{255,255,255,230});
-        quitText.setFillColor(sf::Color{255,255,255,230});
-
-    }
-
-    if(menuSelect == 2){ // if on settings
-        playText.setFillColor(sf::Color{255,255,255,230});
-        customiseText.setFillColor(sf::Color{255,255,255,230});
-        settingsText.setFillColor(sf::Color{255,255,0,230});
-        quitText.setFillColor(sf::Color{255,255,255,230});
-        }
-
-    if(menuSelect == 3){ // if on quit
-        playText.setFillColor(sf::Color{255,255,255,230});
-        customiseText.setFillColor(sf::Color{255,255,255,230});
-        settingsText.setFillColor(sf::Color{255,255,255,230});
-        quitText.setFillColor(sf::Color{255,255,0,230});
-        }
-
-    versionText.setFillColor(sf::Color{255,255,255,70});
-
-    window.draw(titleText);
-    window.draw(playText);
-    window.draw(customiseText);
-    window.draw(settingsText);
-    window.draw(quitText);
-    window.draw(versionText);
-    }
-
-void Menu::customiseUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, Score& score, int& isFullscreen, int screenHeight){
-    window.draw(titleText);
-    holdSpaceDisplay(window, player);
-    handleInput(window, deltaTime, gameState, sound, background, player, building, helicopter, plane, score, isFullscreen, screenWidth, screenHeight);
-    selectTimer += deltaTime;
-    unlockText.setString("");
-
-    // Menu navigation
-    if(menuSelect == 0){ // if on player theme
-        playerText.setFillColor(sf::Color{255,255,0,230});
-        themeText.setFillColor(sf::Color{255,255,255,230});
-        backText.setFillColor(sf::Color{255,255,255,230});
-        }
-
-    if(menuSelect == 1){ // if on theme
-        playerText.setFillColor(sf::Color{255,255,255,230});
-        themeText.setFillColor(sf::Color{255,255,0,230});
-        backText.setFillColor(sf::Color{255,255,255,230});
-    }
-
-    if(menuSelect == 2){ // if on back
-        playerText.setFillColor(sf::Color{255,255,255,230});
-        themeText.setFillColor(sf::Color{255,255,255,230});
-        backText.setFillColor(sf::Color{255,255,0,230});
-        }
-
-    // Changing player
-    if(playerSelect == 0){
-        playerText.setString("< Player: Normal >");
-        }
-    if(playerSelect == 1){
-        playerText.setString("< Player: Pixel >");
-        if(score.high_score < playerPixelScore){ // i.e it's not unlocked
-            unlockText.setString("Score " + std::to_string(playerPixelScore) + " points to unlock!");
-            playerText.setFillColor({255,0,0,230});
-            }
-        }
-
-    if(playerSelect == 2){
-        playerText.setString("< Player: Gold >");
-        if(score.high_score < goldScore){ // i.e it's not unlocked
-            unlockText.setString("Score " + std::to_string(goldScore) + " points to unlock!");
-            playerText.setFillColor({255,0,0,230});
-            }
-        }
-
-    if(playerSelect == 3){
-        playerText.setString("< Player: Origami >");
-        if(score.high_score < origamiScore){ // i.e it's not unlocked
-            unlockText.setString("Score " + std::to_string(origamiScore) + " points to unlock!");
-            playerText.setFillColor({255,0,0,230});
-            }
-        }
-    if(playerSelect == 4){
-        playerText.setString("< Player: King >");
-        if(score.high_score < kingScore){ // i.e it's not unlocked
-            unlockText.setString("Score " + std::to_string(kingScore) + " points to unlock!");
-            playerText.setFillColor({255,0,0,230});
-            }
-        }
-
-    // Changing theme
-    if(themeSelect == 0){
-        themeText.setString(" < Theme: Normal > ");
-    }
-    if(themeSelect == 1){
-        themeText.setString(" < Theme: Pixel >");
-        if(score.high_score < pixelScore){ // i.e it's not unlocked
-            unlockText.setString("Score " + std::to_string(pixelScore) + " points to unlock!");
-            themeText.setFillColor({255,0,0,230});
-        }
-    }
-    if(themeSelect == 2){
-        themeText.setString(" < Theme: Pink Sunset >");
-        if(score.high_score < sunsetScore){ // i.e it's not unlocked
-            unlockText.setString("Score " + std::to_string(sunsetScore) + " points to unlock!");
-            themeText.setFillColor({255,0,0,230});
-        }
-    }
-    if(themeSelect == 3){
-        themeText.setString(" < Theme: Apocalypse >");
-        if(score.high_score < apocScore){ // i.e it's not unlocked
-            unlockText.setString("Score " + std::to_string(apocScore) + " points to unlock!");
-            themeText.setFillColor({255,0,0,230});
-        }
-    }
-    if(themeSelect == 4){
-        themeText.setString(" < Theme: Space >");
-        if(score.high_score < spaceScore){ // i.e it's not unlocked
-            unlockText.setString("Score " + std::to_string(spaceScore) + " points to unlock!");
-            themeText.setFillColor({255,0,0,230});
-        }
-    }
-
-    sf::FloatRect playerBounds = playerText.getLocalBounds();
-    sf::FloatRect themeBounds = themeText.getLocalBounds();
-    sf::FloatRect unlockBounds = unlockText.getLocalBounds();
-
-    playerText.setPosition((screenWidth - playerBounds.width)/2, 240);
-    themeText.setPosition((screenWidth - themeBounds.width)/2, 320);
-    unlockText.setPosition((screenWidth - unlockBounds.width)/2, 500);
-
-    window.draw(playerText);
-    window.draw(themeText);
-    window.draw(backText);
-    window.draw(unlockText);
-    }
-
-void Menu::settingsUpdate(sf::RenderWindow& window, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, Score& score, int screenWidth, int& isFullscreen, int screenHeight){
-
-    // Fullscreen text
-    if(isFullscreen == 1){
-        fullscreenText.setString("Windowed");
-        } else{
-        fullscreenText.setString("Fullscreen");
-        }
-    fullscreenText.setCharacterSize(90);
-    sf::FloatRect fullscreenBounds = fullscreenText.getLocalBounds(); // Retrieve menu option bounds
-    fullscreenText.setPosition((screenWidth - fullscreenBounds.width) / 2, 240); // Centres text based on text and screen width
-
-    volumeText.setString("< Volume: " + std::to_string(sound.volume) + " >");
-    sf::FloatRect volumeTextBounds = volumeText.getLocalBounds();
-    volumeText.setPosition((screenWidth - volumeTextBounds.width) / 2, 320);
-
-    holdSpaceDisplay(window, player);
-    handleInput(window, deltaTime, gameState, sound, background, player, building, helicopter, plane, score, isFullscreen, screenWidth, screenHeight);
-    selectTimer += deltaTime;
-
-    // Menu navigation
-    if(menuSelect == 0){
-        fullscreenText.setFillColor(sf::Color{255,255,0,230});
-        volumeText.setFillColor(sf::Color{255,255,255,230});
-        backText.setFillColor(sf::Color{255,255,255,230});
-        }
-
-    if(menuSelect == 1){
-        fullscreenText.setFillColor(sf::Color{255,255,255,230});
-        volumeText.setFillColor(sf::Color{255,255,0,230});
-        backText.setFillColor(sf::Color{255,255,255,230});
-        }
-
-    if(menuSelect == 2){
-        fullscreenText.setFillColor(sf::Color{255,255,255,230});
-        volumeText.setFillColor(sf::Color{255,255,255,230});
-        backText.setFillColor(sf::Color{255,255,0,230});
-        }
-
-    window.draw(titleText);
-    window.draw(fullscreenText);
-    window.draw(volumeText);
-    window.draw(backText);
+    goMenu(data); // Game starts on menu
 }
 
-void Menu::tryUpdate(sf::RenderWindow& window, int screenWidth, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, Score& score, int& isFullscreen, int screenHeight){
-    handleInput(window, deltaTime, gameState, sound, background, player, building, helicopter, plane, score, isFullscreen, screenWidth, screenHeight);
-    selectTimer += deltaTime;
-
-    // Menu navigation
-    if(menuSelect == 0){
-        retryText.setFillColor(sf::Color{255,255,0,230});
-        menuText.setFillColor(sf::Color{255,255,255,230});
-        quit2Text.setFillColor(sf::Color{255,255,255,230});
-        }
-
-    if(menuSelect == 1){
-        retryText.setFillColor(sf::Color{255,255,255,230});
-        menuText.setFillColor(sf::Color{255,255,0,230});
-        quit2Text.setFillColor(sf::Color{255,255,255,230});
-        }
-
-    if(menuSelect == 2){
-        retryText.setFillColor(sf::Color{255,255,255,230});
-        menuText.setFillColor(sf::Color{255,255,255,230});
-        quit2Text.setFillColor(sf::Color{255,255,0,230});
-        }
-
-    versionText.setFillColor(sf::Color{255,255,255,70});
-
-    window.draw(retryText);
-    window.draw(menuText);
-    window.draw(quit2Text);
+void Menu::update(sf::RenderWindow& window, Data& data, Sounds& sounds) {
+    
+    if (data.gameState != 4) {
+        window.draw(title);
+        window.draw(versionText);
+    }
+    else {
+        window.draw(tryagainScore);
+    }
+    window.draw(option1);
+    window.draw(option2);
+    window.draw(option3);
+    window.draw(highScore);
+    
+    
+    if (data.gameState == 0) {
+        window.draw(option4);
+        
     }
 
-void Menu::handleInput(sf::RenderWindow& window, float deltaTime, int& gameState, Sounds& sound, Background& background, Player& player, Building& building, Helicopter& helicopter, Plane& plane, Score& score, int& isFullscreen, int screenWidth, int screenHeight){
-    if(window.hasFocus()){
-    // UP AND DOWN CONTROLS
+    if (locked) {
+        window.draw(unlockText);
+    }
 
-    // Down
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && selectTimer > 0.2f){
-        if(gameState == 0){
-            menuSelect = ((menuSelect + 1)%4 + 4) % 4;
-        } else{
-            menuSelect = ((menuSelect + 1)%3 + 3) % 3;
-            }
+    handleInput(window, data, sounds);
+}
 
-        resetSelection(score, background, plane, helicopter, player);
-        selectTimer = 0.0f;
-        sound.menuSound();
-        }
+void Menu::playUpdate(sf::RenderWindow& window, Data& data, Sounds& sounds) {
+    if (data.dead == 1) { // if player dies
+        sounds.gameoverSound(data);
+        data.gameState = 4; // go to retry screen
+        goRetry(data);
+    }
+    if (currentScore != data.currentScore) {
+        currentScore = data.currentScore;
+        sounds.pointSound(data);
+        goPlay(data);
+    }
+    window.draw(playScore);
+}
 
-    // Up
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && selectTimer > 0.2f){
-        if(gameState == 0){
-            menuSelect = ((menuSelect - 1)%4 + 4) % 4;
-        } else{
-            menuSelect = ((menuSelect - 1)%3 + 3 ) % 3; // C++ modulo doesn't work w/ negative numbers, so made our own
-            }
+void Menu::handleInput(sf::RenderWindow& window, Data& data, Sounds& sounds) {
+    selectTimer += data.deltaTime;
 
-        selectTimer = 0.0f;
-        sound.menuSound();
-        resetSelection(score, background, plane, helicopter, player);
-        }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && selectTimer > 0.2) {
+        if (data.gameState == 0) { // if enter is pressed on MENU
+            switch (menuSelect) {
+            case 0: // if on play
 
-    // ALL MENU SELECTION - pressing enter
-
-    // On menu
-    if(gameState == 0){
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && selectTimer > 0.2f){ // If Enter is pressed
-            if(menuSelect == 0){ // if we press enter on play
-                background.resetGame();
-                player.resetGame(gameState);
-                building.resetGame(score);
-                helicopter.resetGame();
-                plane.resetGame();
-                sound.startSound();
-                gameState = 1;
-
-                score.current_score = 0;
-            }
-
-            if(menuSelect == 1){ // if we press enter on customise
-                sound.menuSound();
-                gameState = 2;
+                goPlay(data);
+                sounds.startSound(data);
                 menuSelect = 0;
-                selectTimer = 0;
-            }
-
-
-            if(menuSelect == 2){ // if we press settings
-                sound.menuSound();
-                gameState = 3;
+                data.gameState = 1;
+                break;
+            case 1: // if on customise
+                sounds.menuSound(data);
                 menuSelect = 0;
+                goCustomise(data);
+                data.gameState = 2;
+                break;
+            case 2: // if on settings
                 selectTimer = 0;
+                sounds.menuSound(data);
+                menuSelect = 0;
+                goSettings(data);
+                data.gameState = 3;
+                break;
+            case 3: // on quit
+                window.close();
+                break;
+            }
+        }
+        if (data.gameState == 2 && selectTimer > 0.2) { // if enter is pressed on CUSTOMISE
+            if (menuSelect == 2) { // if on back
+                selectTimer = 0;
+                sounds.menuSound(data);
+                data.writeDataTxt();
+                menuSelect = 1;
+                goMenu(data);
+                data.gameState = 0;
+            }
+        }
+        if (data.gameState == 3 && selectTimer > 0.2) { // if enter is pressed on SETTINGS
+            if (menuSelect == 0) { // on fullscreen/windowed
+                selectTimer = 0;
+                if (!data.isFullscreen) {
+                    data.changeFullscreen(window, 1);
+                    goSettings(data);
+                } else {
+                    data.changeFullscreen(window, 0);
+                    goSettings(data);
+                }
             }
 
-            if(menuSelect == 3){ // if we press quit
+
+            if (menuSelect == 2) { // if on back
+                selectTimer = 0;
+                sounds.menuSound(data);
+                data.writeDataTxt();
+                goMenu(data);
+                data.gameState = 0;
+            }
+        }
+        if (data.gameState == 4) { // if enter is pressed on TRY AGAIN SCREEN
+            if (menuSelect == 0) { // on retry
+                data.currentScore = 0;
+                currentScore = 0;
+                goPlay(data);
+                data.gameReset = 1;
+                data.gameState = 1;
+                sounds.startSound(data);
+                menuSelect = 0;
+            }
+            if (menuSelect == 1) { // on menu
+                data.currentScore = 0;
+                currentScore = 0;
+                goPlay(data);
+                selectTimer = 0;
+                sounds.menuSound(data);
+                menuSelect = 0;
+                data.gameState = 0;
+                goMenu(data);
+                data.gameReset = 1;
+            }
+            if (menuSelect == 2) {
                 window.close();
             }
         }
     }
 
-    // On customisation
-    if(gameState == 2 ){
-
-        // CHANGING PLAYER AND THEME
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && selectTimer > 0.2f){ // If press left
-            if(menuSelect == 0){ // On player
-                playerSelect = ((playerSelect + 1)%5 + 5) % 5;
-                selectTimer = 0;
-                playerChange(player, background, score);
-                sound.menuSound();
-                }
-            if(menuSelect == 1){
-                themeSelect = ((themeSelect + 1)%5 + 5) % 5;
-                selectTimer = 0;
-                themeChange(player, background, score, building, plane, helicopter);
-                sound.menuSound();
-                }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && selectTimer > 0.2f) {
+        if (data.gameState == 2) {
+            if (data.highScore < data.playerThemeMap[playerTheme].second) { // if not enough score for the selected player theme
+                playerTheme = 0;
             }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && selectTimer > 0.2f){ // If press right
-            if(menuSelect == 0){ // On theme
-                playerSelect = ((playerSelect - 1)%5 + 5) % 5;
-                selectTimer = 0;
-                playerChange(player, background, score);
-                sound.menuSound();
-                }
-            if(menuSelect == 1){
-                themeSelect = ((themeSelect - 1)%5 + 5) % 5;
-                selectTimer = 0;
-                themeChange(player, background, score, building, plane, helicopter);
-                sound.menuSound();
-                }
+            if (data.highScore < data.themeMap[theme].second) { // if not enough score for the selected theme
+                theme = 0;
             }
-
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && selectTimer > 0.2f){ // Press Enter
-            if(menuSelect == 2){ // On back
-                sound.menuSound();
-                menuSelect = 0;
-                gameState = 0;
-                selectTimer = 0;
-                background.writeTheme(); // Update theme text file
-                player.writeTheme(); // Update player theme text file
-                }
-            }
+            goCustomise(data);
         }
 
-    //On settings
-    if(gameState == 3){
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && selectTimer > 0.2f){ // have to be separate because of selectTimer > 0.2
-            if(menuSelect == 0){ // if we press Enter on  Fullscreen
-                if(isFullscreen == 0){
-                isFullscreen = 1;
-                selectTimer = 0;
-                } else{
-                if(isFullscreen == 1){
-                    isFullscreen = 0;
-                    selectTimer = 0;
-                    }
-                }
-
-                writeFullscreen(isFullscreen);
-
-                window.close(); // restart window
-                loadWindow(screenWidth, screenHeight, isFullscreen, window);
-                }
-
-            if(menuSelect == 2){ // if we press Enter on Back
-                sound.menuSound();
-                menuSelect = 0;
-                gameState = 0;
-              //  volumeWrite();
-                std::ofstream writeVolumeFile("Volume.txt"); // Update high score text file
-                if(writeVolumeFile.is_open()){
-                    writeVolumeFile << sound.volume;
-                    }
-                writeVolumeFile.close();
-                selectTimer = 0;
-                }
-            }
-        if(menuSelect == 1){ // If we press left or right on Volume
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && selectTimer > 0.2f ){
-                sound.volume = ((sound.volume - 1)%11 +11 ) % 11;
-                sound.menuSound();
-                selectTimer = 0;
-                }
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && selectTimer > 0.2f ){
-                sound.volume = ((sound.volume + 1)%11 +11 ) % 11;
-                sound.menuSound();
-                selectTimer = 0;
-                }
-            }
+        sounds.menuSound(data);
+        selectTimer = 0;
+        menuSelect = (menuSelect - 1 + menuOptions) % menuOptions;
+        colorText(data);
     }
 
-    if(gameState == 4){ // IF ON TRY AGAIN MENU. OUR CHOICES ARE RETRY, MENU, QUIT
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && selectTimer > 0.2f){
-            if(menuSelect == 0){ // if we press Enter on Retry
-                background.resetGame();
-                player.resetGame(gameState);
-                building.resetGame(score);
-                helicopter.resetGame();
-                plane.resetGame();
-
-                sound.startSound();
-                gameState = 1;
-
-                score.current_score = 0;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && selectTimer > 0.2f) {
+        if (data.gameState == 2) {
+            if (data.highScore < data.playerThemeMap[playerTheme].second) { // if not enough score for the selected player theme
+                playerTheme = 0;
             }
-            if(menuSelect == 1){ // if we press Enter on Menu
-                sound.menuSound();
-                gameState = 0;
-                menuSelect = 0;
-                selectTimer = 0.0f;
-
+            if (data.highScore < data.themeMap[theme].second) { // if not enough score for the selected theme
+                theme = 0;
             }
-            if(menuSelect == 2){ // if we press Enter on Quit
-                window.close();
-            }
+            goCustomise(data);
         }
+
+        sounds.menuSound(data);
+        selectTimer = 0;
+        menuSelect = (menuSelect + 1) % menuOptions;
+        colorText(data);
     }
-    } // window.hasFocus() close bracket
-}
 
-void Menu::holdSpaceDisplay(sf::RenderWindow& window, Player& player){ // Animation "Press space" next to player on menu screen
-    holdSpaceText.setPosition(30,150*sin(player.playerTimer) + 440);
-    upArrow.setPosition(180,150*sin(player.playerTimer) + 440);
-
-    window.draw(holdSpaceText);
-
-    int spaceTimer = player.playerTimer*1.2;
-    if(spaceTimer % 2 == 0){
-        window.draw(upArrow);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && selectTimer > 0.2f) {
+        selectTimer = 0;
+        if (data.gameState == 2) { // if on CUSTOMISE
+            if (menuSelect == 0) { // on playerTheme
+                sounds.menuSound(data);
+                playerTheme = (playerTheme + 1) % 5;
+            }
+            if (menuSelect == 1) { // on Theme
+                sounds.menuSound(data);
+                theme = (theme + 1) % 5;
+            }
+            goCustomise(data);
+        }
+        if (data.gameState == 3) { // if on SETTINGS
+            if (menuSelect == 1) { // if on volume
+                data.volume = (data.volume + 1) % 11;
+                sounds.menuSound(data);
+            }
+            goSettings(data);
         }
     }
 
-void Menu::playerChange(Player& player, Background& background, Score& score){ // event-based theme changer in settings
-    if(playerSelect == 0){
-        player.themeNormal();
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && selectTimer > 0.2f) {
+        selectTimer = 0;
+        if (data.gameState == 2) { // if on CUSTOMISE
+            if (menuSelect == 0) { // on playerTheme
+                sounds.menuSound(data);
+                playerTheme = (playerTheme - 1 + 5) % 5;
+            }
+            if (menuSelect == 1) { // on Theme
+                sounds.menuSound(data);
+                theme = (theme - 1 + 5) % 5;
+            }
+            goCustomise(data);
         }
-    if(playerSelect == 1 && score.high_score >= playerPixelScore){
-        player.themePixel();
-        }
-
-    if(playerSelect == 2 && score.high_score >= goldScore){
-        player.themeGold();
-        }
-    if(playerSelect == 3 && score.high_score >= origamiScore){
-        player.themeOrigami();
-        }
-
-    if(playerSelect == 4 && score.high_score >= kingScore){
-        player.themeKing();
+        if (data.gameState == 3) { // if on SETTINGS
+            if (menuSelect == 1) { // if on volume
+                data.volume = (data.volume - 1 + 11) % 11;
+                sounds.menuSound(data);
+            }
+            goSettings(data);
         }
     }
+}
 
-void Menu::themeChange(Player& player, Background& background, Score& score, Building& building, Plane& plane, Helicopter& helicopter){
-    if(themeSelect == 0 && background.Style != 0){ // the double condition prevents the sun resetting when themes aren't unlocked
-        background.themeNormal(plane, helicopter);
-        score.themeUpdate(background);
-        building.themeNormal();
-        }
-    if(themeSelect == 1 && score.high_score >= pixelScore && background.Style != 1){
-        background.themePixel(plane, helicopter);
-        score.themeUpdate(background);
-        building.themeNormal();
-        }
-    if(themeSelect == 2 && score.high_score >= sunsetScore && background.Style != 2){
-        background.themeSunset(plane, helicopter);
-        score.themeUpdate(background);
-        building.themeSunset();
-        }
-    if(themeSelect == 3 && score.high_score >= apocScore && background.Style != 3){
-        background.themeApoc(plane, helicopter);
-        score.themeUpdate(background);
-        building.themeApoc();
-        }
-    if(themeSelect == 4 && score.high_score >= spaceScore && background.Style != 4){
-        background.themeSpace(plane, helicopter);
-        score.themeUpdate(background);
-        building.themeSpace();
-        }
+void Menu::goPlay(Data& data) {
+    playScore.setString(std::to_string(currentScore));
 
+    positionText(data);
+}
+
+void Menu::goMenu(Data& data) {
+    tryagainScore.setString("Score: " + std::to_string(data.currentScore));
+    option1.setString("Play");
+    option2.setString("Customise");
+    option3.setString("Settings");
+    option4.setString("Quit");
+    highScore.setString("Highscore: " + std::to_string(data.highScore));
+
+    menuOptions = 4;
+
+    positionText(data);
+    colorText(data);
+}
+
+void Menu::goCustomise(Data& data) {
+    colorText(data);
+
+    option1.setString("< Player: " + data.playerThemeMap[playerTheme].first + " >");
+    option2.setString("< Theme: " + data.themeMap[theme].first + " >");
+    option3.setString("Back");
+
+    locked = 0;
+
+    if (data.highScore < data.playerThemeMap[playerTheme].second) { // if not enough score for the selected player theme
+        unlockText.setString("SCORE " + std::to_string(data.playerThemeMap[playerTheme].second) + " POINTS TO UNLOCK!");
+        locked = 1;
+        option1.setFillColor({ 255,0,0,255 });
+    } else {
+        data.playerTheme = playerTheme;
     }
+    if (data.highScore < data.themeMap[theme].second) { // if not enough score for the selected theme
+        unlockText.setString("SCORE " + std::to_string(data.themeMap[theme].second) + " POINTS TO UNLOCK!");
+        locked = 1;
+        option2.setFillColor({ 255,0,0,255 });
+    } else {
+        data.theme = theme;
+    }
+    sf::FloatRect unlockTextBounds = unlockText.getLocalBounds();
+    unlockText.setPosition((data.screenWidth - unlockTextBounds.width) / 2, 500);
 
-void Menu::resetSelection(Score& score, Background& background, Plane& plane, Helicopter& helicopter, Player& player){ // Resets player and theme selection if they are not unlocked
-    if(playerSelect == 1 && score.high_score < playerPixelScore){ // prevents double stacking "score to unlock" text
-        playerSelect = 0;
-        player.Style = 0;
-        }
+    menuOptions = 3;
 
-    if(playerSelect == 2 && score.high_score < goldScore){ // prevents double stacking "score to unlock" text
-        playerSelect = 0;
-        player.Style = 0;
-        }
-
-    if(playerSelect == 3 && score.high_score < origamiScore){ // prevents double stacking "score to unlock" text
-        playerSelect = 0;
-        player.Style = 0;
-        }
-    if(playerSelect == 4 && score.high_score < kingScore){ // prevents double stacking "score to unlock" text
-        playerSelect = 0;
-        player.Style = 0;
-        }
-
-    if(themeSelect == 1 && score.high_score < pixelScore){
-        themeSelect = 0;
-        if(background.Style != 0){
-            background.themeNormal(plane, helicopter);
-        }
-        background.Style = 0;
-        }
-    if(themeSelect == 2 && score.high_score < sunsetScore){
-        themeSelect = 0;
-        if(background.Style != 0){
-            background.themeNormal(plane, helicopter);
-        }
-        background.Style = 0;
-        }
-    if(themeSelect == 3 && score.high_score < apocScore){
-        themeSelect = 0;
-        if(background.Style != 0){
-            background.themeNormal(plane, helicopter);
-        }
-        background.Style = 0;
-        }
-    if(themeSelect == 4 && score.high_score < spaceScore){
-        themeSelect = 0;
-        if(background.Style != 0){
-            background.themeNormal(plane, helicopter);
-        }
-        background.Style = 0;
-        }
+    positionText(data);
 }
 
-void Menu::writeFullscreen(int& isFullscreen){
-    std::ofstream writeFullscreenFile("isFullscreen.txt");
-    if(writeFullscreenFile.is_open()){
-        writeFullscreenFile << isFullscreen;
-        }
-    writeFullscreenFile.close();
+void Menu::goSettings(Data& data) {
+    if (data.isFullscreen) {
+        option1.setString("Windowed");
+    } else {
+        option1.setString("Fullscreen");
+    }
+    option2.setString("< Volume: " + std::to_string(data.volume) + " >");
+    option3.setString("Back");
+
+    menuOptions = 3;
+
+    positionText(data);
+    colorText(data);
 }
 
-void Menu::readVolume(Sounds& sound){
-    std::ifstream readVolumeFile;
-    readVolumeFile.open( "Volume.txt" );
-    if(readVolumeFile.is_open()){
-        std::string contents;
-        while(!readVolumeFile.eof()){ // while not at end of file
-                readVolumeFile >> contents;
-            }
-        if(isWholeInteger(contents)){ // check isFullscreen.txt has an integer
-            sound.volume = std::stoi(contents);
-            if(sound.volume < 0 || sound.volume > 10){ // check integer is valid
-                std::cout << "Volume.txt does not equal a integer within range. Setting to 10." << std::endl;
-                sound.volume = 10;
-                }
-            } else{
-                std::cout << "Volume.txt does not contain integer value. Setting to 10." << std::endl;
-                sound.volume = 10;
-            }
-        }
-    readVolumeFile.close();
+void Menu::goRetry(Data& data) {
+    tryagainScore.setString("Score: " + std::to_string(data.currentScore));
+    option1.setString("Retry");
+    option2.setString("Menu");
+    option3.setString("Quit");
+    highScore.setString("Highscore: " + std::to_string(data.highScore));
+
+    menuOptions = 3;
+
+    positionText(data);
+    colorText(data);
 }
 
-void Menu::errorScreen(sf::RenderWindow& window){
-    window.clear(sf::Color(178,215,255,255));
-    window.draw(errorText);
+void Menu::positionText(Data& data) {
+    sf::FloatRect playscoreBounds = playScore.getLocalBounds();
+    sf::FloatRect tryagainBounds = tryagainScore.getLocalBounds();
+    sf::FloatRect option1Bounds = option1.getLocalBounds();
+    sf::FloatRect option2Bounds = option2.getLocalBounds();
+    sf::FloatRect option3Bounds = option3.getLocalBounds();
+    sf::FloatRect option4Bounds = option4.getLocalBounds();
+    sf::FloatRect highscoreBounds = highScore.getLocalBounds();
+
+    playScore.setPosition((data.screenWidth - playscoreBounds.width) / 2, 100);
+    tryagainScore.setPosition((data.screenWidth - tryagainBounds.width) / 2, 100);
+    option1.setPosition((data.screenWidth - option1Bounds.width) / 2, 240);
+    option2.setPosition((data.screenWidth - option2Bounds.width) / 2, 300);
+    option3.setPosition((data.screenWidth - option3Bounds.width) / 2, 360);
+    option4.setPosition((data.screenWidth - option4Bounds.width) / 2, 420);
+    highScore.setPosition((data.screenWidth - highscoreBounds.width) / 2, 600);
 }
+
+void Menu::colorText(Data& data) {
+    option1.setFillColor({ 255,255,255,230 });
+    option2.setFillColor({ 255,255,255,230 });
+    option3.setFillColor({ 255,255,255,230 });
+    option4.setFillColor({ 255,255,255,230 });
+    switch (menuSelect) {
+    case 0:
+        option1.setFillColor({ 255,255,0,230 });
+        break;
+    case 1:
+        option2.setFillColor({ 255,255,0,230 });
+        break;
+    case 2:
+        option3.setFillColor({ 255,255,0,230 });
+        break;
+    case 3:
+        option4.setFillColor({ 255,255,0,230 });
+        break;
+    }
+}
+
